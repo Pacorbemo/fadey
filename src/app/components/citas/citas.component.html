@@ -1,0 +1,32 @@
+<table>
+  <thead>
+    <tr>
+		@for (dia of diasDeLaSemana; track dia){
+			<th>{{ dia }}</th>
+		}
+    </tr>
+  </thead>
+  <tbody>
+	@for (hora of franjasHorarias; track hora) {
+	  <tr>
+		@for (dia of diasDeLaSemana; track dia) {
+		  <td>
+			<button (click)="mostrarReserva(dia, hora)" [disabled]="!esFranjaDisponible(dia, hora)">
+			  {{ hora }}
+			</button>
+		  </td>
+		}
+	  </tr>
+	}
+  </tbody>
+</table>
+
+@if (mostrarDialogo) {
+	<div class="overlay">
+	  <div class="reserva-dialogo">
+		<p>Reservar el {{ diaSeleccionado }} a las {{ horaSeleccionada }}</p>
+		<button (click)="confirmarReserva()">Confirmar</button>
+		<button (click)="cancelarReserva()">Cancelar</button>
+	  </div>
+	</div>
+}
