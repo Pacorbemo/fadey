@@ -11,7 +11,7 @@
 	  <tr>
 		@for (dia of diasDeLaSemana; track dia) {
 		  <td>
-			<button (click)="mostrarReserva(dia, hora)" [disabled]="!esFranjaDisponible(dia, hora)">
+			<button (click)="mostrarReserva(diasDeLaSemana.indexOf(dia), hora)" [disabled]="!esFranjaDisponible(dia, hora)">
 			  {{ hora }}
 			</button>
 		  </td>

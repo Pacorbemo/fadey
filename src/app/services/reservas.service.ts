@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -11,8 +11,12 @@ export class ReservasService {
 
   constructor(private http: HttpClient) {}
 
-  confirmarReserva(idBarbero:number, idCliente:number, dia: string, hora: string): Observable<any> {
-    const body = { idBarbero, idCliente, dia, hora };
-    return this.http.post(this.apiUrl, body);
+  confirmarReserva(idBarbero:number, dia: number, hora: string): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const body = { idBarbero, dia, hora };
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.post(this.apiUrl, body, { headers });
   }
 }

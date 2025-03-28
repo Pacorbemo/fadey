@@ -39,8 +39,14 @@ export class RegisterComponent {
     };
 
     this.usuariosService.registrar(usuario).subscribe(
-      response => console.log('Usuario registrado:', response),
-      error => console.error('Error al registrar usuario:', error)
+      (response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        alert('Registro exitoso');
+      },
+      (error) => {
+        alert('Error al registrar usuario');
+      }
     );
   }
 }

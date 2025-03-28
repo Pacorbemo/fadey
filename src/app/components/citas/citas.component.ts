@@ -19,7 +19,7 @@ export class CitasComponent implements OnInit {
       Domingo: []
   };
   mostrarDialogo: boolean = false;
-  diaSeleccionado: string = '';
+  diaSeleccionado: number = 0;
   horaSeleccionada: string = '';
 
   constructor(private reservasService: ReservasService) {}
@@ -57,14 +57,14 @@ export class CitasComponent implements OnInit {
     return this.horariosDisponibles[dia]?.includes(hora) || false;
   }
 
-  mostrarReserva(dia: string, hora: string): void {
-    this.diaSeleccionado = dia;
+  mostrarReserva(dia: number, hora: string): void {
+    this.diaSeleccionado = dia + 1;
     this.horaSeleccionada = hora;
     this.mostrarDialogo = true;
   }
 
   confirmarReserva(): void {
-    this.reservasService.confirmarReserva(1, 1,this.diaSeleccionado, this.horaSeleccionada).subscribe(
+    this.reservasService.confirmarReserva(2, this.diaSeleccionado, this.horaSeleccionada).subscribe(
       response => {
         console.log('Reserva confirmada:', response);
         this.mostrarDialogo = false;
