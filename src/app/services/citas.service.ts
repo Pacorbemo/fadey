@@ -16,9 +16,8 @@ export class CitasService {
   }
 
   calcularSemana(diaInicio: Date, n: number = 0): Date[] {
-    const hoy = diaInicio;
     const diasSemana = [];
-    const primerDiaSemana = this.primerDiaSemana(hoy);
+    const primerDiaSemana = this.primerDiaSemana(this.sumarDias(diaInicio, n * 7));
 
     for (let i = 0; i < 7; i++) {
       diasSemana.push(this.sumarDias(primerDiaSemana, i));
