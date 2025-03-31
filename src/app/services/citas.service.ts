@@ -6,20 +6,22 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CitasService {
+  apiUrl = 'http://localhost:5000/';
+
   constructor(private http: HttpClient) {}
+
+  primerDiaSemana(diaInicio: Date): Date {
+    diaInicio.setDate(diaInicio.getDate() - diaInicio.getDay() + 1);
+    return diaInicio;
+  }
 
   calcularSemana(diaInicio: Date, n: number = 0): Date[] {
     const hoy = diaInicio;
     const diasSemana = [];
-    const primerDiaSemana = new Date(
-      hoy.setDate(hoy.getDate() - hoy.getDay() + 1 + n * 7)
-    );
-    const ultimoDiaSemana = new Date(primerDiaSemana);
-    ultimoDiaSemana.setDate(primerDiaSemana.getDate() + 6);
+    const primerDiaSemana = this.primerDiaSemana(hoy);
 
-    diaInicio = primerDiaSemana;
     for (let i = 0; i < 7; i++) {
-      diasSemana.push(this.sumarDias(diaInicio, i));
+      diasSemana.push(this.sumarDias(primerDiaSemana, i));
     }
     return diasSemana;
   }
@@ -34,7 +36,7 @@ export class CitasService {
     let horaInicio: number;
     let horaFin: number;
     let minutosFin: number;
-    const intervalo: number = 30
+    const intervalo: number = 30;
 
     if (horariosDisponibles) {
       const horasDisponibles = Object.values(horariosDisponibles).flat();
@@ -49,11 +51,10 @@ export class CitasService {
           .filter((hora) => parseInt(hora.split(':')[0]) === horaFin)
           .map((hora) => parseInt(hora.split(':')[1]))
       );
-    }
-    else  {
-      horaInicio = 0; 
+    } else {
+      horaInicio = 0;
       horaFin = 23;
-      minutosFin = 30; 
+      minutosFin = 30;
     }
 
     let franjasHorarias: string[] = [];
@@ -70,10 +71,79 @@ export class CitasService {
   }
 
   subirCitas(idBarbero: number, fechas: Date[]): Observable<any> {
-    const apiUrl = 'http://localhost:5000/crear-citas';
     const token = localStorage.getItem('token');
     const body = { idBarbero, fechas };
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(apiUrl, body, { headers });
+    return this.http.post(`${this.apiUrl}crear-citas`, body, { headers });
+  }
+
+  async getCitas(idBarbero: number, inicio: Date): Promise<{ dia: Date; hora: string }[]> {
+    const token = localStorage.getItem('token');
+    inicio = this.primerDiaSemana(inicio);
+    const fin = this.sumarDias(inicio, 6);
+    const body = {
+      idBarbero,
+      inicio,
+      fin,
+    };
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    let fechas : { dia: Date; hora: string }[] = [];
+    return new Promise<{ dia: Date; hora: string }[]>((resolve, reject) => {
+      this.http.post<Date[]>(`${this.apiUrl}citas`, body, { headers }).subscribe(
+      (response) => {
+        fechas = response.map((fecha: Date) => {
+        const parsedFecha = new Date(fecha);
+        return {
+          dia: parsedFecha,
+          hora: `${parsedFecha.getHours().toString().padStart(2, '0')}:${parsedFecha.getMinutes().toString().padStart(2, '0')}`,
+        };
+        });
+        resolve(fechas);
+      },
+      (error) => {
+        reject(error);
+      }
+      );
+    });
+  }
+
+  async getCitas2(idBarbero: number, inicio: Date): Promise<{ totales: { [dia: number]: string[] }; reservadas: { [dia: number]: string[] } }> {
+    const token = localStorage.getItem('token');
+    inicio = this.primerDiaSemana(inicio);
+    const fin = this.sumarDias(inicio, 6);
+    const body = {
+      idBarbero,
+      inicio,
+      fin,
+    };
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return new Promise<{ totales: { [dia: number]: string[] }; reservadas: { [dia: number]: string[] } }>((resolve, reject) => {
+      this.http.post<{todos: Date[]; reservados: Date[]}>(`${this.apiUrl}citas`, body, { headers }).subscribe(
+        (response) => {
+        let totales : { [dia: number]: string[] } = [];
+        let reservadas : { [dia: number]: string[] } = [];
+        response.todos.forEach((fecha: Date) => {
+          const parsedFecha = new Date(fecha);
+          const dia = parsedFecha.getDate();
+          if (!totales[dia]) {
+            totales[dia] = [];
+          }
+          totales[dia].push(`${parsedFecha.getHours().toString().padStart(2, '0')}:${parsedFecha.getMinutes().toString().padStart(2, '0')}`);
+        });
+        response.reservados.forEach((fecha: Date) => {
+          const parsedFecha = new Date(fecha);
+          const dia = parsedFecha.getDate();
+          if (!reservadas[dia]) {
+            reservadas[dia] = [];
+          }
+          reservadas[dia].push(`${parsedFecha.getHours().toString().padStart(2, '0')}:${parsedFecha.getMinutes().toString().padStart(2, '0')}`);
+        });
+        resolve({ totales, reservadas });
+      },
+      (error) => {
+        reject(error);
+      }
+      );
+    });
   }
 }

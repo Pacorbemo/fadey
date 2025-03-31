@@ -9,24 +9,32 @@ import { CitasService } from '../../services/citas.service';
 export class CrearCitasComponent implements OnInit {
   diasDeLaSemana: Date[] = [];
   franjasHorarias: string[] = [];
-  idBarbero: number = 2;
+  idBarbero: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
 
   seleccionando: boolean = false;
   agregando: boolean = false;
 
+  fechasSubidas: { dia: Date; hora: string }[] = [];
   franjasSeleccionadas: { dia: Date; hora: string }[] = [];
   ultimasFranjasSeleccionadas: { dia: Date; hora: string }[] = [];
 
   constructor(private citasService: CitasService) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.recargarFechasSubidas();    
     this.diasDeLaSemana = this.citasService.calcularSemana(new Date(), 0);
     this.franjasHorarias = this.citasService.generarFranjasHorarias();
   }
 
+  recargarFechasSubidas(): void {
+    this.citasService.getCitas(this.idBarbero, new Date()).then((fechas) => {
+      this.fechasSubidas = fechas;
+    });
+  }
+
   horaEnFranja(dia: Date, hora: string, franja : { dia: Date; hora: string }[] = this.franjasSeleccionadas): boolean {
     const index = franja.findIndex(
-      (f) => f.dia.getTime() === dia.getTime() && f.hora === hora
+      (f) => f.dia.getDate() === dia.getDate() && f.hora === hora
     );
     return index !== -1;
   }
@@ -50,7 +58,7 @@ export class CrearCitasComponent implements OnInit {
 
   terminarSeleccion(): void {
     this.seleccionando = false;
-    console.log('Franjas seleccionadas:', this.franjasSeleccionadas);
+    // console.log('Franjas seleccionadas:', this.franjasSeleccionadas);
   }
 
   alternarSeleccion(dia: Date, hora: string): void {
@@ -79,8 +87,9 @@ export class CrearCitasComponent implements OnInit {
     });
     this.citasService.subirCitas(this.idBarbero, franjasFormateadas).subscribe(
       (response) => {
-        console.log('Citas confirmadas:', response);
+        // console.log('Citas confirmadas:', response); 
         this.franjasSeleccionadas = [];
+        this.recargarFechasSubidas();
       }
     );
   }

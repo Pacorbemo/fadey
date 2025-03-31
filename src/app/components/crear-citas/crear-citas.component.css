@@ -24,3 +24,13 @@ table {
 	background-color: #4caf50;
 	color: white;
   }
+
+  button.subido {
+	background-color: #eaf73c;
+	color: black;
+  }
+
+  button.subido.selected {
+	background-color: #af5b4c;
+	color: white;
+  }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReservasService } from '../../services/reservas.service';
 import { CitasService } from '../../services/citas.service';
+import { createSignal } from '@angular/core/primitives/signals';
 
 @Component({
   selector: 'app-citas',
@@ -10,16 +11,18 @@ import { CitasService } from '../../services/citas.service';
 export class CitasComponent implements OnInit {
   diasDeLaSemana: Date[] = [];
   franjasHorarias: string[] = [];
-  idBarbero: number = 2;
-  horariosDisponibles: { [dia: number]: string[] } = {
-    1: ['08:00', '08:30', '09:00', '10:00'],
-    2: ['10:00', '10:30', '11:00', '12:00'],
-    3: ['08:00', '09:00', '10:00', '11:00'],
-    4: ['14:00', '14:30', '15:00', '15:30', '16:00'],
-    5: ['08:00', '08:30', '09:00', '10:00', '11:00'],
-    6: [],
-    7: [],
-  };
+  idBarbero: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
+  // horariosDisponibles: { [dia: number]: string[] } = {
+  //   1: ['08:00', '08:30', '09:00', '10:00'],
+  //   2: ['10:00', '10:30', '11:00', '12:00'],
+  //   3: ['08:00', '09:00', '10:00', '11:00'],
+  //   4: ['14:00', '14:30', '15:00', '15:30', '16:00'],
+  //   5: ['08:00', '08:30', '09:00', '10:00', '11:00'],
+  //   6: [],
+  //   7: [],
+  // };
+  horariosDisponibles: {[dia: number]: string[]} = []
+  horariosReservados: {[dia: number]: string[]} = []
   mostrarDialogo: boolean = false;
   diaSeleccionado: Date = new Date();
 
@@ -44,9 +47,12 @@ export class CitasComponent implements OnInit {
 
   constructor(private reservasService: ReservasService, private citasService: CitasService) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.calcularSemana();
-    this.generarFranjasHorarias();
+    const response = await this.citasService.getCitas2(this.idBarbero, this.semanaActual.inicio);
+    this.horariosReservados = response.reservadas;
+    this.horariosDisponibles = response.totales;
+    this.generarFranjasHorarias();  
   }
 
   generarFranjasHorarias(): void {
@@ -77,6 +83,10 @@ export class CitasComponent implements OnInit {
 
   esFranjaDisponible(dia: number, hora: string): boolean {
     return this.horariosDisponibles[dia]?.includes(hora) || false;
+  }
+
+  esFranjaReservada(dia: number, hora: string): boolean {
+    return this.horariosReservados[dia]?.includes(hora) || false;
   }
 
   mostrarReserva(dia: Date, hora: string): void {

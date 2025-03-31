@@ -13,7 +13,7 @@ function autenticarToken(req, res, next) {
       return res.status(403).json({ error: 'Token inválido' });
     }
 
-    req.user = user; // Agrega los datos del usuario al objeto `req`
+    req.user = user;
     next();
   });
 }
