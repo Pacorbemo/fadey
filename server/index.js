@@ -27,12 +27,13 @@ db.connect((err) => {
 });
 
 app.post("/confirmar-reserva", autenticarToken, (req, res) => {
-  const { dia, hora, idBarbero } = req.body;
-  if (!dia || !hora || !idBarbero) {
+  const { dia, idBarbero } = req.body;
+  if (!dia || !idBarbero) {
     return res.status(400).json({ error: "Información insuficiente" });
   }
 
-  const fechaHora = new Date(2025, 0, dia, hora.split(':')[0], hora.split(':')[1]); // Enero es el mes 0
+  console.log(dia); 
+  const fechaHora = new Date(dia).toISOString().slice(0, 19).replace('T', ' ');
   const idCliente = req.user.id; 
 
   const query = 'INSERT INTO Citas (barbero_id, cliente_id, fecha_hora) VALUES (?, ?, ?)';
@@ -42,7 +43,8 @@ app.post("/confirmar-reserva", autenticarToken, (req, res) => {
       return res.status(500).json({ error: 'Error al confirmar reserva' });
     }
 
-    res.status(200).json({ message: 'Reserva confirmada', dia, hora });
+    res.status(200).json({ message: 'Reserva confirmada', dia
+     });
   });
 });
 
@@ -135,7 +137,7 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: usuario.id, username: usuario.username, rol: usuario.barbero ? 'barbero' : 'cliente' },
       'jtnhu37569', 
-      { expiresIn: '1h' }
+      // { expiresIn: '1h' }
     );
 
     res.status(200).json({

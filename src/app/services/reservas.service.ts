@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { config, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,11 @@ export class ReservasService {
 
   constructor(private http: HttpClient) {}
 
-  confirmarReserva(idBarbero:number, dia: number, hora: string): Observable<any> {
+  confirmarReserva(idBarbero:number, dia: Date): Observable<any> {
     const token = localStorage.getItem('token');
 
-    const body = { idBarbero, dia, hora };
+    // console.log(dia);
+    const body = { idBarbero, dia };
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     return this.http.post(this.apiUrl, body, { headers });
