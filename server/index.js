@@ -152,6 +152,22 @@ app.post("/login", async (req, res) => {
   });
 });
 
+app.post("/crear-citas", autenticarToken, (req, res) => {
+  const { fechas, idBarbero } = req.body;
+  for (const fecha of fechas) {
+    const fechaHora = new Date(fecha).toISOString().slice(0, 19).replace('T', ' ');
+
+    const query = 'INSERT INTO Citas (barbero_id, fecha_hora) VALUES (?, ?)';
+    db.query(query, [idBarbero, fechaHora], (err, result) => {
+      if (err) {
+        console.error('Error al crear cita:', err);
+        return res.status(500).json({ error: 'Error al crear cita' });
+      }
+    });
+  }
+  return res.status(200).json({ message: "Cita creada" });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

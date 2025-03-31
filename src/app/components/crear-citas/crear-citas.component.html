@@ -1,0 +1,32 @@
+
+@if (franjasHorarias) {
+<button (click)="confirmarSeleccion()">Confirmar</button>
+<button (click)="cancelarSeleccion()">Cancelar</button>
+}
+<table>
+	<thead>
+	  <tr>
+		@for (dia of diasDeLaSemana; track dia) {
+		  <th>{{ dia.getDate() }}</th>
+		}
+	  </tr>
+	</thead>
+	<tbody>
+	  @for (hora of franjasHorarias; track hora) {
+		<tr>
+		  @for (dia of diasDeLaSemana; track dia) {
+			<td>
+			  <button
+				[class.selected]="horaEnFranja(dia, hora)"
+				(mousedown)="empezarSeleccion(dia, hora)"
+				(mousemove)="continuarSeleccion(dia, hora, $event)"
+				(mouseup)="terminarSeleccion()"
+				>
+				{{ hora }}
+			  </button>
+			</td>
+		  }
+		</tr>
+	  }
+	</tbody>
+  </table>

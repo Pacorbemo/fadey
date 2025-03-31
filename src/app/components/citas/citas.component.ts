@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReservasService } from '../../services/reservas.service';
+import { CitasService } from '../../services/citas.service';
 
 @Component({
   selector: 'app-citas',
@@ -24,29 +25,13 @@ export class CitasComponent implements OnInit {
 
   semanaActual = {
     inicio: new Date(),
-    fin: new Date(),
+    fin: new Date()
   };
 
-  sumarDias(fecha: Date, dias: number): Date {
-    const nuevaFecha = new Date(fecha);
-    nuevaFecha.setDate(nuevaFecha.getDate() + dias);
-    return nuevaFecha;
-  }
-
   calcularSemana(n: number = 0): void {
-    const hoy = this.semanaActual.inicio;
-    const primerDiaSemana = new Date(
-      hoy.setDate(hoy.getDate() - hoy.getDay() + 1 + n * 7)
-    );
-    const ultimoDiaSemana = new Date(primerDiaSemana);
-    ultimoDiaSemana.setDate(primerDiaSemana.getDate() + 6);
-
-    this.semanaActual.inicio = primerDiaSemana;
-    this.semanaActual.fin = ultimoDiaSemana;
-    this.diasDeLaSemana = [];
-    for (let i = 0; i < 7; i++) {
-      this.diasDeLaSemana.push(this.sumarDias(this.semanaActual.inicio, i));
-    }
+    this.diasDeLaSemana = this.citasService.calcularSemana(this.semanaActual.inicio, n);
+    this.semanaActual.inicio = this.diasDeLaSemana[0];
+    this.semanaActual.fin = this.diasDeLaSemana[6];
   }
 
   cambiarSemana(n: number) {
@@ -57,7 +42,7 @@ export class CitasComponent implements OnInit {
     return new Date(2025, mes - 1).toLocaleString('default', { month: 'long' });
   }
 
-  constructor(private reservasService: ReservasService) {}
+  constructor(private reservasService: ReservasService, private citasService: CitasService) {}
 
   ngOnInit(): void {
     this.calcularSemana();
