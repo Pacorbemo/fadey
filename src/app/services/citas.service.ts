@@ -6,8 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CitasService {
-  apiUrl = 'http://localhost:5000/';
-
   constructor(private http: HttpClient) {}
 
   primerDiaSemana(diaInicio: Date): Date {
@@ -80,7 +78,7 @@ export class CitasService {
     const token = localStorage.getItem('token');
     const body = { idBarbero, fechas };
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.apiUrl}crear-citas`, body, { headers });
+    return this.http.post(`/crear-citas`, body, { headers });
   }
 
   async getCitas(idBarbero: number, inicio: Date): Promise<{ dia: Date; hora: string }[]> {
@@ -96,7 +94,7 @@ export class CitasService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     let fechas : { dia: Date; hora: string }[] = [];
     return new Promise<{ dia: Date; hora: string }[]>((resolve, reject) => {
-      this.http.post<{todos: Date[]; reservados: Date[]}>(`${this.apiUrl}citas`, body, { headers }).subscribe(
+      this.http.post<{todos: Date[]; reservados: Date[]}>(`/citas`, body, { headers }).subscribe(
       (response) => {
         fechas = response.todos.map((fecha: Date) => {
         const parsedFecha = new Date(fecha);
@@ -126,7 +124,7 @@ export class CitasService {
     };
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return new Promise<{ totales: { [dia: number]: string[] }; reservadas: { [dia: number]: string[] } }>((resolve, reject) => {
-      this.http.post<{todos: Date[]; reservados: Date[]}>(`${this.apiUrl}citas`, body, { headers }).subscribe(
+      this.http.post<{todos: Date[]; reservados: Date[]}>(`/citas`, body, { headers }).subscribe(
         (response) => {
         let totales : { [dia: number]: string[] } = [];
         let reservadas : { [dia: number]: string[] } = [];
@@ -157,6 +155,6 @@ export class CitasService {
 
   getCitasUsuario(token : string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get(`${this.apiUrl}citas-usuario`, { headers });
+    return this.http.get(`/citas-usuario`, { headers });
   }
 }

@@ -7,8 +7,6 @@ import { config, Observable } from 'rxjs';
 })
 
 export class ReservasService {
-  private apiUrl = 'http://localhost:5000/confirmar-reserva';
-
   constructor(private http: HttpClient) {}
 
   confirmarReserva(idBarbero:number, dia: Date): Observable<any> {
@@ -17,6 +15,6 @@ export class ReservasService {
     const body = { idBarbero, dia };
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    return this.http.post(this.apiUrl, body, { headers });
+    return this.http.post('/confirmar-reserva', body, { headers });
   }
 }
