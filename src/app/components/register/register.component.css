@@ -43,3 +43,8 @@
 .btn-registrar:hover {
   background-color: #45a049;
 }
+
+.btn-registrar:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

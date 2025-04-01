@@ -14,7 +14,6 @@ export class ReservasService {
   confirmarReserva(idBarbero:number, dia: Date): Observable<any> {
     const token = localStorage.getItem('token');
 
-    // console.log(dia);
     const body = { idBarbero, dia };
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 

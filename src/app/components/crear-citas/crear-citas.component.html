@@ -1,12 +1,17 @@
+<h2>{{diasDeLaSemana[6] | dateMesString}}</h2>
+<div class="botones-cambio-mes">
+	<button (click)="cambiarSemana(-1)">-</button>
+	<button (click)="cambiarSemana(1)">+</button>
+</div>	
+<div class="botones" [style.visibility]="franjasSeleccionadas.length > 0 ? 'visible' : 'hidden'">
+	<button (click)="confirmarSeleccion()">Confirmar</button>
+	<button (click)="cancelarSeleccion()">Cancelar</button>
+</div>
 
-@if (franjasHorarias) {
-<button (click)="confirmarSeleccion()">Confirmar</button>
-<button (click)="cancelarSeleccion()">Cancelar</button>
-}
 <table>
 	<thead>
 	  <tr>
-		@for (dia of diasDeLaSemana; track dia) {
+		@for (dia of diasDeLaSemana; track idx; let idx = $index) {
 		  <th>{{ dia.getDate() }}</th>
 		}
 	  </tr>
@@ -14,7 +19,7 @@
 	<tbody>
 	  @for (hora of franjasHorarias; track hora) {
 		<tr>
-		  @for (dia of diasDeLaSemana; track dia) {
+		  @for (dia of diasDeLaSemana; let idx = $index; track idx) {
 			<td>
 			  <button
 				[class.selected]="horaEnFranja(dia, hora)"

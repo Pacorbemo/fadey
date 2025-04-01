@@ -5,10 +5,12 @@ import { LoginComponent } from './components/login/login.component';
 import { CrearCitasComponent } from './components/crear-citas/crear-citas.component';
 
 export const routes: Routes = [
-	{ path: 'citas', component: CitasComponent },
+	// { path: 'citas', component: CitasComponent },
+	{ path: ':username/citas', component: CitasComponent },
 	{ path: 'crear-citas', component: CrearCitasComponent},
 	{ path: 'registro', component: RegisterComponent },
 	{ path: 'inicio-sesion', component: LoginComponent },
-	{ path: '', redirectTo: '/citas', pathMatch: 'full' },
-	{ path: '**', redirectTo: '/citas' } 
+
+	{ path: '', redirectTo: '/crear-citas', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/crear-citas' } 
 ];

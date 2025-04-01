@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
+import { DateMesStringPipe } from '../../pipes/date-mes-string.pipe';
 
 @Component({
   selector: 'app-crear-citas',
   templateUrl: './crear-citas.component.html',
   styleUrls: ['./crear-citas.component.css'],
+  standalone: true,
+  imports: [DateMesStringPipe]
 })
 export class CrearCitasComponent implements OnInit {
   diasDeLaSemana: Date[] = [];
@@ -21,15 +24,20 @@ export class CrearCitasComponent implements OnInit {
   constructor(private citasService: CitasService) {}
 
   async ngOnInit(): Promise<void> {
-    this.recargarFechasSubidas();    
     this.diasDeLaSemana = this.citasService.calcularSemana(new Date(), 0);
+    this.recargarFechasSubidas();    
     this.franjasHorarias = this.citasService.generarFranjasHorarias();
   }
 
   recargarFechasSubidas(): void {
-    this.citasService.getCitas(this.idBarbero, new Date()).then((fechas) => {
+    this.citasService.getCitas(this.idBarbero, this.diasDeLaSemana[0]).then((fechas) => {
       this.fechasSubidas = fechas;
     });
+  }
+
+  async cambiarSemana(n: number) {
+    this.diasDeLaSemana = this.citasService.calcularSemana(this.diasDeLaSemana[0], n);
+    this.recargarFechasSubidas();
   }
 
   horaEnFranja(dia: Date, hora: string, franja : { dia: Date; hora: string }[] = this.franjasSeleccionadas): boolean {
@@ -58,7 +66,6 @@ export class CrearCitasComponent implements OnInit {
 
   terminarSeleccion(): void {
     this.seleccionando = false;
-    // console.log('Franjas seleccionadas:', this.franjasSeleccionadas);
   }
 
   alternarSeleccion(dia: Date, hora: string): void {

@@ -15,6 +15,13 @@ export class CitasService {
     return diaInicio;
   }
 
+  diaHora(dia: Date, hora: string): Date {
+    const [horas, minutos] = hora.split(':').map(Number);
+    const fecha = new Date(dia);
+    fecha.setUTCHours(horas, minutos, 0, 0);
+    return fecha;
+  }
+
   calcularSemana(diaInicio: Date, n: number = 0): Date[] {
     const diasSemana = [];
     const primerDiaSemana = this.primerDiaSemana(this.sumarDias(diaInicio, n * 7));
@@ -81,7 +88,6 @@ export class CitasService {
     inicio = this.primerDiaSemana(inicio);
     inicio.setUTCHours(0, 0, 0, 0);
     const fin = this.sumarDias(inicio, 7);
-    console.log(inicio, fin)
     const body = {
       idBarbero,
       inicio,
@@ -92,7 +98,6 @@ export class CitasService {
     return new Promise<{ dia: Date; hora: string }[]>((resolve, reject) => {
       this.http.post<{todos: Date[]; reservados: Date[]}>(`${this.apiUrl}citas`, body, { headers }).subscribe(
       (response) => {
-        console.log(response)
         fechas = response.todos.map((fecha: Date) => {
         const parsedFecha = new Date(fecha);
         return {
@@ -112,6 +117,7 @@ export class CitasService {
   async getCitas2(idBarbero: number, inicio: Date): Promise<{ totales: { [dia: number]: string[] }; reservadas: { [dia: number]: string[] } }> {
     const token = localStorage.getItem('token');
     inicio = this.primerDiaSemana(inicio);
+    inicio.setUTCHours(0, 0, 0, 0);
     const fin = this.sumarDias(inicio, 7);
     const body = {
       idBarbero,

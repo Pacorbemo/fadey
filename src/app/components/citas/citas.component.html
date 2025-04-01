@@ -1,4 +1,6 @@
-<h2>{{ semanaActual.fin.toLocaleString('default', { month: 'long' }).toUpperCase()}}</h2>
+@if(!cargando && usernameValido){
+<h2>{{ semanaActual.fin | dateMesString}} {{semanaActual.fin.getFullYear()}}</h2>
+<h2>Reservando cita a: {{usernameBarbero}}</h2>
 <div class="botones-cambio-mes">
 	<button (click)="cambiarSemana(-1)">-</button>
 	<button (click)="cambiarSemana(1)">+</button>
@@ -12,13 +14,13 @@
     </tr>
   </thead>
   <tbody>
-	@for (hora of franjasHorarias; track hora) {
+	@for (hora of franjasHorarias; let idx = $index; track idx) {
 	  <tr>
 		@for (dia of diasDeLaSemana; let idx = $index; track idx) {
 		  <td>
 			<button 
 			(click)="mostrarReserva(dia, hora)" 
-			[disabled]="!esFranjaDisponible(dia.getDate(), hora)"
+			[disabled]="!esFranjaDisponible(dia, hora) || esFranjaReservada(dia.getDate(),hora)"
 			[class.selected]="esFranjaReservada(dia.getDate(),hora)"
 			>
 			  {{ hora }}
@@ -30,12 +32,23 @@
   </tbody>
 </table>
 
-@if (mostrarDialogo) {
+	@if (mostrarDialogo) {
+		<div class="overlay">
+		<div class="reserva-dialogo">
+			<p>Reservar el {{ diaSeleccionado.getDate() }} a las {{ diaSeleccionado.getHours() }}:{{ diaSeleccionado.getMinutes() === 0 ? '00' : diaSeleccionado.getMinutes() }}</p>
+			<button (click)="confirmarReserva()">Confirmar</button>
+			<button (click)="cancelarReserva()">Cancelar</button>
+		</div>
+		</div>
+	}
+}
+
+@else if(!cargando && !usernameValido){
 	<div class="overlay">
-	  <div class="reserva-dialogo">
-		<p>Reservar el {{ diaSeleccionado.getDate() }} a las {{ diaSeleccionado.getHours() }}:{{ diaSeleccionado.getMinutes() === 0 ? '00' : diaSeleccionado.getMinutes() }}</p>
-		<button (click)="confirmarReserva()">Confirmar</button>
-		<button (click)="cancelarReserva()">Cancelar</button>
-	  </div>
+		<div class="reserva-dialogo">
+			<p>El usuario "{{usernameBarbero}}" no es válido</p>
+			<a routerLink="/">Volver a Inicio</a>
+		</div>
 	</div>
+
 }
