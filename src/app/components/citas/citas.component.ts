@@ -37,8 +37,9 @@ export class CitasComponent implements OnInit {
     this.semanaActual.fin = this.diasDeLaSemana[6];
   }
 
-  cambiarSemana(n: number) {
+  async cambiarSemana(n: number) {
     this.calcularSemana(n);
+    await this.recargarCitas();
   }
 
   getStringMes(mes: number): string {
@@ -49,10 +50,14 @@ export class CitasComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.calcularSemana();
+    await this.recargarCitas();
+    this.generarFranjasHorarias();  
+  }
+
+  async recargarCitas(){
     const response = await this.citasService.getCitas2(this.idBarbero, this.semanaActual.inicio);
     this.horariosReservados = response.reservadas;
     this.horariosDisponibles = response.totales;
-    this.generarFranjasHorarias();  
   }
 
   generarFranjasHorarias(): void {

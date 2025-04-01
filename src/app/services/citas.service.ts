@@ -79,7 +79,9 @@ export class CitasService {
   async getCitas(idBarbero: number, inicio: Date): Promise<{ dia: Date; hora: string }[]> {
     const token = localStorage.getItem('token');
     inicio = this.primerDiaSemana(inicio);
-    const fin = this.sumarDias(inicio, 6);
+    inicio.setUTCHours(0, 0, 0, 0);
+    const fin = this.sumarDias(inicio, 7);
+    console.log(inicio, fin)
     const body = {
       idBarbero,
       inicio,
@@ -88,9 +90,10 @@ export class CitasService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     let fechas : { dia: Date; hora: string }[] = [];
     return new Promise<{ dia: Date; hora: string }[]>((resolve, reject) => {
-      this.http.post<Date[]>(`${this.apiUrl}citas`, body, { headers }).subscribe(
+      this.http.post<{todos: Date[]; reservados: Date[]}>(`${this.apiUrl}citas`, body, { headers }).subscribe(
       (response) => {
-        fechas = response.map((fecha: Date) => {
+        console.log(response)
+        fechas = response.todos.map((fecha: Date) => {
         const parsedFecha = new Date(fecha);
         return {
           dia: parsedFecha,
@@ -109,7 +112,7 @@ export class CitasService {
   async getCitas2(idBarbero: number, inicio: Date): Promise<{ totales: { [dia: number]: string[] }; reservadas: { [dia: number]: string[] } }> {
     const token = localStorage.getItem('token');
     inicio = this.primerDiaSemana(inicio);
-    const fin = this.sumarDias(inicio, 6);
+    const fin = this.sumarDias(inicio, 7);
     const body = {
       idBarbero,
       inicio,
