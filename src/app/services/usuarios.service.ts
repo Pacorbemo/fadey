@@ -33,7 +33,7 @@ export class UsuariosService {
   //   return this.http.get<{username: string; nombre: string}>(`${this.apiUrl}/usuario/${id}`);
   // }
 
-  verificarUsername(username: string): Observable<{ exists: boolean }> {
+  verificarUsername(username: string): Observable<{ exists: boolean; idBarbero?: number }> {
     return this.http.get<{ exists: boolean }>(`${this.apiUrl}/usuario/${username}`);
   }
 

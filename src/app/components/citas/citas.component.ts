@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵsetClassDebugInfo } from '@angular/core';
 import { ReservasService } from '../../services/reservas.service';
 import { CitasService } from '../../services/citas.service';
 import { DateMesStringPipe } from '../../pipes/date-mes-string.pipe';
@@ -18,7 +18,7 @@ export class CitasComponent implements OnInit {
   diasDeLaSemana: Date[] = [];
   franjasHorarias: string[] = [];
   idUsuario: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
-  idBarbero: number = 11;
+  idBarbero: number = 0;
   usernameBarbero: string = '';
   // usernameBarbero$! :  Observable<{username: string, nombre: string}>;
   // horariosDisponibles: { [dia: number]: string[] } = {
@@ -40,7 +40,15 @@ export class CitasComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.usernameBarbero = params['username'];
     })
-    this.usuariosService.verificarUsername(this.usernameBarbero).subscribe((response) => this.usernameValido = response.exists);
+    await new Promise<void>((resolve) => {
+      this.usuariosService.verificarUsername(this.usernameBarbero).subscribe((response) => {
+      this.usernameValido = response.exists;
+      if (response.exists && response.idBarbero) {
+        this.idBarbero = response.idBarbero;
+      }
+      resolve();
+      });
+    });
     this.calcularSemana();
     await this.recargarCitas();
     this.generarFranjasHorarias();  

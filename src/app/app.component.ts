@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { DatosService } from './services/datos.service';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,17 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Fadey';
+
+  constructor(
+    public datosService: DatosService,
+  ) {}
+
+  ngOnInit(): void {
+    const token = localStorage.getItem('token') || '';
+    const username = JSON.parse(localStorage.getItem('user') || '{}').username;
+    this.datosService.tokenUsuario = token;
+    this.datosService.username = username;
+  }
 }

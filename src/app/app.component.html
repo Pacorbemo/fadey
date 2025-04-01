@@ -1,10 +1,12 @@
 <h1>{{title}}</h1>
+<h4>Has iniciado sesión como: {{datosService.username}}</h4>
 <div class="container">
   <nav>
       <a routerLink="/inicio-sesion">Iniciar Sesión</a>
       <a routerLink="/registro">Registro</a>
-      <a routerLink="/pitos/citas">Citas</a>
+      <a routerLink="/{{datosService.username}}/citas">Citas</a>
       <a routerLink="/crear-citas">Crear</a>
+      <a routerLink="/mis-citas">Mis Citas</a>
   </nav>
   <router-outlet></router-outlet>
 

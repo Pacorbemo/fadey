@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../services/usuarios.service';
+import { DatosService } from '../../services/datos.service';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +29,10 @@ export class RegisterComponent {
 
   esCliente:boolean = !this.barbero;
 
-  constructor(private usuariosService: UsuariosService) {}
+  constructor(
+    private usuariosService: UsuariosService,
+    private datosService: DatosService
+  ) {}
 
   registrarUsuario(): void {
     if (this.password !== this.confirmPassword || !this.usernameValido || !this.emailValido) {
@@ -48,7 +52,9 @@ export class RegisterComponent {
     this.usuariosService.registrar(usuario).subscribe(
       (response) => {
         localStorage.setItem('token', response.token);
+        this.datosService.tokenUsuario = response.token;
         localStorage.setItem('user', JSON.stringify(response.user));
+        this.datosService.username = response.user.username;
         alert('Registro exitoso');
       },
       (error) => {

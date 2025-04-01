@@ -1,0 +1,19 @@
+<div class="tabla-container">
+  <table>
+    <thead>
+		<tr>
+		  <th>Fecha</th>
+        <th>Nombre</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody>
+		@for(cita of citas; track cita.id){
+			<tr>
+				<td>{{ cita.fecha_hora | date:'dd/MM hh:mm' }}</td>
+				<td>{{ cita.barbero_nombre }}</td>
+				<td>{{ '@' + cita.barbero_username }}</td>
+		}
+    </tbody>
+  </table>
+</div>

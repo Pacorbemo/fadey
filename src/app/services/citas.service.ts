@@ -154,4 +154,9 @@ export class CitasService {
       );
     });
   }
+
+  getCitasUsuario(token : string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}citas-usuario`, { headers });
+  }
 }
