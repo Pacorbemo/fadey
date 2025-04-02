@@ -21,6 +21,11 @@ button.selected {
   color: black;
 }
 
+button.reservada{
+  background-color: #e4ff49;
+  color: black;
+}
+
 button:hover {
   background-color: #808080;
 }

@@ -25,6 +25,7 @@ export class CitasComponent implements OnInit {
   //   1: ['08:00', '08:30', '09:00', '10:00'],
   horariosDisponibles: {[dia: number]: string[]} = []
   horariosReservados: {[dia: number]: string[]} = []
+  horariosReservadosPorUsuario: {[dia: number]: string[]} = []
   mostrarDialogo: boolean = false;
   diaSeleccionado: Date = new Date();
   
@@ -59,6 +60,10 @@ export class CitasComponent implements OnInit {
     inicio: new Date(),
     fin: new Date()
   };
+
+  desactivarAtras(): boolean {
+    return this.semanaActual.inicio.getTime() <= this.citasService.dateAUTC(new Date()).getTime();
+  }
   
   calcularSemana(n: number = 0): void {
     this.diasDeLaSemana = this.citasService.calcularSemana(this.semanaActual.inicio, n);
@@ -76,11 +81,11 @@ export class CitasComponent implements OnInit {
     return new Date(2025, mes - 1).toLocaleString('default', { month: 'long' });
   }
 
-
   async recargarCitas(){
     const response = await this.citasService.getCitas2(this.idBarbero, this.semanaActual.inicio);
     this.horariosReservados = response.reservadas;
     this.horariosDisponibles = response.totales;
+    this.horariosReservadosPorUsuario = response.reservadasUsuario;
   }
 
   generarFranjasHorarias(): void {
@@ -115,8 +120,10 @@ export class CitasComponent implements OnInit {
     return this.horariosDisponibles[dia.getDate()]?.includes(hora) || false;
   }
 
-  esFranjaReservada(dia: number, hora: string): boolean {
-    return this.horariosReservados[dia]?.includes(hora) || false;
+  esFranjaReservada(dia: number, hora: string): number {
+    if (this.horariosReservadosPorUsuario[dia]?.includes(hora))  return 2;
+    if (this.horariosReservados[dia]?.includes(hora)) return 1;
+    return 0;
   }
 
   mostrarReserva(dia: Date, hora: string): void {

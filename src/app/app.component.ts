@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { DatosService } from './services/datos.service';
 
 @Component({
@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
 
   constructor(
     public datosService: DatosService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -22,4 +23,11 @@ export class AppComponent implements OnInit {
     this.datosService.tokenUsuario = token;
     this.datosService.username = username;
   }
+
+  navegar(ruta: string): void {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([ruta]);
+    });
+  }
+
 }

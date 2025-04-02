@@ -1,0 +1,89 @@
+*{
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+}
+
+nav{
+	display: flex;
+	flex-direction: column;
+	margin-right: 2em;
+}
+
+nav a{
+	text-decoration: none;
+	color: white;
+	padding: 10px;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
+
+nav a:hover{
+	background-color: rgb(34, 34, 34);
+}
+
+.container{
+	display: flex;
+	width: 100%;
+}
+
+.app{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	
+}
+
+.form-control {
+	position: relative;
+}
+
+.input {
+	color: #fff;
+	font-size: 0.9rem;
+	background-color: transparent;
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 0.6em;
+	padding-inline: 0.5em;
+	padding-block: 0.7em;
+	border: none;
+	margin-left: .15vw;
+}
+
+.input:hover {
+	box-shadow: 0 0 0 .15vw rgba(135, 207, 235, 0.186);
+}
+
+.input:hover + .input:focus{
+	box-shadow: 0 0 0 0;
+}
+
+.input:focus {
+	outline: none;
+	box-shadow: 0 0 0 0;
+}
+
+.input-border {
+	position: absolute;
+	width: 0%;
+	height: 2px;
+	bottom: 0;
+	left: 0;
+	transition: width 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  }
+
+  .input-border-alt {
+	margin: 0 0.3vw ;
+	height: 3px;
+	background: linear-gradient(90deg, #ff0000 0%, #ffffff 45%,#ffffff 55%, #2212ff 100%);
+	transition: width 0.4s cubic-bezier(0.42, 0, 0.58, 1.00);
+  }
+
+  .input-alt:focus + .input-border-alt {
+	width: 100%;
+  }
+
+  .input:focus + .input-border {
+	width: 100%;
+  }

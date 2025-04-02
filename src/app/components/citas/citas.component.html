@@ -2,7 +2,8 @@
 <h2>{{ semanaActual.fin | dateMesString}} {{semanaActual.fin.getFullYear()}}</h2>
 <h2>Reservando cita a: {{usernameBarbero}}</h2>
 <div class="botones-cambio-mes">
-	<button (click)="cambiarSemana(-1)">-</button>
+	<button (click)="cambiarSemana(-1)"
+		[disabled]="desactivarAtras()" >-</button>
 	<button (click)="cambiarSemana(1)">+</button>
 </div>
 <table>
@@ -21,7 +22,8 @@
 			<button 
 			(click)="mostrarReserva(dia, hora)" 
 			[disabled]="!esFranjaDisponible(dia, hora) || esFranjaReservada(dia.getDate(),hora)"
-			[class.selected]="esFranjaReservada(dia.getDate(),hora)"
+			[class.selected]="esFranjaReservada(dia.getDate(),hora) === 1"
+			[class.reservada]="esFranjaReservada(dia.getDate(),hora) === 2"
 			>
 			  {{ hora }}
 			</button>

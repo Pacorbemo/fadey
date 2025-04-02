@@ -32,19 +32,35 @@ app.post("/confirmar-reserva", autenticarToken, (req, res) => {
     return res.status(400).json({ error: "Información insuficiente" });
   }
 
-  console.log(dia); 
   const fechaHora = new Date(dia).toISOString().slice(0, 19).replace('T', ' ');
-  const idCliente = req.user.id; 
+  if (new Date(dia) < new Date()) {
+    return res.status(400).json({ error: "No se puede reservar una fecha en el pasado" });
+  }
+  const idCliente = req.user.id;
 
-  const query = 'INSERT INTO Citas (barbero_id, cliente_id, fecha_hora) VALUES (?, ?, ?)';
-  db.query(query, [idBarbero, idCliente, fechaHora], (err, result) => {
+  const checkQuery = 'SELECT * FROM Citas WHERE barbero_id = ? AND fecha_hora = ? AND cliente_id IS NULL';
+  const updateQuery = 'UPDATE Citas SET cliente_id = ?, fecha_reservada = ? WHERE barbero_id = ? AND fecha_hora = ? AND cliente_id IS NULL';
+
+  db.query(checkQuery, [idBarbero, fechaHora], (err, results) => {
     if (err) {
-      console.error('Error al confirmar reserva:', err);
-      return res.status(500).json({ error: 'Error al confirmar reserva' });
+      console.error('Error al comprobar la cita:', err);
+      return res.status(500).json({ error: 'Error al comprobar la cita' });
     }
 
-    res.status(200).json({ message: 'Reserva confirmada', dia
-     });
+    if (results.length === 0) {
+      return res.status(400).json({ error: 'La cita no está disponible' });
+    }
+
+    const fechaReserva = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    db.query(updateQuery, [idCliente, fechaReserva, idBarbero, fechaHora], (err, result) => {
+      if (err) {
+        console.error('Error al confirmar reserva:', err);
+        return res.status(500).json({ error: 'Error al confirmar reserva' });
+      }
+
+      res.status(200).json({ message: 'Reserva confirmada', dia });
+    });
   });
 });
 
@@ -187,32 +203,25 @@ app.post("/crear-citas", autenticarToken, async (req, res) => {
 });
 
 app.post("/citas", autenticarToken, async(req, res) => {
-  // const {inicio, fin, idBarbero} = req.body;
-  
-  // const query = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and fecha_hora BETWEEN ? AND ?;"
-  // db.query(query, [idBarbero, inicio, fin], (err, result) =>{
-  //   if(err){
-  //     return res.status(500).json({ error: 'Error al obtener las citas' });
-  //   }
-  //   response = result.map((cita) => {
-  //     return cita.fecha_hora;
-  //   });
-  //   res.status(200).json(response);
-  // })
-
+  const idUsuario = req.user.id;
   try{
     const {inicio, fin, idBarbero} = req.body;
-    const queryTodos = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and fecha_hora BETWEEN ? AND ?;"
-    const queryReservados = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and cliente_id is not NULL and fecha_hora BETWEEN ? AND ?;"
-    let todos = await db.promise().query(queryTodos, [idBarbero, inicio, fin])
-    todos = todos[0].map((cita) => {
+    const queryTotales = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and fecha_hora BETWEEN ? AND ?;"
+    const queryReservadas = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and cliente_id is not NULL and fecha_hora BETWEEN ? AND ?;"
+    const queryReservadasUsuario = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and cliente_id = ? and fecha_hora BETWEEN ? AND ?;";
+    let totales = await db.promise().query(queryTotales, [idBarbero, inicio, fin])
+    totales = totales[0].map((cita) => {
       return cita.fecha_hora;
     });
-    let reservados = await db.promise().query(queryReservados, [idBarbero, inicio, fin]);
-    reservados = reservados[0].map((cita) => {
+    let reservadas = await db.promise().query(queryReservadas, [idBarbero, inicio, fin]);
+    reservadas = reservadas[0].map((cita) => {
       return cita.fecha_hora;
     });
-    res.status(200).json({todos, reservados});
+    let reservadasUsuario = await db.promise().query(queryReservadasUsuario, [idBarbero, idUsuario, inicio, fin]);
+    reservadasUsuario = reservadasUsuario[0].map((cita) => {
+      return cita.fecha_hora;
+    });
+    res.status(200).json({totales, reservadas, reservadasUsuario});
   }
   catch(err){
     console.error("Error al procesar las citas:", err);
@@ -220,6 +229,98 @@ app.post("/citas", autenticarToken, async(req, res) => {
   }
 
 })
+
+// app.get("/usuario/:id", (req, res) => {
+//   const { id } = req.params;
+
+//   const query = "SELECT nombre, username FROM Usuarios WHERE id = ?";
+//   db.query(query, [id], (err, results) => {
+//     if (err) {
+//       console.error("Error al obtener usuario:", err);
+//       return res.status(500).json({ error: "Error al obtener usuario" });
+//     }
+
+//     if (results.length === 0) {
+//       return res.status(404).json({ error: "Usuario no encontrado" });
+//     }
+
+//     res.status(200).json(results[0]);
+//   });
+// });
+
+app.get("/usuario/:username", async (req, res) => {
+  const { username } = req.params;
+
+  const query = "SELECT * FROM Usuarios WHERE username = ?";
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error("Error al buscar el usuario:", err);
+      return res.status(500).json({ error: "Error al buscar el usuario" });
+    }
+
+    if (results.length > 0) {
+      res.status(200).json({ exists: true, idBarbero: results[0].id });
+    } else {
+      res.status(200).json({ exists: false });
+    }
+  });
+});
+
+app.get("/usuarios/email/:email", (req, res) => {
+  const { email } = req.params;
+
+  const query = "SELECT * FROM Usuarios WHERE email = ?";
+  db.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error al buscar el email:", err);
+      return res.status(500).json({ error: "Error al buscar el email" });
+    }
+
+    if (results.length > 0) {
+      res.status(200).json({ exists: true });
+    } else {
+      res.status(200).json({ exists: false });
+    }
+  });
+});
+
+app.get("/usuarios/telefono/:telefono", (req, res) => {
+  const { telefono } = req.params;
+
+  const query = "SELECT * FROM Usuarios WHERE telefono = ?";
+  db.query(query, [telefono], (err, results) => {
+    if (err) {
+      console.error("Error al buscar el teléfono:", err);
+      return res.status(500).json({ error: "Error al buscar el teléfono" });
+    }
+
+    if (results.length > 0) {
+      res.status(200).json({ exists: true });
+    } else {
+      res.status(200).json({ exists: false });
+    }
+  });
+});
+
+app.get("/citas-usuario", autenticarToken, (req, res) => {
+  const { id } = req.user;
+
+  const query = `
+    SELECT Citas.id, Citas.fecha_hora, Usuarios.nombre AS barbero_nombre, Usuarios.username AS barbero_username 
+    FROM Citas 
+    JOIN Usuarios ON Citas.barbero_id = Usuarios.id 
+    WHERE Citas.cliente_id = ?
+    ORDER BY Citas.fecha_hora ASC
+    `;
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error("Error al obtener citas del usuario:", err);
+      return res.status(500).json({ error: "Error al obtener citas del usuario" });
+    }
+
+    res.status(200).json(results);
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
