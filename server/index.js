@@ -185,7 +185,9 @@ app.post("/crear-citas", autenticarToken, async (req, res) => {
   try {
     for (const fecha of fechas) {
       const fechaHora = new Date(fecha).toISOString().slice(0, 19).replace('T', ' ');
-
+      if(new Date(fecha).getFullYear() < 2024){
+        continue;
+      }
       const [results] = await db.promise().query(checkQuery, [idBarbero, fechaHora]);
       if (results.length > 0) {
         await db.promise().query(deleteQuery, [idBarbero, fechaHora]);
