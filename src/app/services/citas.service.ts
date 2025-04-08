@@ -11,6 +11,7 @@ export class CitasService {
   constructor(private http: HttpClient) {}
 
   dateAUTC(date: Date): Date {
+    // console.log("dateAUTC", date);
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
   }
 

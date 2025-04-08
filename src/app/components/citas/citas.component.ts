@@ -38,9 +38,9 @@ export class CitasComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     // this.usernameBarbero$ = this.usuariosService.getUserById(this.idBarbero);
-    this.route.params.subscribe(params => {
-      this.usernameBarbero = params['username'];
-    })
+      this.route.params.subscribe(params => {
+        this.usernameBarbero = params['username'];
+      })
     await new Promise<void>((resolve) => {
       this.usuariosService.verificarUsername(this.usernameBarbero).subscribe((response) => {
       this.usernameValido = response.exists;
@@ -143,7 +143,6 @@ export class CitasComponent implements OnInit {
   confirmarReserva(): void {
     this.reservasService.confirmarReserva(this.idBarbero, this.diaSeleccionado).subscribe(
       (response) => {
-        console.log('Reserva confirmada:', response);
         this.mostrarDialogo = false;
         this.recargarCitas(); 
       },

@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../services/usuarios.service';
 import { DatosService } from '../../services/datos.service';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
 })
 export class LoginComponent {
   username: string = '';
@@ -16,7 +17,8 @@ export class LoginComponent {
 
   constructor(
     private usuariosService: UsuariosService,
-    private datosService: DatosService
+    private datosService: DatosService,
+    private router: Router
   ) {}
 
   iniciarSesion(): void {
@@ -31,7 +33,7 @@ export class LoginComponent {
         this.datosService.username = response.user.username;
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
-        alert('Inicio de sesión exitoso');
+        this.router.navigate(["/mis-citas"]);
       },
       (error) => {
         alert('Error al iniciar sesión');

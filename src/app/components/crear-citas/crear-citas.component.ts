@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
 import { DateMesStringPipe } from '../../pipes/date-mes-string.pipe';
+import { ArrayCitasInterface } from '../../interfaces/citas.interface';
 
 @Component({
   selector: 'app-crear-citas',
@@ -17,9 +18,9 @@ export class CrearCitasComponent implements OnInit {
   seleccionando: boolean = false;
   agregando: boolean = false;
 
-  fechasSubidas: { dia: Date; hora: string }[] = [];
-  franjasSeleccionadas: { dia: Date; hora: string }[] = [];
-  ultimasFranjasSeleccionadas: { dia: Date; hora: string }[] = [];
+  fechasSubidas: ArrayCitasInterface = [];
+  franjasSeleccionadas: ArrayCitasInterface = [];
+  ultimasFranjasSeleccionadas: ArrayCitasInterface = [];
 
   constructor(private citasService: CitasService) {}
 
@@ -30,8 +31,8 @@ export class CrearCitasComponent implements OnInit {
   }
 
   recargarFechasSubidas(): void {
-    this.citasService.getCitas(this.idBarbero, this.diasDeLaSemana[0]).then((fechas) => {
-      this.fechasSubidas = fechas;
+    this.citasService.getCitas2(this.idBarbero, this.diasDeLaSemana[0]).then((fechas) => {
+      this.fechasSubidas = fechas.totales;
     });
   }
 
@@ -40,11 +41,8 @@ export class CrearCitasComponent implements OnInit {
     this.recargarFechasSubidas();
   }
 
-  horaEnFranja(dia: Date, hora: string, franja : { dia: Date; hora: string }[] = this.franjasSeleccionadas): boolean {
-    const index = franja.findIndex(
-      (f) => f.dia.getDate() === dia.getDate() && f.hora === hora
-    );
-    return index !== -1;
+  horaEnFranja(dia: Date, hora: string, franja : ArrayCitasInterface = this.franjasSeleccionadas): boolean {
+    return franja[dia.getDate()]?.includes(hora)
   }
 
   empezarSeleccion(dia: Date, hora: string): void {
@@ -69,34 +67,34 @@ export class CrearCitasComponent implements OnInit {
   }
 
   alternarSeleccion(dia: Date, hora: string): void {
-    const index = this.franjasSeleccionadas.findIndex(
-      (f) => f.dia.getTime() === dia.getTime() && f.hora === hora
-    );
-    if (index === -1) {
-      this.franjasSeleccionadas.push({ dia, hora });
+    if (!this.horaEnFranja(dia, hora)) {
+      if (!this.franjasSeleccionadas[dia.getDate()]) {
+        this.franjasSeleccionadas[dia.getDate()] = [];
+      }
+      this.franjasSeleccionadas[dia.getDate()].push(hora);
     } else {
-      this.franjasSeleccionadas.splice(index, 1);
+      const index = this.franjasSeleccionadas[dia.getDate()].indexOf(hora);
+      this.franjasSeleccionadas[dia.getDate()].splice(index, 1);
     }
   }
 
   confirmarSeleccion(): void {
-    const franjasFormateadas : Date[] = this.franjasSeleccionadas.map((franja) => {
-      const [horas, minutos] = franja.hora.split(':').map(Number);
-      return new Date(
-        Date.UTC(                       // Cambiamos el UTC por el local para que no haya problemas al guardar en la base de datos 
-        franja.dia.getFullYear(),
-        franja.dia.getMonth(),
-        franja.dia.getDate(),
-        horas,
-        minutos,
-        )
-      );
-    });
+    let franjasFormateadas: Date[] = [];
+    for(let franja in this.franjasSeleccionadas) {
+      for(let hora of this.franjasSeleccionadas[franja]){
+        const dia : number = this.diasDeLaSemana.findIndex((dia) => dia.getDate() === parseInt(franja))
+        franjasFormateadas.push(
+          this.citasService.diaHora(this.diasDeLaSemana[dia], hora)
+        );
+      }
+    }
     this.citasService.subirCitas(this.idBarbero, franjasFormateadas).subscribe(
-      (response) => {
-        // console.log('Citas confirmadas:', response); 
+      () => {
         this.franjasSeleccionadas = [];
         this.recargarFechasSubidas();
+      },
+      () => {
+        alert('No se han podido subir las citas');
       }
     );
   }

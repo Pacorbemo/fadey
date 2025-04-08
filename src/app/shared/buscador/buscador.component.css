@@ -1,0 +1,60 @@
+.form-control {
+	position: relative;
+  }
+  
+  .input {
+	color: #fff;
+	font-size: 0.9rem;
+	background-color: transparent;
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 0.6em;
+	padding-inline: 0.5em;
+	padding-block: 0.7em;
+	border: none;
+	margin-left: 0.15vw;
+  }
+  
+  .input:hover {
+	box-shadow: 0 0 0 0.15vw rgba(135, 207, 235, 0.186);
+  }
+  
+  .input:hover + .input:focus {
+	box-shadow: 0 0 0 0;
+  }
+  
+  .input:focus {
+	outline: none;
+	box-shadow: 0 0 0 0;
+  }
+  
+  .input-border {
+	position: absolute;
+	width: 0%;
+	height: 2px;
+	bottom: 0;
+	left: 0;
+	transition: width 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  }
+  
+  .input-border-alt {
+	margin: 0 0.3vw;
+	height: 3px;
+	background: linear-gradient(
+	  90deg,
+	  #ff0000 0%,
+	  #ffffff 45%,
+	  #ffffff 55%,
+	  #2212ff 100%
+	);
+	transition: width 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+  }
+  
+  .input-alt:focus + .input-border-alt {
+	width: 100%;
+  }
+  
+  .input:focus + .input-border {
+	width: 100%;
+  }
+  

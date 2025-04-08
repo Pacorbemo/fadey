@@ -4,6 +4,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { CrearCitasComponent } from './components/crear-citas/crear-citas.component';
 import { MisCitasComponent } from './components/mis-citas/mis-citas.component';
+import { authGuard } from './guards/auth.guard';
+import { PruebaComponent } from './components/prueba/prueba.component';
 
 export const routes: Routes = [
 	// { path: 'citas', component: CitasComponent },
@@ -11,8 +13,9 @@ export const routes: Routes = [
 	{ path: 'crear-citas', component: CrearCitasComponent},
 	{ path: 'registro', component: RegisterComponent },
 	{ path: 'inicio-sesion', component: LoginComponent },
-	{ path: 'mis-citas', component: MisCitasComponent },
+	{ path: 'mis-citas', component: MisCitasComponent, canActivate: [authGuard], canMatch: [authGuard] },
+	{ path: 'prueba', component: PruebaComponent, canActivate: [authGuard], canMatch: [authGuard] },
 
-	{ path: '', redirectTo: '/crear-citas', pathMatch: 'full' },
-	{ path: '**', redirectTo: '/crear-citas' } 
+	{ path: '', redirectTo: '/mis-citas', pathMatch: 'full' },
+	{ path: '**', redirectTo: '/mis-citas' } 
 ];

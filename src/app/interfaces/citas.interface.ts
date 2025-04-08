@@ -9,3 +9,5 @@ export interface GetCitasInterface {
 	reservadas: Date[];
 	reservadasUsuario: Date[];
 }
+
+export interface ArrayCitasInterface { [dia: number]: string[] }

@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../services/usuarios.service';
 import { DatosService } from '../../services/datos.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ FormsModule ],
+  imports: [ FormsModule, RouterLink ],
 })
 export class RegisterComponent {
   username: string = '';
