@@ -4,6 +4,7 @@ import { DatosService } from './services/datos.service';
 import { BuscadorComponent } from "./shared/buscador/buscador.component";
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-root',
   standalone: true,

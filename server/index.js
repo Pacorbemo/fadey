@@ -4,11 +4,15 @@ const cors = require("cors");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const http = require('http');
+const socketHandler = require('./socket');
+
 
 const autenticarToken = require('./autenticarToken');
 const {actualizarEstadoSolicitud, eliminarRelacion} = require('./funciones/relaciones');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = 5000;
 
 app.use(cors());
@@ -28,6 +32,8 @@ db.connect((err) => {
   }
   console.log("Conexión exitosa a la base de datos MySQL");
 });
+
+socketHandler(server, db); // Pasar el servidor HTTP y la conexión a la base de datos
 
 app.get("/comprobar-relacion", autenticarToken, (req, res) => {
   const idBarbero = req.query.idBarbero;
@@ -453,6 +459,27 @@ app.get("/citas-usuario", autenticarToken, (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.get('/mensajes', autenticarToken, (req, res) => {
+  const { emisor_id, receptor_id } = req.query;
+
+  const query = `
+    SELECT * FROM Mensajes
+    WHERE (emisor_id = ? AND receptor_id = ?)
+       OR (emisor_id = ? AND receptor_id = ?)
+    ORDER BY fecha_envio ASC
+  `;
+  db.query(query, [emisor_id, receptor_id, receptor_id, emisor_id], (err, results) => {
+    if (err) {
+      console.error('Error al obtener mensajes:', err);
+      return res.status(500).json({ error: 'Error al obtener mensajes' });
+    }
+    res.status(200).json(results);
+  });
+});
+
+// app.listen(PORT, () => {
+//   console.log(`Servidor corriendo en http://localhost:${PORT}`);
+// });
+server.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

@@ -7,6 +7,7 @@ import { MisCitasComponent } from './components/mis-citas/mis-citas.component';
 import { authGuard } from './guards/auth.guard';
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
 import { RelacionesComponent } from './components/relaciones/relaciones.component';
+import { MensajesComponent } from './components/mensajes/mensajes.component';
 
 export const routes: Routes = [
 	// { path: 'citas', component: CitasComponent },
@@ -17,6 +18,7 @@ export const routes: Routes = [
 	{ path: 'mis-citas', component: MisCitasComponent, canActivate: [authGuard], canMatch: [authGuard] },
 	{ path: 'solicitudes', component: SolicitudesComponent },
 	{ path: 'relaciones', component: RelacionesComponent},
+	{ path: 'mensajes', component: MensajesComponent},
 
 	{ path: '', redirectTo: '/mis-citas', pathMatch: 'full' },
 	{ path: '**', redirectTo: '/mis-citas' } 

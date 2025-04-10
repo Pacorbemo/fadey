@@ -1,0 +1,19 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.mensajes {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.mensajes .emisor {
+  text-align: right;
+}
+
+.input-container {
+  display: flex;
+  gap: 10px;
+}

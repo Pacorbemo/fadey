@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { RelacionesService } from '../../services/relaciones.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-relaciones',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './relaciones.component.html',
   styleUrl: './relaciones.component.css'
 })
