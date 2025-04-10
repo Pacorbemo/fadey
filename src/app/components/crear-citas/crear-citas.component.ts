@@ -25,13 +25,13 @@ export class CrearCitasComponent implements OnInit {
   constructor(private citasService: CitasService) {}
 
   async ngOnInit(): Promise<void> {
-    this.diasDeLaSemana = this.citasService.calcularSemana(new Date(), 0);
+    this.diasDeLaSemana = this.citasService.calcularSemana(new Date());
     this.recargarFechasSubidas();    
     this.franjasHorarias = this.citasService.generarFranjasHorarias();
   }
 
   recargarFechasSubidas(): void {
-    this.citasService.getCitas2(this.idBarbero, this.diasDeLaSemana[0]).then((fechas) => {
+    this.citasService.getCitas(this.idBarbero, this.diasDeLaSemana[0]).then((fechas) => {
       this.fechasSubidas = fechas.totales;
     });
   }
@@ -88,6 +88,7 @@ export class CrearCitasComponent implements OnInit {
         );
       }
     }
+    console.log(franjasFormateadas)
     this.citasService.subirCitas(this.idBarbero, franjasFormateadas).subscribe(
       () => {
         this.franjasSeleccionadas = [];

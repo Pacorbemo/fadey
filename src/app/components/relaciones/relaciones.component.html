@@ -1,0 +1,30 @@
+<h2>Tus relaciones</h2>
+
+@if (relaciones.length > 0) {
+<div class="solicitudes-container">
+	<table>
+		<thead>
+			<tr>
+				<th>Nombre</th>
+				<th>Usuario</th>
+				<!-- <th></th> -->
+			</tr>
+		</thead>
+		<tbody>
+			@for (relacion of relaciones; let idx = $index; track idx) {
+			<tr>
+				<td>{{ relacion.nombre }}</td>
+				<td>{{ relacion.username }}</td>
+				<td>
+					<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
+				</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
+}
+
+@else {
+	<p>Aún no tienes relaciones.</p>
+}

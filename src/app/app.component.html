@@ -2,22 +2,24 @@
   <div class="sombra-container">
     <h1>{{title}}</h1>
   </div>
-  @if(datosService.username){
+  @if(datosService.user.username){
   <div class="foto-perfil">
     <app-buscador></app-buscador>
-    <div class="username">{{datosService.username}}</div>
-    <span class="marco-perfil">{{datosService.username.charAt(0).toUpperCase()}}</span>
+    <div class="username">{{datosService.user.username}}</div>
+    <span class="marco-perfil">{{datosService.user.username.charAt(0).toUpperCase()}}</span>
   </div>
   }
 </header>
 <div class="container">
   @if(datosService.tokenUsuario){
   <nav>
-      <a routerLink="/inicio-sesion">Iniciar Sesión</a>
-      <a routerLink="/registro">Registro</a>
-      <a routerLink="/{{datosService.username}}/citas">Citas</a>
-      <a routerLink="/crear-citas">Crear citas</a>
-      <a routerLink="/mis-citas">Mis Citas</a>
+      <!-- <a routerLink="inicio-sesion">Iniciar Sesión</a>
+      <a routerLink="registro">Registro</a> -->
+      <a routerLink="{{datosService.user.username}}/citas">Citas</a>
+      <a routerLink="crear-citas" *ngIf="datosService.esBarbero()">Crear citas</a>
+      <a routerLink="mis-citas">Mis Citas</a>
+      <a routerLink="solicitudes" *ngIf="datosService.esBarbero()">Solicitudes</a>
+      <a routerLink="relaciones">Relaciones</a>
       <button (click)="logout()">Cerrar Sesión</button>
   </nav>
 }

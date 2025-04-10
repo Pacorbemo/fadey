@@ -5,6 +5,7 @@ import { DateMesStringPipe } from '../../pipes/date-mes-string.pipe';
 import { UsuariosService } from '../../services/usuarios.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RelacionesService } from '../../services/relaciones.service';
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.component.html',
@@ -15,12 +16,13 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 export class CitasComponent implements OnInit {
   cargando: boolean = true;
   usernameValido: boolean = false;
+  usuarioAutorizado: boolean = false;
+  relacion : string = '';
   diasDeLaSemana: Date[] = [];
   franjasHorarias: string[] = [];
   idUsuario: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
   idBarbero: number = 0;
   usernameBarbero: string = '';
-  // usernameBarbero$! :  Observable<{username: string, nombre: string}>;
   // horariosDisponibles: { [dia: number]: string[] } = {
   //   1: ['08:00', '08:30', '09:00', '10:00'],
   horariosDisponibles: {[dia: number]: string[]} = []
@@ -33,14 +35,14 @@ export class CitasComponent implements OnInit {
     private reservasService: ReservasService, 
     private citasService: CitasService,
     private usuariosService: UsuariosService,
+    public relacionesService: RelacionesService,
     private route: ActivatedRoute,
   ) {}
 
   async ngOnInit(): Promise<void> {
-    // this.usernameBarbero$ = this.usuariosService.getUserById(this.idBarbero);
-      this.route.params.subscribe(params => {
-        this.usernameBarbero = params['username'];
-      })
+    await this.route.params.subscribe(params => {
+      this.usernameBarbero = params['username'];
+    })
     await new Promise<void>((resolve) => {
       this.usuariosService.verificarUsername(this.usernameBarbero).subscribe((response) => {
       this.usernameValido = response.exists;
@@ -50,9 +52,18 @@ export class CitasComponent implements OnInit {
       resolve();
       });
     });
-    this.calcularSemana();
-    await this.recargarCitas();
-    this.generarFranjasHorarias();  
+    if (this.idBarbero == this.idUsuario) this.usuarioAutorizado = true;
+    else{
+      await this.relacionesService.comprobarRelacion(this.idBarbero).then((response) => {
+        this.usuarioAutorizado = response.relacion == 'aceptado';
+      });
+    }
+    if(this.usuarioAutorizado){
+      this.calcularSemana();
+      await this.recargarCitas();
+      this.generarFranjasHorarias();  
+    }
+    this.relacion = (await this.relacionesService.comprobarRelacion(this.idBarbero)).relacion,
     this.cargando = false;
   }
   
@@ -82,9 +93,10 @@ export class CitasComponent implements OnInit {
   }
 
   async recargarCitas(){
-    const response = await this.citasService.getCitas2(this.idBarbero, this.semanaActual.inicio);
+    const response = await this.citasService.getCitas(this.idBarbero, this.semanaActual.inicio);
     this.horariosReservados = response.reservadas;
-    this.horariosDisponibles = response.totales;
+    this.horariosDisponibles = this.citasService.purgarDiasPasados(response.totales);
+    console.log(this.citasService.purgarDiasPasados(this.horariosDisponibles));
     this.horariosReservadosPorUsuario = response.reservadasUsuario;
   }
 
@@ -116,7 +128,8 @@ export class CitasComponent implements OnInit {
   }
 
   esFranjaDisponible(dia: Date, hora: string): boolean {
-    if (this.citasService.diaHora(dia, hora).getTime() < new Date().getTime() - new Date().getTimezoneOffset() * 60000) return false;
+    // console.log(this.citasService.diaHora(dia, hora).getHours())
+    if (this.citasService.diaHora(dia, hora).getTime() < new Date().getTime()) return false;
     return this.horariosDisponibles[dia.getDate()]?.includes(hora) || false;
   }
 
@@ -127,16 +140,7 @@ export class CitasComponent implements OnInit {
   }
 
   mostrarReserva(dia: Date, hora: string): void {
-    const [horas, minutos] = hora.split(':').map(Number);
-    this.diaSeleccionado = new Date(
-      Date.UTC(                       // Cambiamos el UTC por el local para que no haya problemas al guardar en la base de datos 
-      dia.getFullYear(),
-      dia.getMonth(),
-      dia.getDate(),
-      horas,
-      minutos,
-      )
-    );
+    this.diaSeleccionado = this.citasService.diaHora(dia, hora);
     this.mostrarDialogo = true;
   }
 

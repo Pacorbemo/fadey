@@ -1,8 +1,9 @@
 <div class="tabla-container">
-  <table>
+  <h1>Citas</h1>
+  <!-- <table>
     <thead>
 		<tr>
-		  <th>Fecha</th>
+		    <th>Fecha</th>
         <th>Nombre</th>
         <th>Username</th>
       </tr>
@@ -15,5 +16,20 @@
 				<td>{{ '@' + cita.barbero_username }}</td>
 		}
     </tbody>
-  </table>
+  </table> -->
+
+  <ul>
+    <li class="header">
+      <div class="col col-1">Fecha</div>
+      <div class="col col-2">Nombre</div>
+      <div class="col col-3">Username</div>
+    </li>
+    @for(cita of citas; track cita.id){
+      <li class="row">
+        <div class="col col-1">{{ cita.fecha_hora | date:'dd/MM hh:mm' }}</div>
+        <div class="col col-2">{{ cita.barbero_nombre }}</div>
+        <div class="col col-3">{{ '@' + cita.barbero_username }}</div>
+      </li>
+    }
+  </ul>
 </div>

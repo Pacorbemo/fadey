@@ -11,28 +11,31 @@ export class CitasService {
   constructor(private http: HttpClient) {}
 
   dateAUTC(date: Date): Date {
-    // console.log("dateAUTC", date);
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
   }
 
+  // Si le pasamos cualquier día de la semana, devuelve el lunes de esa semana
   primerDiaSemana(diaInicio: Date): Date {
-    diaInicio.setDate(diaInicio.getDate() - diaInicio.getDay() + 1);
-    return diaInicio;
+    const copiaDiaInicio = new Date(diaInicio); // Crea una copia para evitar mutaciones
+    copiaDiaInicio.setDate(copiaDiaInicio.getDate() - copiaDiaInicio.getDay() + 1);
+    return copiaDiaInicio;
   }
 
+  // Transformar Date con la hora en 00:00 con la hora correspondiente
   diaHora(dia: Date, hora: string): Date {
     const [horas, minutos] = hora.split(':').map(Number);
     const fecha = new Date(dia);
-    fecha.setUTCHours(horas, minutos, 0, 0);
+    fecha.setHours(horas, minutos, 0, 0);
     return fecha;
   }
 
+  // Array con los 7 días de la semana, sumando o restando tantas semanas como "n"
   calcularSemana(diaInicio: Date, n: number = 0): Date[] {
     const diasSemana = [];
+    diaInicio = this.diaHora(diaInicio, '00:00');
     const primerDiaSemana = this.primerDiaSemana(
       this.sumarDias(diaInicio, n * 7)
     );
-
     for (let i = 0; i < 7; i++) {
       diasSemana.push(this.sumarDias(primerDiaSemana, i));
     }
@@ -45,6 +48,8 @@ export class CitasService {
     return nuevaFecha;
   }
 
+  // Array con TODOS los tramos horarios entre la hora más temprana y la más tardía
+  // Si no se le pasa un array de horas, devuelve de 00:00 a 23:30
   generarFranjasHorarias(horariosDisponibles?: string[]): string[] {
     let horaInicio: number;
     let horaFin: number;
@@ -90,51 +95,8 @@ export class CitasService {
     return this.http.post(`/crear-citas`, body, { headers });
   }
 
+  // Obtener las citas de un BARBERO
   async getCitas(
-    idBarbero: number,
-    inicio: Date
-  ): Promise<{ dia: Date; hora: string }[]> {
-    const token = localStorage.getItem('token');
-    inicio = this.primerDiaSemana(inicio);
-    inicio.setUTCHours(0, 0, 0, 0);
-    const fin = this.sumarDias(inicio, 7);
-    const body = {
-      idBarbero,
-      inicio,
-      fin,
-    };
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    let fechas: { dia: Date; hora: string }[] = [];
-    return new Promise<{ dia: Date; hora: string }[]>((resolve, reject) => {
-      this.http
-        .post<{ todos: Date[]; reservados: Date[] }>(`/citas`, body, {
-          headers,
-        })
-        .subscribe(
-          (response) => {
-            fechas = response.todos.map((fecha: Date) => {
-              const parsedFecha = new Date(fecha);
-              return {
-                dia: parsedFecha,
-                hora: `${parsedFecha
-                  .getHours()
-                  .toString()
-                  .padStart(2, '0')}:${parsedFecha
-                  .getMinutes()
-                  .toString()
-                  .padStart(2, '0')}`,
-              };
-            });
-            resolve(fechas);
-          },
-          (error) => {
-            reject(error);
-          }
-        );
-    });
-  }
-
-  async getCitas2(
     idBarbero: number,
     inicio: Date
   ): Promise<GetCitasResponseInterface> {
@@ -170,6 +132,32 @@ export class CitasService {
     });
   }
 
+  // Obtener las citas de un USUARIO
+  getCitasUsuario(token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`/citas-usuario`, { headers });
+  }
+
+  purgarDiasPasados(horarios: { [dia: number]: string[] }): { [dia: number]: string[] } {
+    const hoy = new Date();
+    const horariosPurgados: { [dia: number]: string[] } = {};
+
+    Object.entries(horarios).forEach(([diaStr, horas]) => {
+      const dia = parseInt(diaStr);
+      if (dia === hoy.getDate()) {
+        horariosPurgados[dia] = horas.filter(hora => 
+          hora > `${hoy.getHours().toString().padStart(2, '0')}:${hoy.getMinutes().toString().padStart(2, '0')}`
+        );
+      } else if (dia > hoy.getDate()) {
+        horariosPurgados[dia] = horas;
+      }
+    });
+
+    return horariosPurgados;
+  }
+
+  // Transformar un array de Date a un objeto con claves los días y valores los horarios
+  // { 1: ['08:00', '08:30'], 2: ['09:00', '09:30'], ... }
   private procesarFechas(
     fechas: Date[],
   ): { [dia: number]: string[] } {
@@ -190,8 +178,4 @@ export class CitasService {
     return resultado;
   }
 
-  getCitasUsuario(token: string): Observable<any> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get(`/citas-usuario`, { headers });
-  }
 }

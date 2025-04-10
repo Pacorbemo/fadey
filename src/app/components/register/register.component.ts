@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../services/usuarios.service';
 import { DatosService } from '../../services/datos.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -32,7 +32,8 @@ export class RegisterComponent {
 
   constructor(
     private usuariosService: UsuariosService,
-    private datosService: DatosService
+    private datosService: DatosService,
+    private router: Router
   ) {}
 
   registrarUsuario(): void {
@@ -55,8 +56,8 @@ export class RegisterComponent {
         localStorage.setItem('token', response.token);
         this.datosService.tokenUsuario = response.token;
         localStorage.setItem('user', JSON.stringify(response.user));
-        this.datosService.username = response.user.username;
-        alert('Registro exitoso');
+        this.datosService.user = response.user;
+        this.router.navigate(['/mis-citas']);
       },
       (error) => {
         alert('Error al registrar usuario');

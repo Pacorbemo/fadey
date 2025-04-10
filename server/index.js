@@ -4,7 +4,9 @@ const cors = require("cors");
 const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+
 const autenticarToken = require('./autenticarToken');
+const {actualizarEstadoSolicitud, eliminarRelacion} = require('./funciones/relaciones');
 
 const app = express();
 const PORT = 5000;
@@ -17,6 +19,7 @@ const db = mysql.createConnection({
   user: "root",
   password: "2004paco",
   database: "Fadey",
+  // timezone: 'Europe/Madrid',
 });
 db.connect((err) => {
   if (err) {
@@ -26,17 +29,136 @@ db.connect((err) => {
   console.log("Conexión exitosa a la base de datos MySQL");
 });
 
+app.get("/comprobar-relacion", autenticarToken, (req, res) => {
+  const idBarbero = req.query.idBarbero;
+  const idCliente = req.user.id;
+
+  if (!idBarbero) {
+    return res.status(400).json({ error: "ID de Barbero no proporcionado" });
+  }
+
+  const query = `
+    SELECT * FROM Relaciones 
+    WHERE cliente_id = ? AND barbero_id = ?;
+  `;
+  db.query(query, [idCliente, idBarbero], (err, results) => {
+    if (err) {
+      console.error("Error al comprobar la relación:", err);
+      return res.status(500).json({ error: "Error al comprobar la relación" });
+    }
+
+    if (results.length > 0) {
+      res.status(200).json({ relacion: results[0].estado });
+    } else {
+      res.status(200).json({ relacion: 'ninguna' });
+    }
+  });
+})
+
+
+app.get("/relaciones",autenticarToken,(req, res) => {
+  const idUsuario = req.user.id;
+  const query = `
+    SELECT 
+      Relaciones.id,
+      Usuarios.username AS username,
+      Usuarios.nombre AS nombre,
+      Relaciones.estado,
+      Relaciones.fecha_creacion
+    FROM 
+      Relaciones
+    JOIN 
+      Usuarios 
+    ON 
+      Relaciones.cliente_id = Usuarios.id
+    WHERE 
+      Relaciones.barbero_id = ?;  
+  `;
+  db.query(query, [idUsuario, idUsuario], (err, results) => {
+    if (err) {
+      console.error("Error al obtener solicitudes:", err);
+      return res.status(500).json({ error: "Error al obtener solicitudes" });
+    }
+
+    return res.status(200).json(results);
+  });
+})
+
+app.post("/aceptar-solicitud", autenticarToken, (req, res) => {
+  actualizarEstadoSolicitud(req, 'aceptado', res, db);
+});
+
+app.post("/rechazar-solicitud", autenticarToken, (req, res) => {
+  actualizarEstadoSolicitud(req, 'rechazado', res, db);
+});
+
+app.post("/eliminar-relacion", autenticarToken, (req, res) => {
+  eliminarRelacion(req, res, db);
+})
+
+app.post("/solicitar", autenticarToken, (req, res) => {
+  const { userBarbero } = req.body;
+  const idCliente = req.user.id;
+
+  if (!userBarbero) {
+    return res.status(400).json({ error: "Información insuficiente" });
+  }
+
+  const idQuery = "SELECT id FROM Usuarios WHERE username = ?";
+  const checkQuery = "SELECT * FROM Relaciones WHERE cliente_id = ? AND barbero_id = ?";
+  const insertQuery = "INSERT INTO Relaciones (cliente_id, barbero_id, estado) VALUES (?, ?, 'pendiente')";
+  
+  db.query(idQuery, [userBarbero], (err, results) => {
+    if (err) {
+      console.error("Error al buscar el barbero:", err);
+      return res.status(500).json({ error: "Error al buscar el barbero" });
+    }
+
+    if (results.length === 0) {
+      return res.status(400).json({ error: "Barbero no encontrado" });
+    }
+
+    const idBarbero = results[0].id;
+
+    db.query(checkQuery, [idCliente, idBarbero], (err, results) => {
+      if (err) {
+        console.error("Error al comprobar la relación:", err);
+        return res.status(500).json({ error: "Error al comprobar la relación" });
+      }
+
+      if (results.length > 0) {
+        return res.status(400).json({ error: "Ya has solicitado esta relación" });
+      }
+
+      db.query(insertQuery, [idCliente, idBarbero], (err, result) => {
+        if (err) {
+          console.error("Error al solicitar relación:", err);
+          return res.status(500).json({ error: "Error al solicitar relación" });
+        }
+
+        res.status(200).json({ message: "Solicitud enviada" });
+      });
+    });
+  });
+})
+
 app.post("/confirmar-reserva", autenticarToken, (req, res) => {
   const { dia, idBarbero } = req.body;
+  const idCliente = req.user.id;
+
   if (!dia || !idBarbero) {
     return res.status(400).json({ error: "Información insuficiente" });
   }
 
-  const fechaHora = new Date(dia).toISOString().slice(0, 19).replace('T', ' ');
+  if (idCliente === idBarbero) {
+    return res.status(400).json({ error: "No puedes reservar una cita para ti mismo" });
+  }
+
+  const fechaHora = new Date(dia)
+  console.log(fechaHora)
   if (new Date(dia) < new Date()) {
     return res.status(400).json({ error: "No se puede reservar una fecha en el pasado" });
   }
-  const idCliente = req.user.id;
 
   const checkQuery = 'SELECT * FROM Citas WHERE barbero_id = ? AND fecha_hora = ? AND cliente_id IS NULL';
   const updateQuery = 'UPDATE Citas SET cliente_id = ?, fecha_reservada = ? WHERE barbero_id = ? AND fecha_hora = ? AND cliente_id IS NULL';
@@ -51,9 +173,7 @@ app.post("/confirmar-reserva", autenticarToken, (req, res) => {
       return res.status(400).json({ error: 'La cita no está disponible' });
     }
 
-    const fechaReserva = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-    db.query(updateQuery, [idCliente, fechaReserva, idBarbero, fechaHora], (err, result) => {
+    db.query(updateQuery, [idCliente, new Date(), idBarbero, fechaHora], (err, result) => {
       if (err) {
         console.error('Error al confirmar reserva:', err);
         return res.status(500).json({ error: 'Error al confirmar reserva' });
@@ -184,8 +304,8 @@ app.post("/crear-citas", autenticarToken, async (req, res) => {
   const deleteQuery = 'DELETE FROM Citas WHERE barbero_id = ? AND fecha_hora = ?';
   try {
     for (const fecha of fechas) {
-      const fechaHora = new Date(fecha).toISOString().slice(0, 19).replace('T', ' ');
-      if(new Date(fecha).getFullYear() < 2024){
+      const fechaHora = new Date(fecha);
+      if(fechaHora.getFullYear() < 2024){
         continue;
       }
       const [results] = await db.promise().query(checkQuery, [idBarbero, fechaHora]);
@@ -206,8 +326,17 @@ app.post("/crear-citas", autenticarToken, async (req, res) => {
 
 app.post("/citas", autenticarToken, async(req, res) => {
   const idUsuario = req.user.id;
+  const {inicio, fin, idBarbero} = req.body;
+
+  if(idUsuario != idBarbero){
+    const queryRelacion = "SELECT count(*) AS existe FROM Relaciones WHERE cliente_id = ? AND barbero_id = ? AND estado = 'aceptado';";
+    const [relacion] = await db.promise().query(queryRelacion, [idUsuario, idBarbero]);
+    if (!relacion[0].existe) {
+      return res.status(403).json({ error: "No tienes permisos para ver las citas de este barbero" });
+    }
+  }
+
   try{
-    const {inicio, fin, idBarbero} = req.body;
     const queryTotales = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and fecha_hora BETWEEN ? AND ?;"
     const queryReservadas = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and cliente_id is not NULL and fecha_hora BETWEEN ? AND ?;"
     const queryReservadasUsuario = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and cliente_id = ? and fecha_hora BETWEEN ? AND ?;";

@@ -30,7 +30,7 @@ export class LoginComponent {
     this.usuariosService.login(credenciales).subscribe(
       (response) => {
         this.datosService.tokenUsuario = response.token;
-        this.datosService.username = response.user.username;
+        this.datosService.user = response.user;
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
         this.router.navigate(["/mis-citas"]);

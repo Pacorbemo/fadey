@@ -1,7 +1,8 @@
 table {
-  width: 100%;
+  width: 50vw;
   border-collapse: collapse;
   text-align: center;
+  table-layout: fixed;
 }
 
 th, td {
