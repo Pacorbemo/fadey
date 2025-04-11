@@ -2,15 +2,29 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 40vw;
 }
 
 .mensajes {
+  width: 100%;
   flex: 1;
   overflow-y: auto;
 }
 
-.mensajes .emisor {
-  text-align: right;
+.mensaje{
+  width: fit-content;
+  display: flex;
+  align-items:baseline;
+  gap: 1vw;
+}
+
+.mensaje.emisor {
+  margin-left: auto;
+}
+
+.mensaje .hora{
+  font-size: 0.8em;
+  color: #888;
 }
 
 .input-container {

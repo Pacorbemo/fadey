@@ -8,7 +8,7 @@
 				<th>Nombre</th>
 				<th>Usuario</th>
 				<th>Fecha</th>
-				<th>Estado</th>
+				<!-- <th>Estado</th> -->
 				<!-- <th></th> -->
 			</tr>
 		</thead>
@@ -18,7 +18,7 @@
 				<td>{{ solicitud.nombre }}</td>
 				<td>{{ solicitud.username }}</td>
 				<td>{{ solicitud.fecha_creacion | date:'HH:mm dd/MM'}}</td>
-				<td>{{ solicitud.estado }}</td>
+				<!-- <td>{{ solicitud.estado }}</td> -->
 				<td>
 					<button (click)="aceptarSolicitud(solicitud.id)">Aceptar</button>
 					<button (click)="rechazarSolicitud(solicitud.id)">Rechazar</button>

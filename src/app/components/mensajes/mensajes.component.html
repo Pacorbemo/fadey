@@ -1,12 +1,14 @@
-<div class="chat-container">
+<div class="chat-container" *ngIf="!cargando">
   <div class="mensajes">
-    <div *ngFor="let mensaje of mensajes" [class.emisor]="mensaje.emisor_id === usuarioActual">
-      <p>{{ mensaje.mensaje }}</p>
-      <span>{{ mensaje.fecha_envio | date: 'shortTime' }}</span>
-    </div>
+    @for(mensaje of mensajes; let idx = $index ; track idx) {
+      <div class="mensaje" [class.emisor]="mensaje.emisor_id === usuarioActual">
+        <p>{{ mensaje.mensaje }}</p>
+        <span class="hora">{{ mensaje.fecha_envio | date: 'HH:mm' }}</span>
+      </div>
+    }
   </div>
   <div class="input-container">
-    <input [(ngModel)]="mensaje" placeholder="Escribe un mensaje..." />
+    <input [(ngModel)]="mensaje" placeholder="Escribe un mensaje..." (keydown.enter)="enviarMensaje()" />
     <button (click)="enviarMensaje()">Enviar</button>
   </div>
 </div>

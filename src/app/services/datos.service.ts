@@ -33,6 +33,4 @@ export class DatosService {
     this._tokenUsuario = token;
   }
 
-
-
 }

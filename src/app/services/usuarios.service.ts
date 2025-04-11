@@ -42,4 +42,12 @@ export class UsuariosService {
   verificarTelefono(telefono: string): Observable<{ exists: boolean }> {
     return this.http.get<{ exists: boolean }>(`/usuarios/telefono/${telefono}`);
   }
+
+  esBarbero(id:number): Promise<boolean>{
+    return new Promise((resolve) =>{
+      this.http.get<{ barbero: boolean }>(`/es-barbero/${id}`).subscribe((response) => {
+        resolve(response.barbero);
+      });
+    });
+  }
 }

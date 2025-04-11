@@ -1,0 +1,5 @@
+<form (submit)="subirImagen($event)">
+  <input type="file" (change)="seleccionarImagen($event)" />
+  <button type="submit">Subir Imagen</button>
+</form>
+<img *ngIf="imagenUrl" [src]="imagenUrl" alt="Imagen subida" />

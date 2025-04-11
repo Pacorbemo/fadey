@@ -17,7 +17,6 @@ export class SolicitudesComponent implements OnInit{
   
   async ngOnInit(): Promise<void> {
     this.solicitudes = await this.relacionesService.getSolicitudes()
-    console.log(this.solicitudes)
   }
 
   aceptarSolicitud(idSolicitud: number): void {
@@ -29,6 +28,5 @@ export class SolicitudesComponent implements OnInit{
     this.relacionesService.rechazarSolicitud(solicitud).then(() => {
       this.solicitudes = this.solicitudes.filter(s => s.id !== solicitud.id);
     })
-    console.log('Solicitud rechazada:', solicitud);
   }
 }

@@ -1,4 +1,22 @@
-@if(!cargando && !usuarioAutorizado){
+@if(!cargando && !usernameValido){
+	<div class="overlay">
+		<div class="reserva-dialogo">
+			<p>El usuario "{{usernameBarbero}}" no es válido</p>
+			<a routerLink="/">Volver a Inicio</a>
+		</div>
+	</div>
+}
+
+@else if(!cargando && !esBarbero){
+	<div class="overlay">
+		<div class="reserva-dialogo">
+			<p>El usuario "{{usernameBarbero}}" no es Barbero</p>
+			<a routerLink="/">Volver a Inicio</a>
+		</div>
+	</div>
+}
+
+@else if(!cargando && !usuarioAutorizado){
 	<div class="overlay">
 		<div class="reserva-dialogo">
 			<p>No tienes acceso a las citas de {{usernameBarbero}}</p>
@@ -75,12 +93,3 @@
 	}
 }
 
-@else if(!cargando && !usernameValido){
-	<div class="overlay">
-		<div class="reserva-dialogo">
-			<p>El usuario "{{usernameBarbero}}" no es válido</p>
-			<a routerLink="/">Volver a Inicio</a>
-		</div>
-	</div>
-
-}

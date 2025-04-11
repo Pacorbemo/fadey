@@ -23,6 +23,7 @@ export class CitasComponent implements OnInit {
   idUsuario: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
   idBarbero: number = 0;
   usernameBarbero: string = '';
+  esBarbero: boolean = true;
   // horariosDisponibles: { [dia: number]: string[] } = {
   //   1: ['08:00', '08:30', '09:00', '10:00'],
   horariosDisponibles: {[dia: number]: string[]} = []
@@ -52,18 +53,21 @@ export class CitasComponent implements OnInit {
       resolve();
       });
     });
-    if (this.idBarbero == this.idUsuario) this.usuarioAutorizado = true;
-    else{
-      await this.relacionesService.comprobarRelacion(this.idBarbero).then((response) => {
-        this.usuarioAutorizado = response.relacion == 'aceptado';
-      });
+    if(this.usernameValido){
+      if (this.idBarbero == this.idUsuario) this.usuarioAutorizado = true;
+      else{
+        await this.relacionesService.comprobarRelacion(this.idBarbero).then((response) => {
+          this.usuarioAutorizado = response.relacion == 'aceptado';
+        });
+      }
+      this.esBarbero = await this.usuariosService.esBarbero(this.idBarbero);
+      if(this.usuarioAutorizado){
+        this.calcularSemana();
+        await this.recargarCitas();
+        this.generarFranjasHorarias();  
+      }
+      this.relacion = (await this.relacionesService.comprobarRelacion(this.idBarbero)).relacion
     }
-    if(this.usuarioAutorizado){
-      this.calcularSemana();
-      await this.recargarCitas();
-      this.generarFranjasHorarias();  
-    }
-    this.relacion = (await this.relacionesService.comprobarRelacion(this.idBarbero)).relacion,
     this.cargando = false;
   }
   
@@ -96,7 +100,6 @@ export class CitasComponent implements OnInit {
     const response = await this.citasService.getCitas(this.idBarbero, this.semanaActual.inicio);
     this.horariosReservados = response.reservadas;
     this.horariosDisponibles = this.citasService.purgarDiasPasados(response.totales);
-    console.log(this.citasService.purgarDiasPasados(this.horariosDisponibles));
     this.horariosReservadosPorUsuario = response.reservadasUsuario;
   }
 

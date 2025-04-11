@@ -2,6 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { MensajesService } from '../../services/mensajes.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { UsuariosService } from '../../services/usuarios.service';
+
+interface MensajeCargado{
+  emisor_id:number,
+  mensaje: string,
+  receptor_id: number,
+  fecha_envio: Date,
+  id: number,
+  leido: boolean,
+}
 
 @Component({
   selector: 'app-mensajes',
@@ -13,26 +24,30 @@ import { CommonModule } from '@angular/common';
 export class MensajesComponent implements OnInit {
   mensajes: any[] = [];
   mensaje: string = '';
+  cargando : boolean = true;
   usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
-  receptorId: number = 12; // ID del usuario con el que estás chateando
-
-  constructor(private mensajesService: MensajesService) {}
+  receptor : {id: number, username: string} = {id: 0, username: ''};
+  constructor(private mensajesService: MensajesService, private route: ActivatedRoute, private usuariosService: UsuariosService) {}
 
   ngOnInit(): void {
-    // Cargar mensajes desde el backend
-    this.mensajesService.cargarMensajes(this.usuarioActual, this.receptorId).subscribe((mensajes) => {
-      this.mensajes = mensajes;
+    this.route.params.subscribe((params) => {
+      this.receptor.username = params['username'];
     });
-
-    // Escuchar mensajes en tiempo real
+    this.usuariosService.verificarUsername(this.receptor.username).subscribe((usuario) => {
+      this.receptor.id = usuario?.idBarbero || 0;
+      this.mensajesService.cargarMensajes(this.usuarioActual, this.receptor.id).subscribe((mensajes: MensajeCargado[]) => {
+        this.mensajes = mensajes;
+        this.cargando = false;
+      });
+    });
     this.mensajesService.recibirMensajes().subscribe((mensaje: any) => {
       this.mensajes.push(mensaje);
-    });
+    })
   }
 
   enviarMensaje(): void {
     if (this.mensaje.trim()) {
-      this.mensajesService.enviarMensaje(this.usuarioActual, this.receptorId, this.mensaje);
+      this.mensajesService.enviarMensaje(this.usuarioActual, this.receptor.id, this.mensaje);
       this.mensajes.push({
         emisor_id: this.usuarioActual,
         mensaje: this.mensaje,

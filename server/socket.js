@@ -8,7 +8,6 @@ module.exports = (server, db) => {
   });
 
   io.on('connection', (socket) => {
-    console.log('Usuario conectado:', socket.id);
 
     // Escuchar mensajes enviados por el cliente
     socket.on('enviarMensaje', async ({ emisor_id, receptor_id, mensaje }) => {
@@ -30,8 +29,8 @@ module.exports = (server, db) => {
     });
 
     // Desconexión del usuario
-    socket.on('disconnect', () => {
-      console.log('Usuario desconectado:', socket.id);
-    });
+    // socket.on('disconnect', () => {
+    //   console.log('Usuario desconectado:', socket.id);
+    // });
   });
 };

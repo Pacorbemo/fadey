@@ -6,6 +6,10 @@ const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const http = require('http');
 const socketHandler = require('./socket');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 
 
 const autenticarToken = require('./autenticarToken');
@@ -17,6 +21,27 @@ const PORT = 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Carpeta donde se guardarán las imágenes
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+const fileFilter = (req, file, cb) => {
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  if (allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true); // Aceptar el archivo
+  } else {
+    cb(new Error('Solo se permiten imágenes (JPEG, PNG, GIF, WEBP)')); // Rechazar el archivo
+  }
+};
+const upload = multer({ storage, fileFilter, limits: {fileSize: 5 * 1024 * 1024} });
+
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -33,7 +58,50 @@ db.connect((err) => {
   console.log("Conexión exitosa a la base de datos MySQL");
 });
 
-socketHandler(server, db); // Pasar el servidor HTTP y la conexión a la base de datos
+socketHandler(server, db);
+
+app.post('/subir-imagen', autenticarToken, upload.single('imagen'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No se subió ninguna imagen' });
+  }
+
+  const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+  const userId = req.user.id;
+
+  // Obtener la URL de la foto actual del usuario
+  const getPhotoQuery = 'SELECT foto_perfil FROM Usuarios WHERE id = ?';
+  db.query(getPhotoQuery, [userId], (err, results) => {
+    if (err) {
+      console.error('Error al obtener la foto actual:', err);
+      return res.status(500).json({ error: 'Error al obtener la foto actual' });
+    }
+
+    const currentPhotoUrl = results[0]?.foto_perfil;
+
+    // Eliminar la foto anterior si existe
+    if (currentPhotoUrl) {
+      const currentPhotoPath = `uploads/${currentPhotoUrl.split('/uploads/')[1]}`;
+      fs.unlink(currentPhotoPath, (err) => {
+        if (err) {
+          console.error('Error al eliminar la foto anterior:', err);
+        } else {
+          console.log('Foto anterior eliminada:', currentPhotoPath);
+        }
+      });
+    }
+
+    // Guardar la nueva URL de la foto en la base de datos
+    const updatePhotoQuery = 'UPDATE Usuarios SET foto_perfil = ? WHERE id = ?';
+    db.query(updatePhotoQuery, [imageUrl, userId], (err) => {
+      if (err) {
+        console.error('Error al guardar la URL de la imagen en la base de datos:', err);
+        return res.status(500).json({ error: 'Error al guardar la imagen' });
+      }
+
+      res.status(200).json({ message: 'Imagen subida correctamente', imageUrl });
+    });
+  });
+});
 
 app.get("/comprobar-relacion", autenticarToken, (req, res) => {
   const idBarbero = req.query.idBarbero;
@@ -45,9 +113,10 @@ app.get("/comprobar-relacion", autenticarToken, (req, res) => {
 
   const query = `
     SELECT * FROM Relaciones 
-    WHERE cliente_id = ? AND barbero_id = ?;
+    WHERE cliente_id = ? AND barbero_id = ?
+    OR barbero_id = ? AND cliente_id  = ?;
   `;
-  db.query(query, [idCliente, idBarbero], (err, results) => {
+  db.query(query, [idCliente, idBarbero, idCliente, idBarbero], (err, results) => {
     if (err) {
       console.error("Error al comprobar la relación:", err);
       return res.status(500).json({ error: "Error al comprobar la relación" });
@@ -78,7 +147,8 @@ app.get("/relaciones",autenticarToken,(req, res) => {
     ON 
       Relaciones.cliente_id = Usuarios.id
     WHERE 
-      Relaciones.barbero_id = ?;  
+      Relaciones.barbero_id = ? OR
+      Relaciones.cliente_id = ?;  
   `;
   db.query(query, [idUsuario, idUsuario], (err, results) => {
     if (err) {
@@ -335,12 +405,16 @@ app.post("/citas", autenticarToken, async(req, res) => {
   const {inicio, fin, idBarbero} = req.body;
 
   if(idUsuario != idBarbero){
-    const queryRelacion = "SELECT count(*) AS existe FROM Relaciones WHERE cliente_id = ? AND barbero_id = ? AND estado = 'aceptado';";
-    const [relacion] = await db.promise().query(queryRelacion, [idUsuario, idBarbero]);
+    const queryRelacion = "SELECT count(*) AS existe FROM Relaciones WHERE (cliente_id = ? AND barbero_id = ? OR barbero_id = ? AND cliente_id = ?) AND estado = 'aceptado';";
+    const [relacion] = await db.promise().query(queryRelacion, [idUsuario, idBarbero, idUsuario, idBarbero]);
     if (!relacion[0].existe) {
       return res.status(403).json({ error: "No tienes permisos para ver las citas de este barbero" });
     }
   }
+
+  const queryEsBarbero = "SELECT barbero FROM usuarios WHERE id = ?;"
+  const esBarbero = await db.promise().query(queryEsBarbero, [idBarbero]);
+  if(!esBarbero[0][0].barbero) return res.status(400).json({error: "No es barbero"});
 
   try{
     const queryTotales = "SELECT fecha_hora FROM citas WHERE barbero_id like ? and fecha_hora BETWEEN ? AND ?;"
@@ -474,6 +548,69 @@ app.get('/mensajes', autenticarToken, (req, res) => {
       return res.status(500).json({ error: 'Error al obtener mensajes' });
     }
     res.status(200).json(results);
+  });
+});
+
+app.get('/chats', autenticarToken, (req, res) => {
+  const userId = req.user.id;
+
+  const query = `
+    SELECT 
+      CASE 
+        WHEN emisor_id = ? THEN receptor_id
+        ELSE emisor_id
+      END AS usuario_id,
+      MAX(fecha_envio) AS ultima_fecha,
+      MIN(mensaje) AS ultimo_mensaje
+    FROM Mensajes
+    WHERE emisor_id = ? OR receptor_id = ?
+    GROUP BY usuario_id
+    ORDER BY ultima_fecha DESC;
+  `;
+
+  db.query(query, [userId, userId, userId], (err, results) => {
+    if (err) {
+      console.error('Error al obtener los chats:', err);
+      return res.status(500).json({ error: 'Error al obtener los chats' });
+    }
+    const userIds = results.map(chat => chat.usuario_id);
+    if (userIds.length > 0) {
+      const userQuery = `SELECT id, username FROM Usuarios WHERE id IN (?)`;
+      db.query(userQuery, [userIds], (err, userResults) => {
+        if (err) {
+          console.error('Error al obtener usernames:', err);
+          return res.status(500).json({ error: 'Error al obtener usernames' });
+        }
+        const usernamesMap = userResults.reduce((map, user) => {
+          map[user.id] = user.username;
+          return map;
+        }, {});
+        results.forEach(chat => {
+          chat.username = usernamesMap[chat.usuario_id] || null;
+        });
+        res.status(200).json(results);
+      });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
+
+app.get("/es-barbero/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query = "SELECT barbero FROM Usuarios WHERE id = ?";
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error("Error al buscar el usuario:", err);
+      return res.status(500).json({ error: "Error al buscar el usuario" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.status(200).json(results[0]);
   });
 });
 

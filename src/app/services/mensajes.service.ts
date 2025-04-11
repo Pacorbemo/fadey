@@ -31,4 +31,13 @@ export class MensajesService {
       },
     });
   }
+
+  cargarChats(): Observable<any> {
+    const token = this.datosService.tokenUsuario;
+    return this.http.get('/chats', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 }

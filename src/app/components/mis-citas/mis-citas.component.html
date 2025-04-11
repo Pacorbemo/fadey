@@ -1,23 +1,6 @@
 <div class="tabla-container">
   <h1>Citas</h1>
-  <!-- <table>
-    <thead>
-		<tr>
-		    <th>Fecha</th>
-        <th>Nombre</th>
-        <th>Username</th>
-      </tr>
-    </thead>
-    <tbody>
-		@for(cita of citas; track cita.id){
-			<tr>
-				<td>{{ cita.fecha_hora | date:'dd/MM hh:mm' }}</td>
-				<td>{{ cita.barbero_nombre }}</td>
-				<td>{{ '@' + cita.barbero_username }}</td>
-		}
-    </tbody>
-  </table> -->
-
+  @if(citas.length){
   <ul>
     <li class="header">
       <div class="col col-1">Fecha</div>
@@ -32,4 +15,7 @@
       </li>
     }
   </ul>
+    }@else {
+      <h3>No tienes citas pendientes</h3>
+    }
 </div>

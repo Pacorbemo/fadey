@@ -1,0 +1,30 @@
+ul{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 50vw;
+}
+
+li{
+	width: 100%;
+	display: flex;
+}
+
+.chat-item{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 0;
+	border-bottom: 1px solid #ccc;
+	cursor: pointer;
+}
+
+.info-chat{
+	width: 100%;
+	flex: 1;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 0;
+}
