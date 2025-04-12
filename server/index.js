@@ -358,7 +358,8 @@ app.post("/login", async (req, res) => {
         id: usuario.id,
         username: usuario.username,
         nombre: usuario.nombre,
-        rol: usuario.barbero ? 'barbero' : 'cliente'
+        rol: usuario.barbero ? 'barbero' : 'cliente',
+        pic: usuario.foto_perfil
       }
     });
   });
@@ -432,6 +433,7 @@ app.post("/citas", autenticarToken, async(req, res) => {
     reservadasUsuario = reservadasUsuario[0].map((cita) => {
       return cita.fecha_hora;
     });
+    console.log(inicio,fin,totales)
     res.status(200).json({totales, reservadas, reservadasUsuario});
   }
   catch(err){

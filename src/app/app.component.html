@@ -3,10 +3,17 @@
     <h1>{{title}}</h1>
   </div>
   @if(datosService.user.username){
-  <div class="foto-perfil">
+  <div class="header">
     <app-buscador></app-buscador>
     <div class="username">{{datosService.user.username}}</div>
-    <span class="marco-perfil">{{datosService.user.username.charAt(0).toUpperCase()}}</span>
+    <span class="marco-perfil">
+      @if(!datosService.user.pic){
+      {{datosService.user.username.charAt(0).toUpperCase()}}
+      }
+      @else{
+      <img class="foto-perfil" [src]="datosService.user.pic" alt="Foto de perfil" />
+      }
+    </span>
   </div>
   }
 </header>
@@ -21,6 +28,7 @@
       <a routerLink="solicitudes" *ngIf="datosService.esBarbero()">Solicitudes</a>
       <a routerLink="relaciones">Relaciones</a>
       <a routerLink="chats">Chats</a>
+      <a routerLink="editar-perfil">Perfil</a>
       <button (click)="logout()">Cerrar Sesión</button>
   </nav>
 }

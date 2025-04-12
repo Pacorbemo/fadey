@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 interface User {
   id: number;
   username: string;
-  nomber: string;
+  nombre: string;
   rol: string;
+  pic: string;
 }
 
 @Injectable({
@@ -18,7 +19,7 @@ export class DatosService {
   public rol: string = '';
 
   limpiarUser(): void {
-    this.user = { id: 0, username: '', nomber: '', rol: '' };
+    this.user = { id: 0, username: '', nombre: '', rol: '' , pic: '' };
   }
 
   esBarbero(): boolean {

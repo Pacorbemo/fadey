@@ -14,7 +14,7 @@ export class EditarPerfilComponent {
   imagenSeleccionada: File | null = null;
   imagenUrl: string | null = null;
 
-  constructor(private http: HttpClient, private datosService:DatosService) {}
+  constructor(private http: HttpClient, public datosService:DatosService) {}
 
   seleccionarImagen(event: any): void {
     this.imagenSeleccionada = event.target.files[0];

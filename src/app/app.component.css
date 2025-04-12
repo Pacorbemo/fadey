@@ -38,12 +38,12 @@ h1{
 	}
 }
 
-.foto-perfil{
+.header{
 	display:flex;
 	align-items: center;
 	gap: 1.5em;
 }
-.foto-perfil > * {
+.header > * {
 	font-weight: 600;
 }
 
@@ -63,6 +63,12 @@ h1{
   font-weight: bold;
   font-size: 1.2em;
   padding:0;
+}
+
+.foto-perfil {
+  object-fit: cover;
+  width: 2vw;
+  height: 2vw;
 }
 
 nav {
@@ -98,6 +104,6 @@ nav a:hover {
 
 .app {
   width: 100%;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
 }

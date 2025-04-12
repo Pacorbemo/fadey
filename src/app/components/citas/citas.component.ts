@@ -61,7 +61,7 @@ export class CitasComponent implements OnInit {
         });
       }
       this.esBarbero = await this.usuariosService.esBarbero(this.idBarbero);
-      if(this.usuarioAutorizado){
+      if(this.usuarioAutorizado && this.esBarbero){
         this.calcularSemana();
         await this.recargarCitas();
         this.generarFranjasHorarias();  

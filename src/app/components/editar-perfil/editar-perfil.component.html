@@ -1,5 +1,25 @@
-<form (submit)="subirImagen($event)">
+<section>
+  <span>
+    @if(this.datosService.user.pic){
+      <img
+        [alt]="this.datosService.user.username"
+        [src]="this.datosService.user.pic">
+    }
+    @else{
+      <img
+        [alt]="this.datosService.user.username"
+        src="https://avatars.githubusercontent.com/u/88788711?v=4">
+    }
+  </span>
+  <aside>
+    <h1>{{this.datosService.user.nombre}}</h1>
+    <h2>{{'@' + this.datosService.user.username}}</h2>
+  </aside>
+</section>
+
+
+<!-- <form (submit)="subirImagen($event)">
   <input type="file" (change)="seleccionarImagen($event)" />
   <button type="submit">Subir Imagen</button>
 </form>
-<img *ngIf="imagenUrl" [src]="imagenUrl" alt="Imagen subida" />
+<img *ngIf="imagenUrl" [src]="imagenUrl" alt="Imagen subida" /> -->

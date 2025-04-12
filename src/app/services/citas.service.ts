@@ -16,7 +16,7 @@ export class CitasService {
 
   // Si le pasamos cualquier día de la semana, devuelve el lunes de esa semana
   primerDiaSemana(diaInicio: Date): Date {
-    const copiaDiaInicio = new Date(diaInicio); // Crea una copia para evitar mutaciones
+    const copiaDiaInicio = new Date(diaInicio);
     copiaDiaInicio.setDate(copiaDiaInicio.getDate() - copiaDiaInicio.getDay() + 1);
     return copiaDiaInicio;
   }
@@ -32,7 +32,7 @@ export class CitasService {
   // Array con los 7 días de la semana, sumando o restando tantas semanas como "n"
   calcularSemana(diaInicio: Date, n: number = 0): Date[] {
     const diasSemana = [];
-    diaInicio = this.diaHora(diaInicio, '00:00');
+    diaInicio.setUTCHours(0, 0, 0, 0);
     const primerDiaSemana = this.primerDiaSemana(
       this.sumarDias(diaInicio, n * 7)
     );
@@ -102,7 +102,6 @@ export class CitasService {
   ): Promise<GetCitasResponseInterface> {
     const token = localStorage.getItem('token');
     inicio = this.primerDiaSemana(inicio);
-    inicio.setUTCHours(0, 0, 0, 0);
     const fin = this.sumarDias(inicio, 7);
     const body = {
       idBarbero,
