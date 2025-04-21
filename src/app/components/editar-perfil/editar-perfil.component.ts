@@ -16,12 +16,23 @@ export class EditarPerfilComponent {
 
   constructor(private http: HttpClient, public datosService:DatosService) {}
 
-  seleccionarImagen(event: any): void {
-    this.imagenSeleccionada = event.target.files[0];
+  activarInput() {
+    // Al hacer clic en el botón, activamos el input para seleccionar la nueva imagen
+    const inputFile = document.getElementById('fileInput');
+    if (inputFile) {
+      inputFile.click();  // Esto abrirá el selector de archivos
+    } else {
+      console.error('El elemento con id "fileInput" no se encontró.');
+    }
   }
 
-  subirImagen(event: Event): void {
-    event.preventDefault();
+  seleccionarImagen(event: any): void {
+    this.imagenSeleccionada = event.target.files[0];
+    this.subirImagen();
+  }
+
+  subirImagen(event?: Event): void {
+    event?.preventDefault();
     if (!this.imagenSeleccionada) {
       alert('Por favor, selecciona una imagen');
       return;
@@ -35,7 +46,10 @@ export class EditarPerfilComponent {
           Authorization: `Bearer ${token}`,
         }}).subscribe(
       (response) => {
-        this.imagenUrl = response.imageUrl;
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        user.pic = response.imageUrl;
+        localStorage.setItem('user', JSON.stringify(user));
+        this.datosService.user.pic = response.imageUrl;
         alert('Imagen subida correctamente');
       },
       (error) => {

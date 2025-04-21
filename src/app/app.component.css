@@ -42,9 +42,22 @@ h1{
 	display:flex;
 	align-items: center;
 	gap: 1.5em;
+  position: relative;
 }
+
 .header > * {
 	font-weight: 600;
+}
+
+#buscador{
+  margin-right: 10rem;
+}
+
+.user{
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  cursor: pointer;
 }
 
 .username{
@@ -53,8 +66,8 @@ h1{
 
 .marco-perfil {
   display: inline-block;
-  width: 2em;
-  height: 2em;
+  width: 2rem;
+  height: 2rem;
   background-color: rgb(96, 104, 212);
   border-radius: 10%;
   display: flex;
@@ -67,8 +80,8 @@ h1{
 
 .foto-perfil {
   object-fit: cover;
-  width: 2vw;
-  height: 2vw;
+  width: 2rem;
+  height: 2rem;
 }
 
 nav {
@@ -106,4 +119,50 @@ nav a:hover {
   width: 100%;
   /* display: flex; */
   justify-content: center;
+}
+
+.dropdown-menu{
+  list-style: none;
+	margin: 0;
+	padding: 0;
+	border: 0.2rem solid #292929;
+	position: absolute;
+	z-index: 1000;
+  top: 100%;
+  margin-top: 0.4rem;
+  right: 0;
+  border-radius: 0.6rem;
+}
+
+.dropdown-menu li {
+	padding: 10px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+  }
+  
+.dropdown-menu li:hover {
+  background-color: #313131;
+}
+
+.dropdown-menu li a {
+  text-decoration: none;
+  color: white;
+  display: block;
+}
+
+.dropdown-menu li svg {
+  margin-right: 10px;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.dropdown-menu li button {
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.dropdown-menu li button:focus {
+  outline: none;
 }

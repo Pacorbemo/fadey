@@ -8,6 +8,7 @@ section {
 }
 
 span {
+	position: relative;
 	display: flex;
 	flex-shrink: 0;
 	overflow: hidden;
@@ -41,3 +42,26 @@ h2 {
 	font-weight: 600;
 	color: gray;
 }
+
+
+.change-button-container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0;
+	transition: opacity 0.3s ease; /* Suaviza la aparición del botón */
+  }
+  
+  span .change-button-container:hover {
+	opacity: 1; /* El botón aparece cuando se hace hover */
+  }
+  
+  .file-input {
+	display: none; /* Oculta el input de archivo */
+  }
+  
+  form {
+	display: none; /* Opcionalmente ocultamos el formulario, si prefieres que solo se muestre después de elegir la imagen */
+  }
+  

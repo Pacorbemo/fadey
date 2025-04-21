@@ -50,4 +50,8 @@ export class UsuariosService {
       });
     });
   }
+
+  buscarUsuarios(query: string): Observable<{ id: number; username: string; nombre: string; foto_perfil: string }[]> {
+    return this.http.get<{ id: number; username: string; nombre: string; foto_perfil: string }[]>(`/buscar-barberos?query=${query}`);
+  }
 }

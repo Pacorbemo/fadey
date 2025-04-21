@@ -10,6 +10,20 @@
         [alt]="this.datosService.user.username"
         src="https://avatars.githubusercontent.com/u/88788711?v=4">
     }
+
+    <div class="change-button-container">
+      <button (click)="activarInput()">Cambiar Foto</button>
+    </div>
+  
+    <form id="uploadForm" (submit)="subirImagen($event)">
+      <input 
+        type="file" 
+        id="fileInput" 
+        (change)="seleccionarImagen($event)" 
+        class="file-input"
+      />
+      <button type="submit">Subir Imagen</button>
+    </form>
   </span>
   <aside>
     <h1>{{this.datosService.user.nombre}}</h1>

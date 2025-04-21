@@ -58,3 +58,32 @@
 	width: 100%;
   }
   
+
+  .autocomplete-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #ccc;
+	background: rgb(255, 84, 84);
+	position: absolute;
+	z-index: 1000;
+	width: 100%;
+  }
+  
+  .autocomplete-list li {
+	padding: 10px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+  }
+  
+  .autocomplete-list li:hover {
+	background-color: #f0f0f0;
+  }
+  
+  .avatar {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	margin-right: 10px;
+  }

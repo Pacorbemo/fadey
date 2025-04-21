@@ -443,6 +443,28 @@ app.post("/citas", autenticarToken, async(req, res) => {
 
 })
 
+app.get('/buscar-barberos', (req, res) => {
+  const { query } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Falta el parámetro de búsqueda' });
+  }
+
+  const searchQuery = `
+    SELECT id, username, nombre, foto_perfil 
+    FROM Usuarios 
+    WHERE barbero = 1 AND (username LIKE ? OR nombre LIKE ?) 
+    LIMIT 10
+  `;
+  db.query(searchQuery, [`%${query}%`, `%${query}%`], (err, results) => {
+    if (err) {
+      console.error('Error al buscar usuarios:', err);
+      return res.status(500).json({ error: 'Error al buscar usuarios' });
+    }
+    res.status(200).json(results);
+  });
+});
+
 // app.get("/usuario/:id", (req, res) => {
 //   const { id } = req.params;
 

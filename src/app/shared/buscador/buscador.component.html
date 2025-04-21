@@ -1,4 +1,22 @@
-<div class="form-control">
+<!-- <div class="form-control">
 	<input type="text" #userInput class="input input-alt" (keyup.enter)="navegar('/' + userInput.value.toLocaleLowerCase() + '/citas')" placeholder="Buscar" />
 	<span class="input-border input-border-alt"></span>
+</div> -->
+
+<div class="form-control">
+  <input 
+    type="text" 
+    #userInput 
+    class="input input-alt" 
+    (input)="buscarUsuarios(userInput.value)" 
+    (keydown.enter)="seleccionarPrimero()" 
+    placeholder="Buscar usuarios..." 
+    [(ngModel)]="busqueda" 
+  />
+  <ul *ngIf="resultados.length > 0" class="autocomplete-list">
+    <li *ngFor="let usuario of resultados" (click)="seleccionarUsuario(usuario)">
+      <img [src]="usuario.foto_perfil || 'http://localhost:5000/uploads/default-avatar.jpg'" alt="Avatar" class="avatar" />
+      <span>{{ usuario.username }}</span>
+    </li>
+  </ul>
 </div>
