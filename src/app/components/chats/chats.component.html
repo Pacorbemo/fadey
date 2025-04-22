@@ -1,14 +1,16 @@
-<ul>
-	@for(chat of chats; track chat.usuario_id) {
-		<li [routerLink]="['/', chat.username, 'mensajes']">
-			<div class="chat-item">
-				<!-- <img [src]="chat.imagen" alt="Imagen de perfil" class="imagen-perfil" /> -->
-				<div class="info-chat">
-					<h3>{{ chat.username }}</h3>
-					<p>{{ chat.ultimo_mensaje }}</p>
-					<span class="fecha">{{ chat.ultima_fecha | date: 'HH:mm' }}</span>
+<div class="component-container">
+	<ul>
+		@for(chat of chats; track chat.usuario_id) {
+			<li [routerLink]="['/', chat.username, 'mensajes']">
+				<div class="chat-item">
+					<!-- <img [src]="chat.imagen" alt="Imagen de perfil" class="imagen-perfil" /> -->
+					<div class="info-chat">
+						<h3>{{ chat.username }}</h3>
+						<p>{{ chat.ultimo_mensaje }}</p>
+						<span class="fecha">{{ chat.ultima_fecha | date: 'HH:mm' }}</span>
+					</div>
 				</div>
-			</div>
-		</li>
-	}
-</ul>
+			</li>
+		}
+	</ul>
+</div>

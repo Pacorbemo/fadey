@@ -1,0 +1,11 @@
+@if(citasComoBarbero.length){
+  <h3>Citas como Barbero</h3>
+  <mis-citas-tabla [citas]="citasComoBarbero" />
+}
+@if(citasComoCliente.length){
+  <h3>Citas como Cliente</h3>
+  <mis-citas-tabla [citas]="citasComoCliente" />
+}
+@else if(citasComoBarbero.length == 0) {
+  <h3>No tienes citas pendientes</h3>
+}

@@ -1,5 +1,4 @@
 import { Component, OnInit, ɵsetClassDebugInfo } from '@angular/core';
-import { ReservasService } from '../../services/reservas.service';
 import { CitasService } from '../../services/citas.service';
 import { DateMesStringPipe } from '../../pipes/date-mes-string.pipe';
 import { UsuariosService } from '../../services/usuarios.service';
@@ -33,7 +32,6 @@ export class CitasComponent implements OnInit {
   diaSeleccionado: Date = new Date();
   
   constructor(
-    private reservasService: ReservasService, 
     private citasService: CitasService,
     private usuariosService: UsuariosService,
     public relacionesService: RelacionesService,
@@ -148,7 +146,7 @@ export class CitasComponent implements OnInit {
   }
 
   confirmarReserva(): void {
-    this.reservasService.confirmarReserva(this.idBarbero, this.diaSeleccionado).subscribe(
+    this.citasService.confirmarReserva(this.idBarbero, this.diaSeleccionado).subscribe(
       (response) => {
         this.mostrarDialogo = false;
         this.recargarCitas(); 
@@ -163,4 +161,8 @@ export class CitasComponent implements OnInit {
     this.mostrarDialogo = false;
   }
 
+  solicitar(usernameBarbero: string): void {
+    this.relacionesService.solicitar(usernameBarbero);
+    this.relacion = 'pendiente';
+  }
 }

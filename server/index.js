@@ -114,9 +114,8 @@ app.get("/comprobar-relacion", autenticarToken, (req, res) => {
   const query = `
     SELECT * FROM Relaciones 
     WHERE cliente_id = ? AND barbero_id = ?
-    OR barbero_id = ? AND cliente_id  = ?;
   `;
-  db.query(query, [idCliente, idBarbero, idCliente, idBarbero], (err, results) => {
+  db.query(query, [idCliente, idBarbero], (err, results) => {
     if (err) {
       console.error("Error al comprobar la relación:", err);
       return res.status(500).json({ error: "Error al comprobar la relación" });
@@ -151,6 +150,62 @@ app.get("/relaciones",autenticarToken,(req, res) => {
       Relaciones.cliente_id = ?;  
   `;
   db.query(query, [idUsuario, idUsuario], (err, results) => {
+    if (err) {
+      console.error("Error al obtener solicitudes:", err);
+      return res.status(500).json({ error: "Error al obtener solicitudes" });
+    }
+
+    return res.status(200).json(results);
+  });
+})
+
+app.get("/relaciones-cliente",autenticarToken,(req, res) => {
+  const idUsuario = req.user.id;
+  const query = `
+    SELECT 
+      Relaciones.id,
+      Usuarios.username AS username,
+      Usuarios.nombre AS nombre,
+      Relaciones.estado,
+      Relaciones.fecha_creacion
+    FROM 
+      Relaciones
+    JOIN 
+      Usuarios 
+    ON 
+      Relaciones.barbero_id = Usuarios.id
+    WHERE 
+      Relaciones.cliente_id = ?;  
+  `;
+  db.query(query, [idUsuario], (err, results) => {
+    if (err) {
+      console.error("Error al obtener solicitudes:", err);
+      return res.status(500).json({ error: "Error al obtener solicitudes" });
+    }
+
+    return res.status(200).json(results);
+  });
+})
+
+app.get("/relaciones-barbero",autenticarToken,(req, res) => {
+  const idUsuario = req.user.id;
+  const query = `
+    SELECT 
+      Relaciones.id,
+      Usuarios.username AS username,
+      Usuarios.nombre AS nombre,
+      Relaciones.estado,
+      Relaciones.fecha_creacion
+    FROM 
+      Relaciones
+    JOIN 
+      Usuarios 
+    ON 
+      Relaciones.cliente_id = Usuarios.id
+    WHERE 
+      Relaciones.barbero_id = ?;  
+  `;
+  db.query(query, [idUsuario], (err, results) => {
     if (err) {
       console.error("Error al obtener solicitudes:", err);
       return res.status(500).json({ error: "Error al obtener solicitudes" });
@@ -541,7 +596,7 @@ app.get("/citas-usuario", autenticarToken, (req, res) => {
   const { id } = req.user;
 
   const query = `
-    SELECT Citas.id, Citas.fecha_hora, Usuarios.nombre AS barbero_nombre, Usuarios.username AS barbero_username 
+    SELECT Citas.id, Citas.fecha_hora, Usuarios.nombre AS usuario_nombre, Usuarios.username AS usuario_username 
     FROM Citas 
     JOIN Usuarios ON Citas.barbero_id = Usuarios.id 
     WHERE Citas.cliente_id = ?
@@ -556,6 +611,26 @@ app.get("/citas-usuario", autenticarToken, (req, res) => {
     res.status(200).json(results);
   });
 });
+
+app.get("/citas-barbero", autenticarToken, (req, res) => {
+  const { id } = req.user;
+
+  const query = `
+    SELECT Citas.id, Citas.fecha_hora, Usuarios.nombre AS usuario_nombre, Usuarios.username AS usuario_username 
+    FROM Citas 
+    JOIN Usuarios ON Citas.cliente_id = Usuarios.id 
+    WHERE Citas.barbero_id = ?
+    ORDER BY Citas.fecha_hora ASC
+    `;
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error("Error al obtener citas del barbero:", err);
+      return res.status(500).json({ error: "Error al obtener citas del barbero" });
+    }
+
+    res.status(200).json(results);
+  });
+})
 
 app.get('/mensajes', autenticarToken, (req, res) => {
   const { emisor_id, receptor_id } = req.query;

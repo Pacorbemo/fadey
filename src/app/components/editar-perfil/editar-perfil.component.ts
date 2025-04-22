@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { DatosService } from '../../services/datos.service';
+import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-editar-perfil',
@@ -14,13 +14,15 @@ export class EditarPerfilComponent {
   imagenSeleccionada: File | null = null;
   imagenUrl: string | null = null;
 
-  constructor(private http: HttpClient, public datosService:DatosService) {}
+  constructor(
+    private httpService: HttpService,
+    public datosService: DatosService
+  ) {}
 
   activarInput() {
-    // Al hacer clic en el botón, activamos el input para seleccionar la nueva imagen
     const inputFile = document.getElementById('fileInput');
     if (inputFile) {
-      inputFile.click();  // Esto abrirá el selector de archivos
+      inputFile.click();
     } else {
       console.error('El elemento con id "fileInput" no se encontró.');
     }
@@ -40,11 +42,8 @@ export class EditarPerfilComponent {
 
     const formData = new FormData();
     formData.append('imagen', this.imagenSeleccionada);
-    const token = this.datosService.tokenUsuario;
-    this.http.post<{ imageUrl: string }>('/subir-imagen', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }}).subscribe(
+
+    this.httpService.httpPostToken('/subir-imagen', formData).subscribe(
       (response) => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         user.pic = response.imageUrl;

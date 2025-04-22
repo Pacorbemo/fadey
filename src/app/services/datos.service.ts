@@ -26,6 +26,10 @@ export class DatosService {
     return this.user.rol === 'barbero';
   }
 
+  esCliente(): boolean {
+    return this.user.rol === 'cliente';
+  }
+
   get tokenUsuario(): string {
     return this._tokenUsuario;
   }

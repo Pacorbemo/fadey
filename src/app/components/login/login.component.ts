@@ -29,7 +29,6 @@ export class LoginComponent {
 
     this.usuariosService.login(credenciales).subscribe(
       (response) => {
-        console.log(response);  
         this.datosService.tokenUsuario = response.token;
         this.datosService.user = response.user;
         localStorage.setItem('token', response.token);

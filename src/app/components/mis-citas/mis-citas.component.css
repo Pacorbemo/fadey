@@ -6,61 +6,6 @@
   flex-direction: column;
 }
 
-table {
-  border-collapse: collapse;
+.tabla-container > * {
   width: 100%;
-  text-align: left;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-th {
-  background-color: #ff4f4f;
-  text-align: center;
-}
-
-
-tr:hover {
-  background-color: #555555;
-}
-
-ul{
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;
-}
-
-li{
-  border-radius: 3px;
-  padding: 25px 30px;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 25px;
-}
-
-li.header{
-  background-color: #95A5A6;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-li.row{
-  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
-  background-color: #303030;
-}
-
-.col-1 {
-  flex-basis: 30%;
-}
-.col-2 {
-  flex-basis: 10%;
-}
-.col-3 {
-  flex-basis: 0;
 }

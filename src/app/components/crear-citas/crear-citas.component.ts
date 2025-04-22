@@ -88,7 +88,7 @@ export class CrearCitasComponent implements OnInit {
         );
       }
     }
-    console.log(franjasFormateadas)
+    // console.log(franjasFormateadas)
     this.citasService.subirCitas(this.idBarbero, franjasFormateadas).subscribe(
       () => {
         this.franjasSeleccionadas = [];

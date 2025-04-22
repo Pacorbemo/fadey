@@ -1,3 +1,4 @@
+<div class="component-container">
 @if(!cargando && !usernameValido){
 	<div class="overlay">
 		<div class="reserva-dialogo">
@@ -21,7 +22,7 @@
 		<div class="reserva-dialogo">
 			<p>No tienes acceso a las citas de {{usernameBarbero}}</p>
 			@if(relacion == 'ninguna'){
-				<button (click)="this.relacionesService.solicitar(usernameBarbero)">Enviar solicitud</button>
+				<button (click)="solicitar(usernameBarbero)">Enviar solicitud</button>
 			}
 			@else if (relacion == 'pendiente'){
 				<h3>Ya has enviado una solicitud, espera a que sea aceptada</h3>
@@ -92,4 +93,4 @@
 		</div>
 	}
 }
-
+</div>

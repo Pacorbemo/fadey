@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RelacionesService } from '../../services/relaciones.service';
 import { RouterModule } from '@angular/router';
+import { DatosService } from '../../services/datos.service';
 
 @Component({
   selector: 'app-relaciones',
@@ -10,18 +11,25 @@ import { RouterModule } from '@angular/router';
   styleUrl: './relaciones.component.css'
 })
 export class RelacionesComponent implements OnInit {
-  relaciones: any[] = [];
+  barberos: any[] = [];
+  clientes: any[] = [];
 
-  constructor(private relacionesService: RelacionesService) { }
+  constructor(private relacionesService: RelacionesService, public datosService: DatosService) { }
 
   async ngOnInit(): Promise<void> {
-    this.relaciones = await this.relacionesService.getRelaciones('aceptado')
-    console.log(this.relaciones)
+    if (this.datosService.esCliente()){
+      this.barberos = await this.relacionesService.getRelacionesCliente()
+    }
+    else if (this.datosService.esBarbero()){
+      this.clientes = await this.relacionesService.getRelacionesBarbero()
+      this.barberos = await this.relacionesService.getRelacionesCliente()
+    }
   }
 
   eliminarRelacion(idRelacion: number): void {
     this.relacionesService.eliminarRelacion(idRelacion).then(() => {
-      this.relaciones = this.relaciones.filter(r => r.id !== idRelacion);
+      this.clientes = this.clientes.filter(r => r.id !== idRelacion);
+      this.barberos = this.barberos.filter(r => r.id !== idRelacion);
     })
   }
 }

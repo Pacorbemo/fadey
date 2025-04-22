@@ -18,18 +18,12 @@ export class UsuariosService {
   constructor(private http: HttpClient) {}
 
   registrar(usuario: Usuario): Observable<any> {
-    const body = usuario;
-    return this.http.post(`/registro`, body);
+    return this.http.post(`/registro`, usuario);
   }
 
   login(credenciales: { username: string; password: string }): Observable<any> {
-    const body = credenciales;
-    return this.http.post(`/login`, body);
+    return this.http.post(`/login`, credenciales);
   }
-
-  // getUserById(id: number): Observable<{username: string; nombre: string}> {
-  //   return this.http.get<{username: string; nombre: string}>(`/usuario/${id}`);
-  // }
 
   verificarUsername(username: string): Observable<{ exists: boolean; idBarbero?: number }> {
     return this.http.get<{ exists: boolean }>(`/usuario/${username}`);

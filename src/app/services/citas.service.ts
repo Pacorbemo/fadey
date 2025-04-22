@@ -1,14 +1,14 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetCitasInterface, GetCitasResponseInterface } from '../interfaces/citas.interface';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CitasService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpService: HttpService) {}
 
   dateAUTC(date: Date): Date {
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
@@ -89,53 +89,50 @@ export class CitasService {
   }
 
   subirCitas(idBarbero: number, fechas: Date[]): Observable<any> {
-    const token = localStorage.getItem('token');
     const body = { idBarbero, fechas };
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`/crear-citas`, body, { headers });
+    return this.httpService.httpPostToken('/citas', body);
   }
 
   // Obtener las citas de un BARBERO
   async getCitas(
-    idBarbero: number,
-    inicio: Date
-  ): Promise<GetCitasResponseInterface> {
-    const token = localStorage.getItem('token');
-    inicio = this.primerDiaSemana(inicio);
-    const fin = this.sumarDias(inicio, 7);
-    const body = {
-      idBarbero,
-      inicio,
-      fin,
-    };
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return new Promise<GetCitasResponseInterface>((resolve, reject) => {
-      this.http.post<GetCitasInterface>(
-          `/citas`,
-          body,
-          { headers }
-        )
-        .subscribe(
-          (response) => {
-            resolve(
-              ['totales', 'reservadas', 'reservadasUsuario'].reduce((acc, key) => {
-                acc[key as keyof GetCitasResponseInterface] = this.procesarFechas(response[key as keyof GetCitasInterface]);
-                return acc;
-              }, {} as GetCitasResponseInterface)
-            );
-          },
-          (error) => {
-            reject(error);
-          }
-        );
-    });
-  }
+      idBarbero: number,
+      inicio: Date
+    ): Promise<GetCitasResponseInterface> {
+      inicio = this.primerDiaSemana(inicio);
+      const fin = this.sumarDias(inicio, 7);
+      const body = {
+        idBarbero,
+        inicio,
+        fin,
+      };
+  
+      return new Promise<GetCitasResponseInterface>((resolve, reject) => {
+        this.httpService.httpPostToken('/citas', body)
+          .subscribe(
+            (response) => {
+              resolve(
+                ['totales', 'reservadas', 'reservadasUsuario'].reduce((acc, key) => {
+                  acc[key as keyof GetCitasResponseInterface] = this.procesarFechas(response[key as keyof GetCitasInterface]);
+                  return acc;
+                }, {} as GetCitasResponseInterface)
+              );
+            },
+            (error) => {
+              reject(error);
+            }
+          );
+      });
+    }
 
   // Obtener las citas de un USUARIO
-  getCitasUsuario(token: string): Observable<any> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get(`/citas-usuario`, { headers });
+  getCitasUsuario(): Observable<any> {
+    return this.httpService.httpGetToken('/citas-usuario')
   }
+
+  getCitasBarbero(): Observable<any> {
+    return this.httpService.httpGetToken('/citas-barbero')
+  }
+
 
   purgarDiasPasados(horarios: { [dia: number]: string[] }): { [dia: number]: string[] } {
     const hoy = new Date();
@@ -176,5 +173,10 @@ export class CitasService {
     });
     return resultado;
   }
+
+  confirmarReserva(idBarbero:number, dia: Date): Observable<any> {
+      const body = { idBarbero, dia };
+      return this.httpService.httpPostToken('/confirmar-reserva', body);
+    }
 
 }
