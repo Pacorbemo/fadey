@@ -34,7 +34,8 @@ export class MensajesComponent implements OnInit {
       this.receptor.username = params['username'];
     });
     this.usuariosService.verificarUsername(this.receptor.username).subscribe((usuario) => {
-      this.receptor.id = usuario?.idBarbero || 0;
+      this.receptor.id = usuario?.user?.id || 0;
+      this.mensajesService.conectar(this.usuarioActual);
       this.mensajesService.cargarMensajes(this.usuarioActual, this.receptor.id).subscribe((mensajes: MensajeCargado[]) => {
         this.mensajes = mensajes;
         this.cargando = false;

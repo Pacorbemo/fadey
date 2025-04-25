@@ -65,7 +65,8 @@ app.post('/subir-imagen', autenticarToken, upload.single('imagen'), (req, res) =
     return res.status(400).json({ error: 'No se subió ninguna imagen' });
   }
 
-  const imageUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+  const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  console.log(imageUrl)
   const userId = req.user.id;
 
   // Obtener la URL de la foto actual del usuario
@@ -286,7 +287,6 @@ app.post("/confirmar-reserva", autenticarToken, (req, res) => {
   }
 
   const fechaHora = new Date(dia)
-  console.log(fechaHora)
   if (new Date(dia) < new Date()) {
     return res.status(400).json({ error: "No se puede reservar una fecha en el pasado" });
   }
@@ -488,7 +488,6 @@ app.post("/citas", autenticarToken, async(req, res) => {
     reservadasUsuario = reservadasUsuario[0].map((cita) => {
       return cita.fecha_hora;
     });
-    console.log(inicio,fin,totales)
     res.status(200).json({totales, reservadas, reservadasUsuario});
   }
   catch(err){
@@ -541,7 +540,7 @@ app.get('/buscar-barberos', (req, res) => {
 app.get("/usuario/:username", async (req, res) => {
   const { username } = req.params;
 
-  const query = "SELECT * FROM Usuarios WHERE username = ?";
+  const query = "SELECT id, nombre, username, foto_perfil FROM Usuarios WHERE username = ?";
   db.query(query, [username], (err, results) => {
     if (err) {
       console.error("Error al buscar el usuario:", err);
@@ -549,7 +548,7 @@ app.get("/usuario/:username", async (req, res) => {
     }
 
     if (results.length > 0) {
-      res.status(200).json({ exists: true, idBarbero: results[0].id });
+      res.status(200).json({ exists: true, user: results[0] });
     } else {
       res.status(200).json({ exists: false });
     }

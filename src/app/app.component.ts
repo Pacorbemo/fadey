@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { DatosService } from './services/datos.service';
 import { BuscadorComponent } from "./shared/buscador/buscador.component";
 import { CommonModule } from '@angular/common';
+import { BuscadorService } from './shared/buscador/buscador.service';
 
 @Component({
   selector: 'app-root',
@@ -14,19 +15,21 @@ import { CommonModule } from '@angular/common';
 export class AppComponent implements OnInit {
   @ViewChild(BuscadorComponent) buscadorComponent!: BuscadorComponent;
   
-  title = 'Fadey';
   menuAbierto: boolean = false;
 
   constructor(
     public datosService: DatosService,
-    private router: Router
+    private router: Router,
+    private buscadorService: BuscadorService
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token') || '';
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.datosService.tokenUsuario = token;
-    this.datosService.user = user;
+    this.datosService.tokenUsuario = localStorage.getItem('token') || '';
+    this.datosService.user = JSON.parse(localStorage.getItem('user') || '{}');
+  }
+
+  paginaPrincipal(): boolean {
+    return this.router.url == '/';
   }
 
   logout(): void {
@@ -53,7 +56,7 @@ export class AppComponent implements OnInit {
     
     // Si el clic no es en el buscador, cierra la lista de resultados
     if (buscador && !buscador.contains(target) && this.buscadorComponent) {
-      this.buscadorComponent.limpiarResultados();
+      this.buscadorService.limpiarResultados();
     }
   }
 }

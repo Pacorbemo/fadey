@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../environments/environments';
 
 interface User {
   id: number;
@@ -17,6 +18,7 @@ export class DatosService {
   private _tokenUsuario: string = '';
   public user!: User;
   public rol: string = '';
+  public noFoto: string = `${environment.serverUrl}/uploads/default-avatar.jpg`;
 
   limpiarUser(): void {
     this.user = { id: 0, username: '', nombre: '', rol: '' , pic: '' };

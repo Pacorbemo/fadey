@@ -1,0 +1,96 @@
+.container{
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+	height: 100%;
+}
+
+.fondo{
+	top: 0;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	opacity: 0.7;
+	z-index: -1;
+	background: linear-gradient(#374151, rgba(136, 25, 25, 0.2));
+	filter: blur(200px)
+}
+
+h1{
+	font-family: Montserrat, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+	font-size: 4.2rem;
+}
+
+.form-control{
+	width: 20vw;
+}
+
+.input {
+	width: 100%;
+	font-family: inherit;
+	background-color: white;
+	color: black;
+	height: 3rem;
+	padding: 12px;
+	border-radius: 12px;
+	border: 1.5px solid lightgrey;
+	box-sizing: border-box;
+	outline: none;
+	transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+	box-shadow: 0px 0px 20px -18px;
+}
+  
+.input:hover {
+	border: 2px solid lightgrey;
+	box-shadow: 0px 0px 20px -17px;
+}
+  
+.input:active {
+	transform: scale(0.95);
+}
+  
+.input:focus {
+	border: 2px solid grey;
+}
+
+.main{
+	width: 100%;
+	display: flex;
+	position: relative;
+	justify-content: center;
+	align-items: center;
+}
+
+.main .sombra{
+	position: absolute;	
+	z-index: 1;
+	width: 15vw;
+	height: 100%;
+	filter: blur(10px);	
+	pointer-events: none;
+	opacity: 0.8;
+	margin: -2vw
+}
+
+.main .sombra-1{
+	left: 0;
+	background: linear-gradient(270deg, rgba(0, 0, 0, 0), #000000);	
+}
+
+.main .sombra-2{
+	right: 0;
+	background: linear-gradient(90deg, rgba(0, 0, 0, 0), #000000);
+}
+
+.cards {
+	margin-top: 5vh;
+}
+
+.card-row{
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 50px;
+	padding: 20px 0;
+}

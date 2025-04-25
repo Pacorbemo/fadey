@@ -45,8 +45,8 @@ export class CitasComponent implements OnInit {
     await new Promise<void>((resolve) => {
       this.usuariosService.verificarUsername(this.usernameBarbero).subscribe((response) => {
       this.usernameValido = response.exists;
-      if (response.exists && response.idBarbero) {
-        this.idBarbero = response.idBarbero;
+      if (response.exists && response.user?.id) {
+        this.idBarbero = response.user?.id;
       }
       resolve();
       });

@@ -9,6 +9,10 @@ import { HttpService } from './http.service';
 export class MensajesService {
   constructor(private httpService: HttpService, private socket: Socket) {}
 
+  conectar(emisor_id: number): void {
+    this.socket.emit('registro', emisor_id);
+  }
+
   enviarMensaje(emisor_id: number, receptor_id: number, mensaje: string): void {
     this.socket.emit('enviarMensaje', { emisor_id, receptor_id, mensaje });
   }

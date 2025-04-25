@@ -10,9 +10,11 @@ import { RelacionesComponent } from './components/relaciones/relaciones.componen
 import { MensajesComponent } from './components/mensajes/mensajes.component';
 import { ChatsComponent } from './components/chats/chats.component';
 import { EditarPerfilComponent } from './components/editar-perfil/editar-perfil.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
+import { usuarioExistenteGuard } from './guards/usuario-existente.guard';
+import { PaginaPrincipalComponent } from './components/pagina-principal/pagina-principal.component';
 
 export const routes: Routes = [
-	// { path: 'citas', component: CitasComponent },
 	{ path: 'crear-citas', component: CrearCitasComponent},
 	{ path: 'registro', component: RegisterComponent },
 	{ path: 'inicio-sesion', component: LoginComponent },
@@ -23,13 +25,14 @@ export const routes: Routes = [
 	{ path: 'editar-perfil', component: EditarPerfilComponent},
 	{
 		path: ':username',
+		canActivate: [usuarioExistenteGuard],
 		children: [
 		  { path: 'citas', component: CitasComponent },
 		  { path: 'mensajes', component: MensajesComponent },
-		  { path: '', redirectTo: '/mis-citas', pathMatch: 'full' },
+		  { path: '', component: PerfilComponent},
 		],
-	  },
+	},
 	
-	{ path: '', redirectTo: '/mis-citas', pathMatch: 'full' },
+	{ path: '', component:PaginaPrincipalComponent, pathMatch: 'full' },
 	{ path: '**', redirectTo: '/mis-citas' } 
 ];

@@ -16,7 +16,7 @@
 					@for (relacion of barberos; let idx = $index; track idx) {
 					<tr>
 						<td>{{ relacion.nombre }}</td>
-						<td><a [routerLink]="['/', relacion.username, 'citas']">{{ relacion.username }}</a></td>
+						<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
 						<td>
 							<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
 						</td>

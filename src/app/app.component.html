@@ -1,10 +1,12 @@
 <header>
-  <div class="sombra-container">
-    <h1>{{title}}</h1>
+  <div class="titulo-container" routerLink="/">
+    <p>Fadey</p>
   </div>
   @if(datosService.user.username){
   <div class="header">
+    @if(!paginaPrincipal()){
     <app-buscador id="buscador"></app-buscador>
+    } 
     <div class="user"  (click)="alternarMenu()">
       <div class="username">{{datosService.user.username}}</div>
       <span class="marco-perfil">

@@ -1,0 +1,25 @@
+<div class="container">
+	<div class="fondo"></div>
+	<h1>Busca nuevos Barberos</h1>
+	<div class="form-control">
+		<input 
+		  type="text" 
+		  class="input" 
+		  (input)="buscadorService.buscarUsuarios()"
+		  (keydown.enter)="buscadorService.seleccionarUsuario(buscadorService.buscador)" 
+		  placeholder="Buscar barberos..." 
+		  [(ngModel)]="buscadorService.buscador" 
+		/>
+	</div>
+	<div class="main">
+		<div class="sombra sombra-1"></div>
+		<div class="cards">
+			<div *ngFor="let chunk of chunkArray(buscadorService.resultados, 4,5)" class="card-row">
+				<div *ngFor="let barbero of chunk">
+					<pagina-principal-card [barbero]="barbero" [routerLink]="[barbero.username]"></pagina-principal-card>
+				</div>
+			</div>
+		</div>
+		<div class="sombra sombra-2"></div>
+	</div>
+</div>	

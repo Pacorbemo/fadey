@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { Usuario } from '../interfaces/usuario';
 
-interface Usuario {
+interface UsuarioRegister {
   username: string;
   nombre: string;
   email: string;
@@ -17,7 +18,7 @@ interface Usuario {
 export class UsuariosService {
   constructor(private http: HttpClient) {}
 
-  registrar(usuario: Usuario): Observable<any> {
+  registrar(usuario: UsuarioRegister): Observable<any> {
     return this.http.post(`/registro`, usuario);
   }
 
@@ -25,8 +26,14 @@ export class UsuariosService {
     return this.http.post(`/login`, credenciales);
   }
 
-  verificarUsername(username: string): Observable<{ exists: boolean; idBarbero?: number }> {
+  verificarUsername(username: string): Observable<{ exists: boolean, user?: Usuario }> {
     return this.http.get<{ exists: boolean }>(`/usuario/${username}`);
+  }
+
+  datosUsername(username: string): Observable<Usuario> {
+    return this.http.get<{ user: Usuario }>(`/usuario/${username}`).pipe(
+      map((response) => response.user)
+    );
   }
 
   verificarEmail(email: string): Observable<{ exists: boolean }> {
@@ -45,7 +52,8 @@ export class UsuariosService {
     });
   }
 
-  buscarUsuarios(query: string): Observable<{ id: number; username: string; nombre: string; foto_perfil: string }[]> {
-    return this.http.get<{ id: number; username: string; nombre: string; foto_perfil: string }[]>(`/buscar-barberos?query=${query}`);
+  // Buscar por string el nombre o username
+  buscarUsuarios(query: string): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`/buscar-barberos?query=${query}`);
   }
 }
