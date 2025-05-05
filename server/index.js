@@ -11,7 +11,6 @@ const path = require('path');
 const fs = require('fs');
 
 
-
 const autenticarToken = require('./autenticarToken');
 const {actualizarEstadoSolicitud, eliminarRelacion} = require('./funciones/relaciones');
 
@@ -23,24 +22,24 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Carpeta donde se guardarán las imágenes
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  },
-});
-const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true); // Aceptar el archivo
-  } else {
-    cb(new Error('Solo se permiten imágenes (JPEG, PNG, GIF, WEBP)')); // Rechazar el archivo
-  }
-};
-const upload = multer({ storage, fileFilter, limits: {fileSize: 5 * 1024 * 1024} });
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'uploads/'); // Carpeta donde se guardarán las imágenes
+//   },
+//   filename: (req, file, cb) => {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+//   },
+// });
+// const fileFilter = (req, file, cb) => {
+//   const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+//   if (allowedMimeTypes.includes(file.mimetype)) {
+//     cb(null, true); // Aceptar el archivo
+//   } else {
+//     cb(new Error('Solo se permiten imágenes (JPEG, PNG, GIF, WEBP)')); // Rechazar el archivo
+//   }
+// };
+// const upload = multer({ storage, fileFilter, limits: {fileSize: 5 * 1024 * 1024} });
 
 
 const db = mysql.createConnection({
@@ -60,49 +59,48 @@ db.connect((err) => {
 
 socketHandler(server, db);
 
-app.post('/subir-imagen', autenticarToken, upload.single('imagen'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No se subió ninguna imagen' });
-  }
+// app.post('/subir-imagen', autenticarToken, upload.single('imagen'), (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).json({ error: 'No se subió ninguna imagen' });
+//   }
 
-  const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-  console.log(imageUrl)
-  const userId = req.user.id;
+//   const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+//   const userId = req.user.id;
 
-  // Obtener la URL de la foto actual del usuario
-  const getPhotoQuery = 'SELECT foto_perfil FROM Usuarios WHERE id = ?';
-  db.query(getPhotoQuery, [userId], (err, results) => {
-    if (err) {
-      console.error('Error al obtener la foto actual:', err);
-      return res.status(500).json({ error: 'Error al obtener la foto actual' });
-    }
+//   // Obtener la URL de la foto actual del usuario
+//   const getPhotoQuery = 'SELECT foto_perfil FROM Usuarios WHERE id = ?';
+//   db.query(getPhotoQuery, [userId], (err, results) => {
+//     if (err) {
+//       console.error('Error al obtener la foto actual:', err);
+//       return res.status(500).json({ error: 'Error al obtener la foto actual' });
+//     }
 
-    const currentPhotoUrl = results[0]?.foto_perfil;
+//     const currentPhotoUrl = results[0]?.foto_perfil;
 
-    // Eliminar la foto anterior si existe
-    if (currentPhotoUrl) {
-      const currentPhotoPath = `uploads/${currentPhotoUrl.split('/uploads/')[1]}`;
-      fs.unlink(currentPhotoPath, (err) => {
-        if (err) {
-          console.error('Error al eliminar la foto anterior:', err);
-        } else {
-          console.log('Foto anterior eliminada:', currentPhotoPath);
-        }
-      });
-    }
+//     // Eliminar la foto anterior si existe
+//     if (currentPhotoUrl) {
+//       const currentPhotoPath = `uploads/${currentPhotoUrl.split('/uploads/')[1]}`;
+//       fs.unlink(currentPhotoPath, (err) => {
+//         if (err) {
+//           console.error('Error al eliminar la foto anterior:', err);
+//         } else {
+//           console.log('Foto anterior eliminada:', currentPhotoPath);
+//         }
+//       });
+//     }
 
-    // Guardar la nueva URL de la foto en la base de datos
-    const updatePhotoQuery = 'UPDATE Usuarios SET foto_perfil = ? WHERE id = ?';
-    db.query(updatePhotoQuery, [imageUrl, userId], (err) => {
-      if (err) {
-        console.error('Error al guardar la URL de la imagen en la base de datos:', err);
-        return res.status(500).json({ error: 'Error al guardar la imagen' });
-      }
+//     // Guardar la nueva URL de la foto en la base de datos
+//     const updatePhotoQuery = 'UPDATE Usuarios SET foto_perfil = ? WHERE id = ?';
+//     db.query(updatePhotoQuery, [imageUrl, userId], (err) => {
+//       if (err) {
+//         console.error('Error al guardar la URL de la imagen en la base de datos:', err);
+//         return res.status(500).json({ error: 'Error al guardar la imagen' });
+//       }
 
-      res.status(200).json({ message: 'Imagen subida correctamente', imageUrl });
-    });
-  });
-});
+//       res.status(200).json({ message: 'Imagen subida correctamente', imageUrl });
+//     });
+//   });
+// });
 
 app.get("/comprobar-relacion", autenticarToken, (req, res) => {
   const idBarbero = req.query.idBarbero;
@@ -422,7 +420,6 @@ app.post("/login", async (req, res) => {
 
 app.post("/crear-citas", autenticarToken, async (req, res) => {
   const { fechas, idBarbero } = req.body;
-
   if (req.user.id !== idBarbero) {
     return res.status(403).json({ error: "No tienes permiso para crear citas para este barbero" });
   }
@@ -519,23 +516,96 @@ app.get('/buscar-barberos', (req, res) => {
   });
 });
 
-// app.get("/usuario/:id", (req, res) => {
-//   const { id } = req.params;
+app.get('/random-barberos', (req, res) => {
+  const query = `
+    SELECT id, username, nombre, foto_perfil 
+    FROM Usuarios 
+    WHERE barbero = 1 
+    ORDER BY RAND() 
+    LIMIT 10
+  `;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error al obtener barberos aleatorios:', err);
+      return res.status(500).json({ error: 'Error al obtener barberos aleatorios' });
+    }
+    res.status(200).json(results);
+  });
+});
 
-//   const query = "SELECT nombre, username FROM Usuarios WHERE id = ?";
-//   db.query(query, [id], (err, results) => {
+app.get('/productos-barbero/:username', autenticarToken, (req, res) => {
+  const { username } = req.params;
+
+  const query = `
+    SELECT Productos.id, Productos.nombre, Productos.precio, Productos.descripcion, Productos.foto, Productos.stock 
+    FROM Productos 
+    JOIN Usuarios ON Productos.barbero_id = Usuarios.id 
+    WHERE Usuarios.username = ?
+  `;
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error('Error al obtener productos del barbero:', err);
+      return res.status(500).json({ error: 'Error al obtener productos del barbero' });
+    }
+    res.status(200).json(results);
+  });
+})
+
+// app.post('/producto', autenticarToken, upload.single('foto'), (req, res) => {
+//   const { nombre, precio, descripcion, stock} = req.body;
+//   const foto = req.file;
+//   const barbero_id = req.user.id;
+
+//   if (!nombre || !precio || !descripcion || !stock) {
+//     return res.status(400).json({ error: 'Información insuficiente' });
+//   }
+
+//   let foto_url = null;
+//   if (foto){
+//     foto_url = `${req.protocol}://${req.get('host')}/uploads/${foto.filename}`;
+//   }
+
+//   const query = `
+//     INSERT INTO Productos (nombre, precio, descripcion, foto, stock, barbero_id)
+//     VALUES (?, ?, ?, ?, ?, ?)
+//   `;
+//   db.query(query, [nombre, precio, descripcion, foto_url, stock, barbero_id], (err, result) => {
 //     if (err) {
-//       console.error("Error al obtener usuario:", err);
-//       return res.status(500).json({ error: "Error al obtener usuario" });
+//       console.error('Error al agregar producto:', err);
+//       return res.status(500).json({ error: 'Error al agregar producto' });
 //     }
-
-//     if (results.length === 0) {
-//       return res.status(404).json({ error: "Usuario no encontrado" });
-//     }
-
-//     res.status(200).json(results[0]);
+//     res.status(200).json({ message: 'Producto agregado exitosamente' });
 //   });
-// });
+// })
+
+app.put('/producto/:id', autenticarToken, (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const barbero_id = req.user.id;
+
+  if (!updates || Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: 'No se proporcionaron datos para actualizar' });
+  }
+
+  const query = `
+    UPDATE Productos 
+    SET ${Object.keys(updates).map(key => `${key} = ?`).join(', ')}
+    WHERE id = ? AND barbero_id = ?
+  `;
+
+  db.query(query, [...Object.values(updates), id, barbero_id], (err, result) => {
+    if (err) {
+      console.error('Error al actualizar el producto:', err);
+      return res.status(500).json({ error: 'Error al actualizar el producto' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Producto no encontrado o no autorizado' });
+    }
+
+    res.status(200).json({ message: 'Producto actualizado correctamente' });
+  });
+});
 
 app.get("/usuario/:username", async (req, res) => {
   const { username } = req.params;

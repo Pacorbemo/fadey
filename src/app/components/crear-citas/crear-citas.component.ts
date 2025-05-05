@@ -88,7 +88,6 @@ export class CrearCitasComponent implements OnInit {
         );
       }
     }
-    // console.log(franjasFormateadas)
     this.citasService.subirCitas(this.idBarbero, franjasFormateadas).subscribe(
       () => {
         this.franjasSeleccionadas = [];
@@ -102,6 +101,10 @@ export class CrearCitasComponent implements OnInit {
 
   cancelarSeleccion(): void {
     this.franjasSeleccionadas = [];
+  }
+
+  desactivarAtras(): boolean {
+    return this.diasDeLaSemana[0].getTime() <= new Date().getTime();
   }
 
 }

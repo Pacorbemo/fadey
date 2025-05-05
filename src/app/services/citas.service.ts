@@ -90,7 +90,7 @@ export class CitasService {
 
   subirCitas(idBarbero: number, fechas: Date[]): Observable<any> {
     const body = { idBarbero, fechas };
-    return this.httpService.httpPostToken('/citas', body);
+    return this.httpService.httpPostToken('/citas/crear', body);
   }
 
   // Obtener las citas de un BARBERO
@@ -105,7 +105,7 @@ export class CitasService {
         inicio,
         fin,
       };
-  
+      
       return new Promise<GetCitasResponseInterface>((resolve, reject) => {
         this.httpService.httpPostToken('/citas', body)
           .subscribe(
@@ -126,15 +126,15 @@ export class CitasService {
 
   // Obtener las citas de un USUARIO
   getCitasUsuario(): Observable<any> {
-    return this.httpService.httpGetToken('/citas-usuario')
+    return this.httpService.httpGetToken('/citas/cliente')
   }
 
   getCitasBarbero(): Observable<any> {
-    return this.httpService.httpGetToken('/citas-barbero')
+    return this.httpService.httpGetToken('/citas/barbero')
   }
 
 
-  purgarDiasPasados(horarios: { [dia: number]: string[] }): { [dia: number]: string[] } {
+  purgarDiasPasados(horarios: { [dia: number]: string[] }, primerDiaSemana: Date): { [dia: number]: string[] } {
     const hoy = new Date();
     const horariosPurgados: { [dia: number]: string[] } = {};
 
@@ -144,7 +144,7 @@ export class CitasService {
         horariosPurgados[dia] = horas.filter(hora => 
           hora > `${hoy.getHours().toString().padStart(2, '0')}:${hoy.getMinutes().toString().padStart(2, '0')}`
         );
-      } else if (dia > hoy.getDate()) {
+      } else if (dia > hoy.getDate() || dia < hoy.getDate() - 7) { // La segunda condicion añade los días de inicio de mes, en las semanas que contienen dias de dos meses (30,31,1,2...)
         horariosPurgados[dia] = horas;
       }
     });
@@ -176,7 +176,7 @@ export class CitasService {
 
   confirmarReserva(idBarbero:number, dia: Date): Observable<any> {
       const body = { idBarbero, dia };
-      return this.httpService.httpPostToken('/confirmar-reserva', body);
+      return this.httpService.httpPostToken('/citas/confirmar', body);
     }
 
 }

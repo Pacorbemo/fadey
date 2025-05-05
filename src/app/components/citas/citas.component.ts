@@ -97,7 +97,7 @@ export class CitasComponent implements OnInit {
   async recargarCitas(){
     const response = await this.citasService.getCitas(this.idBarbero, this.semanaActual.inicio);
     this.horariosReservados = response.reservadas;
-    this.horariosDisponibles = this.citasService.purgarDiasPasados(response.totales);
+    this.horariosDisponibles = this.citasService.purgarDiasPasados(response.totales, this.semanaActual.inicio);
     this.horariosReservadosPorUsuario = response.reservadasUsuario;
   }
 

@@ -31,6 +31,6 @@ export class MensajesService {
   }
 
   cargarChats(): Observable<any> {
-    return this.httpService.httpGetToken('/chats');
+    return this.httpService.httpGetToken('/mensajes/chats');
   }
 }

@@ -19,19 +19,19 @@ export class UsuariosService {
   constructor(private http: HttpClient) {}
 
   registrar(usuario: UsuarioRegister): Observable<any> {
-    return this.http.post(`/registro`, usuario);
+    return this.http.post(`/auth/registro`, usuario);
   }
 
   login(credenciales: { username: string; password: string }): Observable<any> {
-    return this.http.post(`/login`, credenciales);
+    return this.http.post(`/auth/login`, credenciales);
   }
 
   verificarUsername(username: string): Observable<{ exists: boolean, user?: Usuario }> {
-    return this.http.get<{ exists: boolean }>(`/usuario/${username}`);
+    return this.http.get<{ exists: boolean }>(`/usuarios/username/${username}`);
   }
 
   datosUsername(username: string): Observable<Usuario> {
-    return this.http.get<{ user: Usuario }>(`/usuario/${username}`).pipe(
+    return this.http.get<{ user: Usuario }>(`/usuarios/username/${username}`).pipe(
       map((response) => response.user)
     );
   }
@@ -46,7 +46,7 @@ export class UsuariosService {
 
   esBarbero(id:number): Promise<boolean>{
     return new Promise((resolve) =>{
-      this.http.get<{ barbero: boolean }>(`/es-barbero/${id}`).subscribe((response) => {
+      this.http.get<{ barbero: boolean }>(`/barberos/es-barbero/${id}`).subscribe((response) => {
         resolve(response.barbero);
       });
     });
@@ -54,6 +54,10 @@ export class UsuariosService {
 
   // Buscar por string el nombre o username
   buscarUsuarios(query: string): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`/buscar-barberos?query=${query}`);
+    return this.http.get<Usuario[]>(`/barberos/buscar/${query}`);
+  }
+
+  getRandomUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`/barberos/random`);
   }
 }

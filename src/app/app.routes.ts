@@ -13,26 +13,40 @@ import { EditarPerfilComponent } from './components/editar-perfil/editar-perfil.
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { usuarioExistenteGuard } from './guards/usuario-existente.guard';
 import { PaginaPrincipalComponent } from './components/pagina-principal/pagina-principal.component';
+import { ProductosComponent } from './components/productos/productos.component';
+import { MisProductosComponent } from './components/mis-productos/mis-productos.component';
 
 export const routes: Routes = [
-	{ path: 'crear-citas', component: CrearCitasComponent},
-	{ path: 'registro', component: RegisterComponent },
-	{ path: 'inicio-sesion', component: LoginComponent },
-	{ path: 'mis-citas', component: MisCitasComponent, canActivate: [authGuard], canMatch: [authGuard] },
-	{ path: 'solicitudes', component: SolicitudesComponent },
-	{ path: 'relaciones', component: RelacionesComponent},
-	{ path: 'chats', component: ChatsComponent},
-	{ path: 'editar-perfil', component: EditarPerfilComponent},
-	{
-		path: ':username',
-		canActivate: [usuarioExistenteGuard],
-		children: [
-		  { path: 'citas', component: CitasComponent },
-		  { path: 'mensajes', component: MensajesComponent },
-		  { path: '', component: PerfilComponent},
-		],
-	},
-	
-	{ path: '', component:PaginaPrincipalComponent, pathMatch: 'full' },
-	{ path: '**', redirectTo: '/mis-citas' } 
+  { path: 'crear-citas', component: CrearCitasComponent },
+  { path: 'registro', component: RegisterComponent },
+  { path: 'inicio-sesion', component: LoginComponent },
+  {
+    path: 'mis-citas',
+    component: MisCitasComponent,
+    canActivate: [authGuard],
+    canMatch: [authGuard],
+  },
+  {
+    path: 'mis-productos',
+    component: MisProductosComponent,
+    canActivate: [authGuard],
+    canMatch: [authGuard],
+  },
+  { path: 'solicitudes', component: SolicitudesComponent },
+  { path: 'relaciones', component: RelacionesComponent },
+  { path: 'chats', component: ChatsComponent },
+  { path: 'editar-perfil', component: EditarPerfilComponent },
+  {
+    path: ':username',
+    canActivate: [usuarioExistenteGuard],
+    children: [
+      { path: 'mensajes', component: MensajesComponent },
+      { path: 'citas', component: CitasComponent },
+      { path: 'productos', component: ProductosComponent },
+      { path: '', component: PerfilComponent },
+    ],
+  },
+
+  { path: '', component: PaginaPrincipalComponent, pathMatch: 'full' },
+  { path: '**', redirectTo: '/mis-citas' },
 ];

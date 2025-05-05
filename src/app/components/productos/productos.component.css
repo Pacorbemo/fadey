@@ -1,0 +1,68 @@
+.productos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.producto-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.producto-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.producto-info {
+  padding: 15px;
+  flex: 1;
+}
+
+.producto-info h2 {
+  font-size: 1.5em;
+  margin: 0 0 10px;
+}
+
+.producto-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.reserva {
+  padding: 15px;
+  border-top: 1px solid #ddd;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.reserva input[type="number"] {
+  width: 70px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.reserva button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reserva button:hover {
+  background-color: #0056b3;
+}

@@ -9,45 +9,56 @@ import { Usuario } from '../../interfaces/usuario';
   providedIn: 'root',
 })
 export class BuscadorService {
-  private searchSubject = new Subject<string>();
+  private searchSubject = new Subject<string | void>();
 
   constructor(private router: Router, private usuariosService: UsuariosService) {
     this.searchSubject
       .pipe(
-        debounceTime(300), // Espera 300ms después de que el usuario deja de escribir
-        switchMap((query) => this.usuariosService.buscarUsuarios(query)) 
+        debounceTime(300),
+        switchMap((query) => query? this.usuariosService.buscarUsuarios(query) : this.usuariosService.getRandomUsuarios())
       )
       .subscribe((usuarios) => {
-        this.resultados = usuarios; 
+        if (usuarios.length == 0){
+          this.resultados = [{id: 0, username: 'No se encontraron resultados', nombre: '', foto_perfil: ''}];
+        }
+        else{
+          this.resultados = usuarios;
+        }
+        this.loading = false;
       });
   }
 
   resultados: Usuario[] = [];
   buscador: string = '';
+  loading: boolean = false;
 
   buscarUsuarios(): void {
-    if (this.buscador.length < 3) {
-      this.limpiarResultados();
-      return;
-    }
-    this.searchSubject.next(this.buscador); 
+    this.loading = true;
+    this.searchSubject.next(this.buscador);
+  }
+
+  getRandomUsuarios(): void {
+    this.loading = true;
+    this.searchSubject.next();
   }
 
   seleccionarUsuario(username: string): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([username]);
-    });
+    this.router.navigate([username]);
     this.limpiarResultados();
-    this.buscador = '';
+    this.limpiarBuscador();
   }
 
   seleccionarPrimero(): void {
     if (this.resultados.length > 0) {
-      this.seleccionarUsuario(this.resultados[0].username); 
+      this.seleccionarUsuario(this.resultados[0].username);
     }
   }
 
   limpiarResultados(): void {
     this.resultados.splice(0, this.resultados.length);
+  }
+
+  limpiarBuscador(): void {
+    this.buscador = '';
   }
 }

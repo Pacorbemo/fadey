@@ -39,6 +39,7 @@
       <!-- <a routerLink="{{datosService.user.username}}/citas">Citas</a> -->
       <a routerLink="crear-citas" *ngIf="datosService.esBarbero()">Crear citas</a>
       <a routerLink="mis-citas">Mis Citas</a>
+      <a routerLink="mis-productos" *ngIf="datosService.esBarbero()">Mis Productos</a>
       <a routerLink="solicitudes" *ngIf="datosService.esBarbero()">Solicitudes</a>
       <a routerLink="relaciones">Relaciones</a>
       <a routerLink="chats">Chats</a>

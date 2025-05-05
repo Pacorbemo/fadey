@@ -5,21 +5,28 @@
 		<input 
 		  type="text" 
 		  class="input" 
-		  (input)="buscadorService.buscarUsuarios()"
-		  (keydown.enter)="buscadorService.seleccionarUsuario(buscadorService.buscador)" 
+		  (input)="inputLetra()"
 		  placeholder="Buscar barberos..." 
 		  [(ngModel)]="buscadorService.buscador" 
 		/>
 	</div>
 	<div class="main">
-		<div class="sombra sombra-1"></div>
+		<!-- <div class="sombra sombra-1"></div> -->
 		<div class="cards">
-			<div *ngFor="let chunk of chunkArray(buscadorService.resultados, 4,5)" class="card-row">
-				<div *ngFor="let barbero of chunk">
-					<pagina-principal-card [barbero]="barbero" [routerLink]="[barbero.username]"></pagina-principal-card>
+			@if(buscadorService.resultados.length == 0 || buscadorService.loading) {
+				<h2>Buscando usuarios...</h2>
+			}
+			@else if (buscadorService.resultados[0].id == 0 && !buscadorService.loading) {
+				<h2>Ningun usuario coincide con "{{buscadorService.buscador}}"</h2>
+			}
+			@else {
+				<div *ngFor="let chunk of chunkArray(buscadorService.resultados, 4,5)" class="card-row">
+					<div *ngFor="let barbero of chunk">
+						<pagina-principal-card [barbero]="barbero" (click)="buscadorService.seleccionarUsuario(barbero.username)"></pagina-principal-card>
+					</div>
 				</div>
-			</div>
+			}
 		</div>
-		<div class="sombra sombra-2"></div>
+		<!-- <div class="sombra sombra-2"></div> -->
 	</div>
 </div>	

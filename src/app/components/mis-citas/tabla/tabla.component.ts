@@ -14,7 +14,7 @@ import { Component, Input } from '@angular/core';
       </li>
       @for(cita of citas; track cita.id){
         <li class="row">
-          <div class="col col-1">{{ cita.fecha_hora | date:'dd/MM hh:mm' }}</div>
+          <div class="col col-1">{{ cita.fecha_hora | date:'dd/MM HH:mm' }}</div>
           <div class="col col-2">{{ cita.usuario_nombre }}</div>
           <div class="col col-3">{{ '@' + cita.usuario_username }}</div>
         </li>

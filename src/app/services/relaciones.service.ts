@@ -24,7 +24,7 @@ export class RelacionesService {
 
   getRelacionesCliente(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.httpService.httpGetToken('/relaciones-cliente')
+      this.httpService.httpGetToken('/relaciones/cliente')
         .subscribe(
           (response) => {
             response = JSON.parse(JSON.stringify(response)).filter((solicitud: any) => solicitud.estado === 'aceptado');
@@ -37,7 +37,7 @@ export class RelacionesService {
 
   getRelacionesBarbero(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.httpService.httpGetToken('/relaciones-barbero')
+      this.httpService.httpGetToken('/relaciones/barbero')
         .subscribe(
           (response) => {
             response = JSON.parse(JSON.stringify(response)).filter((solicitud: any) => solicitud.estado === 'aceptado');
@@ -54,7 +54,7 @@ export class RelacionesService {
 
   solicitar(userBarbero: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/solicitar', { userBarbero })
+      this.httpService.httpPostToken('/relaciones/solicitar', { userBarbero })
         .subscribe(
           (response) => resolve(!!response),
           (error) => reject(error)
@@ -64,7 +64,7 @@ export class RelacionesService {
 
   aceptarSolicitud(idRelacion: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/aceptar-solicitud', { idRelacion })
+      this.httpService.httpPostToken('/relaciones/aceptar', { idRelacion })
         .subscribe(
           (response) => resolve(response),
           (error) => reject(error)
@@ -74,7 +74,7 @@ export class RelacionesService {
 
   rechazarSolicitud(idRelacion: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/rechazar-solicitud', { idRelacion })
+      this.httpService.httpPostToken('/relaciones/rechazar', { idRelacion })
         .subscribe(
           (response) => resolve(response),
           (error) => reject(error)
@@ -84,7 +84,7 @@ export class RelacionesService {
 
   eliminarRelacion(idRelacion: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/eliminar-relacion', { idRelacion })
+      this.httpService.httpPostToken('/relaciones/eliminar', { idRelacion })
         .subscribe(
           (response) => resolve(response),
           (error) => reject(error)
@@ -94,7 +94,7 @@ export class RelacionesService {
 
   comprobarRelacion(idBarbero: number): Promise<{ relacion: string }> {
     return new Promise<{ relacion: string }>((resolve, reject) => {
-      this.httpService.httpGetToken('/comprobar-relacion', { idBarbero: idBarbero.toString() })
+      this.httpService.httpGetToken('/relaciones/comprobar', { idBarbero: idBarbero.toString() })
         .subscribe(
           (response) => resolve(response),
           (error) => reject(error)

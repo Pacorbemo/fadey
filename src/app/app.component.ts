@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { DatosService } from './services/datos.service';
 import { BuscadorComponent } from "./shared/buscador/buscador.component";
@@ -43,20 +43,4 @@ export class AppComponent implements OnInit {
     this.menuAbierto = !this.menuAbierto;
   }
 
-  @HostListener('document:click', ['$event'])
-  cerrarMenu(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    const user = document.querySelector('.user');
-    const buscador = document.querySelector('.autocomplete-list');
-
-    // Si el clic no es en el menú, cierra el menú
-    if (user && !user.contains(target)) {
-      this.menuAbierto = false;
-    }
-    
-    // Si el clic no es en el buscador, cierra la lista de resultados
-    if (buscador && !buscador.contains(target) && this.buscadorComponent) {
-      this.buscadorService.limpiarResultados();
-    }
-  }
 }

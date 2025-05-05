@@ -1,22 +1,24 @@
 <div class="component-container">
-	<h2>Tus relaciones</h2>
+	<h1>Tus relaciones</h1>
+
+	<input type="text" [(ngModel)]="busqueda" placeholder="Buscar por nombre o usuario" (input)="filtrar()" />
 	
 	@if(datosService.esCliente()){
-		@if (barberos.length > 0) {
+		@if (barberosFiltrados.length > 0) {
 		<div class="solicitudes-container">
 			<table>
 				<thead>
 					<tr>
-						<th>Nombre</th>
 						<th>Usuario</th>
+						<th>Nombre</th>
 						<!-- <th></th> -->
 					</tr>
 				</thead>
 				<tbody>
-					@for (relacion of barberos; let idx = $index; track idx) {
-					<tr>
-						<td>{{ relacion.nombre }}</td>
-						<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
+					@for (relacion of barberosFiltrados; let idx = $index; track idx) {
+						<tr>
+							<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
+							<td>{{ relacion.nombre }}</td>
 						<td>
 							<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
 						</td>
@@ -33,22 +35,22 @@
 	}
 
 	@if(datosService.esBarbero()){
-		@if (clientes.length > 0) {
+		@if (clientesFiltrados.length > 0) {
 			<h3>Clientes</h3>
 			<div class="solicitudes-container">
 				<table>
 					<thead>
 						<tr>
-							<th>Nombre</th>
 							<th>Usuario</th>
+							<th>Nombre</th>
 							<!-- <th></th> -->
 						</tr>
 					</thead>
 					<tbody>
-						@for (relacion of clientes; let idx = $index; track idx) {
+						@for (relacion of clientesFiltrados; let idx = $index; track idx) {
 						<tr>
+							<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
 							<td>{{ relacion.nombre }}</td>
-							<td><a [routerLink]="['/', relacion.username, 'citas']">{{ relacion.username }}</a></td>
 							<td>
 								<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
 							</td>
@@ -58,22 +60,22 @@
 				</table>
 			</div>
 		}
-		@if (barberos.length > 0) {
+		@if (barberosFiltrados.length > 0) {
 			<h3>Barberos</h3>
 			<div class="solicitudes-container">
 				<table>
 					<thead>
 						<tr>
-							<th>Nombre</th>
 							<th>Usuario</th>
+							<th>Nombre</th>
 							<!-- <th></th> -->
 						</tr>
 					</thead>
 					<tbody>
-						@for (relacion of barberos; let idx = $index; track idx) {
+						@for (relacion of barberosFiltrados; let idx = $index; track idx) {
 						<tr>
+							<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
 							<td>{{ relacion.nombre }}</td>
-							<td><a [routerLink]="['/', relacion.username, 'citas']">{{ relacion.username }}</a></td>
 							<td>
 								<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
 							</td>

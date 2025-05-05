@@ -62,7 +62,7 @@ h1{
 	align-items: center;
 }
 
-.main .sombra{
+/* .main .sombra{
 	position: absolute;	
 	z-index: 1;
 	width: 15vw;
@@ -81,7 +81,7 @@ h1{
 .main .sombra-2{
 	right: 0;
 	background: linear-gradient(90deg, rgba(0, 0, 0, 0), #000000);
-}
+} */
 
 .cards {
 	margin-top: 5vh;
