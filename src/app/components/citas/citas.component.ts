@@ -5,6 +5,7 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RelacionesService } from '../../services/relaciones.service';
+import { CargandoService } from '../../services/cargando.service';
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.component.html',
@@ -13,7 +14,6 @@ import { RelacionesService } from '../../services/relaciones.service';
   imports: [DateMesStringPipe, CommonModule, RouterLink]
 })
 export class CitasComponent implements OnInit {
-  cargando: boolean = true;
   usernameValido: boolean = false;
   usuarioAutorizado: boolean = false;
   relacion : string = '';
@@ -36,6 +36,7 @@ export class CitasComponent implements OnInit {
     private usuariosService: UsuariosService,
     public relacionesService: RelacionesService,
     private route: ActivatedRoute,
+    public cargandoService: CargandoService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -66,7 +67,6 @@ export class CitasComponent implements OnInit {
       }
       this.relacion = (await this.relacionesService.comprobarRelacion(this.idBarbero)).relacion
     }
-    this.cargando = false;
   }
   
   semanaActual = {

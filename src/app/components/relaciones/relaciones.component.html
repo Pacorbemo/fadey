@@ -1,8 +1,9 @@
 <div class="component-container">
 	<h1>Tus relaciones</h1>
 
-	<input type="text" [(ngModel)]="busqueda" placeholder="Buscar por nombre o usuario" (input)="filtrar()" />
+	<input type="text" [(ngModel)]="busqueda" placeholder="Filtrar por nombre o usuario" (input)="filtrar()" />
 	
+@if(!cargandoService.cargando){
 	@if(datosService.esCliente()){
 		@if (barberosFiltrados.length > 0) {
 		<div class="solicitudes-container">
@@ -35,6 +36,10 @@
 	}
 
 	@if(datosService.esBarbero()){
+		@if(clientes.length == 0 && barberos.length == 0) {
+			<p>Aún no tienes relaciones.</p>
+		}
+
 		@if (clientesFiltrados.length > 0) {
 			<h3>Clientes</h3>
 			<div class="solicitudes-container">
@@ -85,5 +90,15 @@
 				</table>
 			</div>
 		}
+
+		@else if(clientesFiltrados.length == 0 && busqueda != "") {
+			<p>No se encontraron resultados para "{{busqueda}}"</p>
+		}
 	}
+}
+@else {
+	@if(this.cargandoService.cargandoProlongado | async){
+		<p>Cargando...</p>
+	}
+}
 </div>

@@ -24,21 +24,17 @@ export class BuscadorService {
         else{
           this.resultados = usuarios;
         }
-        this.loading = false;
       });
   }
 
   resultados: Usuario[] = [];
   buscador: string = '';
-  loading: boolean = false;
 
   buscarUsuarios(): void {
-    this.loading = true;
     this.searchSubject.next(this.buscador);
   }
 
   getRandomUsuarios(): void {
-    this.loading = true;
     this.searchSubject.next();
   }
 

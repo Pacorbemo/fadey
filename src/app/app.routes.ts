@@ -17,7 +17,7 @@ import { ProductosComponent } from './components/productos/productos.component';
 import { MisProductosComponent } from './components/mis-productos/mis-productos.component';
 
 export const routes: Routes = [
-  { path: 'crear-citas', component: CrearCitasComponent },
+  { path: 'crear-citas', component: CrearCitasComponent, canActivate: [authGuard] },
   { path: 'registro', component: RegisterComponent },
   { path: 'inicio-sesion', component: LoginComponent },
   {
@@ -32,13 +32,13 @@ export const routes: Routes = [
     canActivate: [authGuard],
     canMatch: [authGuard],
   },
-  { path: 'solicitudes', component: SolicitudesComponent },
-  { path: 'relaciones', component: RelacionesComponent },
-  { path: 'chats', component: ChatsComponent },
-  { path: 'editar-perfil', component: EditarPerfilComponent },
+  { path: 'solicitudes', component: SolicitudesComponent, canActivate: [authGuard] },
+  { path: 'relaciones', component: RelacionesComponent, canActivate: [authGuard] },
+  { path: 'chats', component: ChatsComponent, canActivate: [authGuard] },
+  { path: 'editar-perfil', component: EditarPerfilComponent, canActivate: [authGuard] },
   {
     path: ':username',
-    canActivate: [usuarioExistenteGuard],
+    canActivate: [usuarioExistenteGuard, authGuard],
     children: [
       { path: 'mensajes', component: MensajesComponent },
       { path: 'citas', component: CitasComponent },
@@ -47,6 +47,6 @@ export const routes: Routes = [
     ],
   },
 
-  { path: '', component: PaginaPrincipalComponent, pathMatch: 'full' },
+  { path: '', component: PaginaPrincipalComponent, pathMatch: 'full', canActivate: [authGuard] },
   { path: '**', redirectTo: '/mis-citas' },
 ];

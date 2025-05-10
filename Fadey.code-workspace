@@ -10,6 +10,7 @@
 			"plaintext": false,
 			"markdown": false,
 			"scminput": false
-		}
+		},
+		"github.copilot.chat.editor.temporalContext.enabled": true
 	}
 }

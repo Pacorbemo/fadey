@@ -2,11 +2,12 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { DatosService } from '../../services/datos.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-mis-productos',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './mis-productos.component.html',
   styleUrl: './mis-productos.component.css',
 })
@@ -26,9 +27,10 @@ export class MisProductosComponent {
     foto: null,
   };
   productos: Producto[] = [];
+  expandidos: number[] = [];
+  reservados: {[id: number] : {cantidad : number, username: string}[]} = {};
   @ViewChild('fileInput') fileInput!: ElementRef;
 
-  // Arreglo con los campos que se pueden editar
   campos = [
     { field: 'nombre', label: 'Nombre', type: 'text', colClass: 'col-1' },
     {
@@ -57,6 +59,16 @@ export class MisProductosComponent {
         },
         (error) => {
           console.error('Error al obtener los productos:', error);
+        }
+      );
+    this.httpService
+      .httpGetToken(`/productos/reservados`)
+      .subscribe(
+        (response) => {
+          this.reservados = response;
+        },
+        (error) => {
+          console.error('Error al obtener los productos reservados:', error);
         }
       );
   }
@@ -99,7 +111,7 @@ export class MisProductosComponent {
     this.producto.foto = null;
     const fileInput = this.fileInput.nativeElement as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = ''; // Limpiar el valor del input de archivo
+      fileInput.value = ''; 
     }
   }
 
@@ -162,9 +174,7 @@ export class MisProductosComponent {
           this.httpService
             .httpPutToken(`/productos/${id}`, { [field]: producto[field] })
             .subscribe(
-              (response) => {
-                console.log('Producto actualizado correctamente:', response);
-              },
+              () => {},
               (error) => {
                 console.error('Error al actualizar el producto:', error);
               }
@@ -173,6 +183,15 @@ export class MisProductosComponent {
       }
     }
     this.editingCell = null;
+  }
+
+  expandir(producto: Producto): void {
+    const index = this.expandidos.indexOf(producto.id);
+    if (index === -1) {
+      this.expandidos.push(producto.id);
+    } else {
+      this.expandidos.splice(index, 1);
+    }
   }
 }
 

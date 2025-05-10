@@ -108,3 +108,21 @@ li.row img {
     object-fit: cover;
     border: 1px solid #444;
 }
+
+.triangle {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid rgb(255, 255, 255);
+  transition: transform 0.3s;
+}
+
+.triangle.down {
+  transform: rotate(90deg);
+}
+
+.triangle.left {
+  transform: rotate(0deg);
+}

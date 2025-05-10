@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UsuariosService } from '../../services/usuarios.service';
+import { CargandoService } from '../../services/cargando.service';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -24,10 +25,9 @@ interface MensajeCargado{
 export class MensajesComponent implements OnInit {
   mensajes: any[] = [];
   mensaje: string = '';
-  cargando : boolean = true;
   usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
   receptor : {id: number, username: string} = {id: 0, username: ''};
-  constructor(private mensajesService: MensajesService, private route: ActivatedRoute, private usuariosService: UsuariosService) {}
+  constructor(private mensajesService: MensajesService, private route: ActivatedRoute, private usuariosService: UsuariosService, public cargandoService: CargandoService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -38,7 +38,6 @@ export class MensajesComponent implements OnInit {
       this.mensajesService.conectar(this.usuarioActual);
       this.mensajesService.cargarMensajes(this.usuarioActual, this.receptor.id).subscribe((mensajes: MensajeCargado[]) => {
         this.mensajes = mensajes;
-        this.cargando = false;
       });
     });
     this.mensajesService.recibirMensajes().subscribe((mensaje: any) => {

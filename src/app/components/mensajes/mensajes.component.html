@@ -1,4 +1,4 @@
-<div class="chat-container" *ngIf="!cargando">
+<div class="chat-container" *ngIf="!cargandoService.cargando">
   <div class="mensajes">
     @for(mensaje of mensajes; let idx = $index ; track idx) {
       <div class="mensaje" [class.emisor]="mensaje.emisor_id === usuarioActual">

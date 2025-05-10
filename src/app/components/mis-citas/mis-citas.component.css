@@ -1,11 +1,6 @@
 .tabla-container {
-  width: 60vw;
-  display: flex;
+    display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-
-.tabla-container > * {
-  width: 100%;
 }

@@ -13,10 +13,10 @@
 	<div class="main">
 		<!-- <div class="sombra sombra-1"></div> -->
 		<div class="cards">
-			@if(buscadorService.resultados.length == 0 || buscadorService.loading) {
+			@if(cargandoService.cargando) {
 				<h2>Buscando usuarios...</h2>
 			}
-			@else if (buscadorService.resultados[0].id == 0 && !buscadorService.loading) {
+			@else if (buscadorService.resultados[0].id == 0 && !cargandoService.cargando) {
 				<h2>Ningun usuario coincide con "{{buscadorService.buscador}}"</h2>
 			}
 			@else {

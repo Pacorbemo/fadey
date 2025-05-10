@@ -3,11 +3,14 @@ import { RelacionesService } from '../../services/relaciones.service';
 import { RouterModule } from '@angular/router';
 import { DatosService } from '../../services/datos.service';
 import { FormsModule } from '@angular/forms';
+import { CargandoService } from '../../services/cargando.service';
+import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-relaciones',
   standalone: true,
-  imports: [RouterModule, FormsModule],
+  imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './relaciones.component.html',
   styleUrl: './relaciones.component.css'
 })
@@ -18,7 +21,7 @@ export class RelacionesComponent implements OnInit {
   clientesFiltrados: any[] = [];
   busqueda: string = '';
 
-  constructor(private relacionesService: RelacionesService, public datosService: DatosService) { }
+  constructor(private relacionesService: RelacionesService, public datosService: DatosService, public cargandoService: CargandoService) { }
 
   async ngOnInit(): Promise<void> {
     if (this.datosService.esCliente()){
@@ -48,4 +51,5 @@ export class RelacionesComponent implements OnInit {
       return cliente.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) ||
              cliente.username.toLowerCase().includes(this.busqueda.toLowerCase())    });
   }
+
 }

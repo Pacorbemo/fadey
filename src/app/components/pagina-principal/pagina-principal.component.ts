@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CardComponent } from './card/card.component';
 import { BuscadorService } from '../../shared/buscador/buscador.service';
 import { CommonModule } from '@angular/common';
+import { CargandoService } from '../../services/cargando.service';
 
 @Component({
   selector: 'app-pagina-principal',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './pagina-principal.component.css',
 })
 export class PaginaPrincipalComponent implements OnInit {
-  constructor(public buscadorService: BuscadorService) {}
+  constructor(public buscadorService: BuscadorService, public cargandoService: CargandoService) {}
 
   ngOnInit(): void {
     this.buscadorService.getRandomUsuarios();

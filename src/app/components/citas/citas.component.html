@@ -1,5 +1,5 @@
 <div class="component-container">
-@if(!cargando && !usernameValido){
+@if(!cargandoService.cargando && !usernameValido){
 	<div class="overlay">
 		<div class="reserva-dialogo">
 			<p>El usuario "{{usernameBarbero}}" no es válido</p>
@@ -8,7 +8,7 @@
 	</div>
 }
 
-@else if(!cargando && !esBarbero){
+@else if(!cargandoService.cargando && !esBarbero){
 	<div class="overlay">
 		<div class="reserva-dialogo">
 			<p>El usuario "{{usernameBarbero}}" no es Barbero</p>
@@ -17,7 +17,7 @@
 	</div>
 }
 
-@else if(!cargando && !usuarioAutorizado){
+@else if(!cargandoService.cargando && !usuarioAutorizado){
 	<div class="overlay">
 		<div class="reserva-dialogo">
 			<p>No tienes acceso a las citas de {{usernameBarbero}}</p>
@@ -35,7 +35,7 @@
 	</div>
 }
 
-@else if(!cargando && usernameValido){
+@else if(!cargandoService.cargando && usernameValido){
 	<h2>{{ semanaActual.fin | dateMesString}} {{semanaActual.fin.getFullYear()}}</h2>
 	<h2>Reservando cita a: {{usernameBarbero}}</h2>
 	<div class="botones-cambio-mes">

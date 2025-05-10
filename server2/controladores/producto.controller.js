@@ -17,6 +17,43 @@ exports.getProductosByBarbero = (req, res) => {
   });
 };
 
+exports.getReservadosByBarbero = (req, res) => {
+  const { username } = req.user;
+
+  const query = `
+    SELECT 
+      Productos.id AS producto_id, 
+      reservas_productos.cantidad, 
+      Usuarios.username AS cliente_username
+    FROM reservas_productos
+    JOIN Productos ON reservas_productos.producto_id = Productos.id
+    JOIN Usuarios ON reservas_productos.cliente_id = Usuarios.id
+    WHERE Productos.barbero_id = (
+      SELECT id FROM Usuarios WHERE username = ?
+    ) AND reservas_productos.entregado = 0
+  `;
+
+  db.query(query, [username], (err, results) => {
+    if (err) {
+      console.error("Error al obtener productos reservados:", err);
+      return res.status(500).json({ error: "Error al obtener productos reservados" });
+    }
+
+    const reservados = {};
+    results.forEach(row => {
+      if (!reservados[row.producto_id]) {
+        reservados[row.producto_id] = [];
+      }
+      reservados[row.producto_id].push({
+        cantidad: row.cantidad,
+        username: row.cliente_username
+      });
+    });
+
+    res.status(200).json(reservados);
+  });
+};
+
 exports.addProducto = (req, res) => {
   const { nombre, precio, descripcion, stock } = req.body;
   const foto = req.file;
@@ -102,8 +139,12 @@ exports.reservarProducto = (req, res) => {
     if (results.length === 0) {
       return res.status(400).json({ error: 'El producto no está disponible o no existe' });
     }
+    
+    const producto = results[0];
+    if (producto.barbero_id === idCliente) {
+      return res.status(400).json({ error: 'No puedes reservar tu propio producto' });
+    }
 
-    // Verificar si ya existe una reserva para este cliente y producto
     db.query(selectQuery, [idCliente, idProducto], (err, results) => {
       if (err) {
         console.error('Error al comprobar la reserva:', err);
@@ -111,7 +152,6 @@ exports.reservarProducto = (req, res) => {
       }
 
       if (results.length > 0) {
-        // Ya existe reserva: se debe restar del stock la cantidad adicional solicitada
         db.query(updateQuery, [cantidad, idProducto, cantidad], (err, resultStock) => {
           if (err) {
             console.error('Error al actualizar stock del producto:', err);
@@ -126,8 +166,6 @@ exports.reservarProducto = (req, res) => {
           });
         });
       } else {
-        // Primera reserva: se resta 1 del stock, sin importar la cantidad solicitada,
-        // pero se registra la cantidad solicitada en la reserva
         db.query(updateQuery, [1, idProducto, 1], (err, result) => {
           if (err) {
             console.error('Error al reservar el producto:', err);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RelacionesService } from '../../services/relaciones.service';
 import { CommonModule } from '@angular/common';
+import { CargandoService } from '../../services/cargando.service';
 
 @Component({
   selector: 'app-solicitudes',
@@ -11,9 +12,10 @@ import { CommonModule } from '@angular/common';
 })
 
 export class SolicitudesComponent implements OnInit{
+[x: string]: any;
   solicitudes: any[] = [];
 
-  constructor(private relacionesService: RelacionesService) { }
+  constructor(private relacionesService: RelacionesService, public cargandoService: CargandoService) { }
   
   async ngOnInit(): Promise<void> {
     this.solicitudes = await this.relacionesService.getSolicitudes()
