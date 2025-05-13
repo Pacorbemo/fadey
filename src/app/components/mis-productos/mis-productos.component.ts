@@ -1,8 +1,9 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { DatosService } from '../../services/datos.service';
 import { CommonModule } from '@angular/common';
+import { debounceTime, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-mis-productos',
@@ -10,6 +11,10 @@ import { CommonModule } from '@angular/common';
   imports: [FormsModule, CommonModule],
   templateUrl: './mis-productos.component.html',
   styleUrl: './mis-productos.component.css',
+  host: {
+    '(drop)': 'handleDrop($event)', // En cualquier lugar del componente que se arrastre la imagen la aceptará
+    '(dragover)': 'handleDragOver($event)',
+  },
 })
 export class MisProductosComponent {
   producto: {
@@ -26,9 +31,11 @@ export class MisProductosComponent {
     stock: 0,
     foto: null,
   };
+
+  pantallaSubject = new Subject<boolean>();
   productos: Producto[] = [];
   expandidos: number[] = [];
-  reservados: {[id: number] : {cantidad : number, username: string}[]} = {};
+  reservados: { [id: number]: { cantidad: number; username: string }[] } = {};
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   campos = [
@@ -44,11 +51,18 @@ export class MisProductosComponent {
   ];
 
   editingCell: { id: number; field: string } | null = null;
+  oscurecerPantalla = false;
+  private arrastrando = false;
 
   constructor(
     private httpService: HttpService,
     private datosService: DatosService
-  ) {}
+  ) {
+    this.pantallaSubject.pipe(debounceTime(30)).subscribe((oscurecer) => {
+      this.oscurecerPantalla = oscurecer;
+      console.log(oscurecer)
+    });
+  }
 
   ngOnInit(): void {
     this.httpService
@@ -61,16 +75,14 @@ export class MisProductosComponent {
           console.error('Error al obtener los productos:', error);
         }
       );
-    this.httpService
-      .httpGetToken(`/productos/reservados`)
-      .subscribe(
-        (response) => {
-          this.reservados = response;
-        },
-        (error) => {
-          console.error('Error al obtener los productos reservados:', error);
-        }
-      );
+    this.httpService.httpGetToken(`/productos/reservados`).subscribe(
+      (response) => {
+        this.reservados = response;
+      },
+      (error) => {
+        console.error('Error al obtener los productos reservados:', error);
+      }
+    );
   }
 
   urlImagen(): string {
@@ -111,21 +123,34 @@ export class MisProductosComponent {
     this.producto.foto = null;
     const fileInput = this.fileInput.nativeElement as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = ''; 
+      fileInput.value = '';
     }
   }
 
   handleDragOver(event: DragEvent): void {
     event.preventDefault();
+    if (!this.arrastrando) {
+      this.arrastrando = true;
+      this.pantallaSubject.next(true);
+    }
   }
 
   handleDrop(event: DragEvent): void {
     event.preventDefault();
+    this.arrastrando = false;
+    this.pantallaSubject.next(false);
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       const file = event.dataTransfer.files[0];
       this.producto.foto = file;
       event.dataTransfer.clearData();
     }
+  }
+
+  @HostListener('dragleave', ['$event'])
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.arrastrando = false;
+    this.pantallaSubject.next(false);
   }
 
   subirProducto() {

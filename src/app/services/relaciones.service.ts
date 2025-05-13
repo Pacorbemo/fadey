@@ -49,7 +49,15 @@ export class RelacionesService {
   }
 
   getSolicitudes(): Promise<any> {
-    return this.getRelaciones('pendiente');
+    return new Promise<any>((resolve, reject) => {
+      this.httpService.httpGetToken('/relaciones/solicitudes')
+        .subscribe(
+          (response) => {
+            resolve(response);
+          },
+          (error) => reject(error)
+        );
+    });
   }
 
   solicitar(userBarbero: string): Promise<any> {

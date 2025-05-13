@@ -6,13 +6,33 @@
 		<h1>{{user.nombre}}</h1>
 		<h2>{{'@' + user.username}}</h2>
 	</aside>
-	<div class="perfil-botones">	
-		@for(componente of getMapaComponentesEntries(); track componente){
-			<button (click)="loadComponent(componente)">
-				{{componente | capitalize}}
-			</button>
-		}
-	</div>
+	@if(usuarioAutorizado){
+		<div class="perfil-botones">	
+			@for(componente of getMapaComponentesEntries(); track componente){
+				<button (click)="loadComponent(componente)">
+					{{componente | capitalize}}
+				</button>
+			}
+		</div>
+	}
 </section>
+
+@if(!usuarioAutorizado){
+	<div class="overlay">
+		<div class="reserva-dialogo">
+			<p>No tienes acceso al perfil de {{user.username}}</p>
+			@if(relacionActual == 'ninguna'){
+				<button (click)="solicitar(user.username)">Enviar solicitud</button>
+			}
+			@else if (relacionActual == 'pendiente'){
+				<h3>Ya has enviado una solicitud, espera a que sea aceptada</h3>
+			}
+			@else if(relacionActual == 'rechazado'){
+				<h3>Tu solicitud ha sido rechazada</h3>
+			}
+			<a routerLink="/">Volver a Inicio</a>
+		</div>
+	</div>
+}
 
 <ng-container *ngComponentOutlet="component$.value" />

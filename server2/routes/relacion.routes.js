@@ -6,6 +6,7 @@ const autenticarToken = require('../middlewares/autenticarToken');
 router.get('/', autenticarToken, relacionController.getRelaciones);
 router.get('/cliente', autenticarToken, relacionController.getRelacionesCliente);
 router.get('/barbero', autenticarToken, relacionController.getRelacionesBarbero);
+router.get('/solicitudes', autenticarToken, relacionController.getSolicitudes);
 router.post('/aceptar', autenticarToken, (req, res) => relacionController.actualizarSolicitud(req, res, 'aceptado'));
 router.post('/rechazar', autenticarToken, (req, res) => relacionController.actualizarSolicitud(req, res, 'rechazado'));
 router.post('/eliminar', autenticarToken, relacionController.eliminarRelacion);

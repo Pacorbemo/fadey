@@ -12,6 +12,13 @@ form#uploadForm {
     background-color: #1e1e1e;
 }
 
+form#uploadForm h2 {
+    margin-top: 0.4rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #e0e0e0;
+}
+
 form#uploadForm label {
     display: block;
     margin-bottom: 0.5rem;
@@ -125,4 +132,4 @@ li.row img {
 
 .triangle.left {
   transform: rotate(0deg);
-}
+}  

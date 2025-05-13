@@ -27,11 +27,13 @@ export class BuscadorService {
         switchMap(() => this.usuariosService.getRandomUsuarios())
       )
       .subscribe((usuarios) => {
+        this.resultadosAleatorios = usuarios;
         this.resultados = usuarios;
       });
   }
 
   resultados: Usuario[] = []
+  resultadosAleatorios: Usuario[] = []
   buscador: string = '';
 
   buscarUsuarios(): void {

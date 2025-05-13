@@ -22,7 +22,6 @@ export class NotificacionesService {
     this.httpService.httpGetToken('/notificaciones').subscribe(
       {
         next: (response: any) => {
-          console.log(response)
           this.notificaciones = response;
         },
         error: (error: any) => {
@@ -35,12 +34,8 @@ export class NotificacionesService {
   marcarTodasLeidas(): void {
     this.httpService.httpPutToken('/notificaciones/leidas', {}).subscribe(
       {
-        next: (response: any) => {
-          console.log(response);
+        next: () => {
           this.notificaciones.forEach(notificacion => notificacion.leida = true);
-        },
-        error: (error: any) => {
-          console.error('Error al marcar todas las notificaciones como leídas:', error);
         }
       }
     );

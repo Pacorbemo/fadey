@@ -1,3 +1,9 @@
+<div 
+  class="pantalla-oscura" 
+  *ngIf="oscurecerPantalla"
+  style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:999;background:rgba(0,0,0,0.5);pointer-events:none;transition:background 0.3s;">
+</div>
+
 <form id="uploadForm" (submit)="subirProducto()">
   <h2>Añadir Producto</h2>
   @for(campo of campos; track campo.field){
@@ -21,9 +27,9 @@
       ></textarea>
     }
   }
-  <div class="upload-area" (drop)="handleDrop($event)" (dragover)="handleDragOver($event)">
+  <div class="upload-area">
     <label for="fileInput" class="custom-file-upload">
-      Seleccionar Imagen o arrastra aquí
+      Seleccionar Imagen o arrastra
     </label>
     <input 
       type="file" 

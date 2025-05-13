@@ -17,11 +17,7 @@ export class PaginaPrincipalComponent implements OnInit {
   constructor(public buscadorService: BuscadorService, public cargandoService: CargandoService, private usuariosService : UsuariosService) {}
 
   ngOnInit(): void {
-    this.usuariosService.getRandomUsuarios().subscribe({
-      next: (response: any) => {
-        this.buscadorService.resultados = response;
-      }
-    });
+    this.buscadorService.getRandomUsuarios();
   }
 
   ngOnDestroy(): void {
@@ -35,7 +31,7 @@ export class PaginaPrincipalComponent implements OnInit {
     }
     this.buscadorService.buscador = this.buscadorService.buscador.trim();
     if(this.buscadorService.buscador.length == 0){
-      this.buscadorService.getRandomUsuarios();
+      this.buscadorService.resultados = this.buscadorService.resultadosAleatorios;
     }
     else{
       this.buscadorService.buscarUsuarios();

@@ -68,6 +68,28 @@ exports.getRelacionesBarbero = (req, res) => {
   });
 };
 
+exports.getSolicitudes = (req, res) => {
+  const idUsuario = req.user.id;
+  const query = `
+    SELECT 
+      Relaciones.id,
+      Usuarios.username AS username,
+      Usuarios.nombre AS nombre,
+      Relaciones.estado,
+      Relaciones.fecha_creacion
+    FROM Relaciones
+    JOIN Usuarios ON Relaciones.cliente_id = Usuarios.id
+    WHERE Relaciones.barbero_id = ? AND Relaciones.estado = 'pendiente';
+  `;
+  db.query(query, [idUsuario], (err, results) => {
+    if (err) {
+      console.error("Error al obtener solicitudes:", err);
+      return res.status(500).json({ error: "Error al obtener solicitudes" });
+    }
+    res.status(200).json(results);
+  });
+}
+
 exports.actualizarSolicitud = (req, res, estado) => {
   actualizarEstadoSolicitud(req, estado, res, db);
 };

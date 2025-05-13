@@ -5,46 +5,50 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { DatosService } from '../../services/datos.service';
 import { BehaviorSubject } from 'rxjs';
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
+import { RelacionesService } from '../../services/relaciones.service';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
   imports: [RouterModule, NgComponentOutlet, CapitalizePipe],
   templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.css'
+  styleUrl: './perfil.component.css',
 })
 export class PerfilComponent implements OnInit {
-  user: { foto_perfil: string; username: string; nombre: string } = {
-    foto_perfil: '',
-    username: '',
-    nombre: '',
-  };
+  user: { foto_perfil: string; username: string; nombre: string; id: number } =
+    {
+      foto_perfil: '',
+      username: '',
+      nombre: '',
+      id: 0,
+    };
 
   component$ = new BehaviorSubject<any>(null);
+  usuarioAutorizado: boolean = false;
+  relacionActual: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private usuariosServices: UsuariosService,
-    public datosService: DatosService
+    public datosService: DatosService,
+    private relacionesService: RelacionesService
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.route.params.subscribe((params: { [key: string]: string }) => {
       this.user.username = params['username'];
-      this.usuariosServices
-        .datosUsername(this.user.username)
-        .subscribe(
-          (response: {
-            foto_perfil: string;
-            username: string;
-            nombre: string;
-            id: number;
-          }) => {
-            this.user = response;
-          }
-        );
+      this.usuariosServices.datosUsername(this.user.username).subscribe(async (response) => {
+        this.user = response;
+        if (this.user.username == this.datosService.user.username) {
+          this.usuarioAutorizado = true;
+        } else {
+          const relacionResponse = (await this.relacionesService.comprobarRelacion(this.user.id)).relacion;
+          this.usuarioAutorizado = relacionResponse == 'aceptado';
+          this.relacionActual = relacionResponse;
+        }
+        if (this.usuarioAutorizado) await this.loadComponent('citas');
+      });
     });
-    this.loadComponent('citas');
   }
 
   mapaComponentes: { [key: string]: () => Promise<any> } = {
@@ -65,5 +69,10 @@ export class PerfilComponent implements OnInit {
 
   getMapaComponentesEntries(): string[] {
     return Object.keys(this.mapaComponentes);
+  }
+
+  solicitar(usernameBarbero: string): void {
+    this.relacionesService.solicitar(usernameBarbero);
+    this.relacionActual = 'pendiente';
   }
 }
