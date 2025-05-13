@@ -1,3 +1,5 @@
+const crearNotificacion = require('../funciones/notificaciones.functions');
+
 function actualizarEstadoSolicitud(req, estado, res, db) {
   const { idRelacion } = req.body;
   const idBarbero = req.user.id;
@@ -31,6 +33,12 @@ function actualizarEstadoSolicitud(req, estado, res, db) {
       }
 
       res.status(200).json({ message: `Solicitud ${estado}` });
+      crearNotificacion({
+        usuario_id: results[0].cliente_id,
+        emisor_id: idBarbero,
+        tipo: 'relacion',
+        mensaje: estado
+      });
     });
   });
 }

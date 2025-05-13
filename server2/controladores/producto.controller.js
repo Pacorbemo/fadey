@@ -1,4 +1,5 @@
 const { db } = require('../db/db.config');
+const crearNotificacion = require('../funciones/notificaciones.functions');
 
 exports.getProductosByBarbero = (req, res) => {
   const { username } = req.params;
@@ -180,6 +181,12 @@ exports.reservarProducto = (req, res) => {
           });
         });
       }
+      crearNotificacion({
+        usuario_id: producto.barbero_id,
+        emisor_id: idCliente,
+        tipo: 'producto',
+        mensaje: JSON.stringify({producto: producto.nombre, cantidad: cantidad}),
+      })
     });
   });
 };

@@ -1,4 +1,5 @@
 const { db } = require('../db/db.config');
+const crearNotificacion = require('../funciones/notificaciones.functions');
 
 exports.crearCitas = async (req, res) => {
   const { fechas, idBarbero } = req.body;
@@ -165,6 +166,13 @@ exports.confirmarCita = async (req, res) => {
         console.error('Error al confirmar reserva:', err);
         return res.status(500).json({ error: 'Error al confirmar reserva' });
       }
+
+      crearNotificacion({
+        usuario_id: idBarbero,
+        emisor_id: idCliente,
+        tipo: 'cita',
+        mensaje: fechaHora,
+      });
 
       res.status(200).json({ message: 'Reserva confirmada', dia });
     });

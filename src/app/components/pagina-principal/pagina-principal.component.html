@@ -2,31 +2,27 @@
 	<div class="fondo"></div>
 	<h1>Busca nuevos Barberos</h1>
 	<div class="form-control">
-		<input 
-		  type="text" 
-		  class="input" 
-		  (input)="inputLetra()"
-		  placeholder="Buscar barberos..." 
-		  [(ngModel)]="buscadorService.buscador" 
-		/>
+		<input type="text" class="input" (input)="inputLetra()" placeholder="Buscar barberos..."
+			[(ngModel)]="buscadorService.buscador" />
 	</div>
 	<div class="main">
 		<!-- <div class="sombra sombra-1"></div> -->
 		<div class="cards">
-			@if(cargandoService.cargando) {
-				<h2>Buscando usuarios...</h2>
+			@if(cargandoService.cargandoProlongado | async) {
+			<h2>Buscando usuarios...</h2>
 			}
-			@else if (buscadorService.resultados[0].id == 0 && !cargandoService.cargando) {
-				<h2>Ningun usuario coincide con "{{buscadorService.buscador}}"</h2>
+			@else if (buscadorService.resultados.length == 0 && !cargandoService.cargando ) {
+			<h2>Ningun usuario coincide con "{{buscadorService.buscador}}"</h2>
 			}
 			@else {
-				<div *ngFor="let chunk of chunkArray(buscadorService.resultados, 4,5)" class="card-row">
-					<div *ngFor="let barbero of chunk">
-						<pagina-principal-card [barbero]="barbero" (click)="buscadorService.seleccionarUsuario(barbero.username)"></pagina-principal-card>
-					</div>
+			<div class="card-row">
+				<div *ngFor="let barbero of buscadorService.resultados">
+					<pagina-principal-card [barbero]="barbero"
+						(click)="buscadorService.seleccionarUsuario(barbero.username)"></pagina-principal-card>
 				</div>
+			</div>
 			}
 		</div>
 		<!-- <div class="sombra sombra-2"></div> -->
 	</div>
-</div>	
+</div>

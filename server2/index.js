@@ -21,6 +21,7 @@ const citaRoutes = require('./routes/cita.routes');
 const mensajeRoutes = require('./routes/mensaje.routes');
 const barberoRoutes = require('./routes/barbero.routes');
 const usuarioRoutes = require('./routes/usuario.routes');
+const notificacionRoutes = require('./routes/notificacion.routes');
 
 app.use('/auth', authRoutes);
 app.use('/productos', productoRoutes);
@@ -29,6 +30,7 @@ app.use('/citas', citaRoutes);
 app.use('/mensajes', mensajeRoutes);
 app.use('/barberos', barberoRoutes);
 app.use('/usuarios', usuarioRoutes);
+app.use('/notificaciones', notificacionRoutes);
 
 socketHandler(server, db);
 

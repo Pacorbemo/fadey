@@ -170,3 +170,47 @@ nav a:hover {
 .dropdown-menu li button:focus {
   outline: none;
 }
+
+.crear-citas{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.crear-citas:hover #sombra-crear-citas{
+  transform: translate(-50%, -7rem) scale(1.2);
+  transition: transform 0.6s;
+}
+
+#sombra-crear-citas{
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -7rem);
+  width: 200%;
+  height: 80px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #6366f1 0%, #ffffff 100%);
+  filter: blur(32px);
+  z-index: 0;
+  transition: transform 0.6s;
+}
+
+#boton-crear-citas{
+  background: linear-gradient(120deg, #cccccc, #483bff);  
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#boton-crear-citas:hover{
+  background-color: #313131;
+}
+
+#boton-crear-citas:focus{
+  outline: none;
+}

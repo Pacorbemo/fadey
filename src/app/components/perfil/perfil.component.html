@@ -1,22 +1,18 @@
 <section>
 	<span>
-	  @if(user.foto_perfil){
-		<img
-		  [alt]="user.username"
-		  [src]="user.foto_perfil">
-	  }
-	  @else{
-		<img
-		  [alt]="user.username"
-		  src="https://avatars.githubusercontent.com/u/88788711?v=4">
-	  }
+		<img [alt]="user.username" [src]="user.foto_perfil || datosService.noFoto">
 	</span>
 	<aside>
-	  <h1>{{user.nombre}}</h1>
-	  <h2>{{'@' + user.username}}</h2>
+		<h1>{{user.nombre}}</h1>
+		<h2>{{'@' + user.username}}</h2>
 	</aside>
-	<a [routerLink]="['citas']">Citas</a>
-	<a [routerLink]="['mensajes']">Mensajes</a>
-	<a [routerLink]="['productos']">Productos</a>
-  </section>
-  
+	<div class="perfil-botones">	
+		@for(componente of getMapaComponentesEntries(); track componente){
+			<button (click)="loadComponent(componente)">
+				{{componente | capitalize}}
+			</button>
+		}
+	</div>
+</section>
+
+<ng-container *ngComponentOutlet="component$.value" />

@@ -1,4 +1,5 @@
 const { db } = require('../db/db.config');
+const crearNotificacion = require('../funciones/notificaciones.functions');
 const { actualizarEstadoSolicitud, eliminarRelacion } = require('../funciones/relaciones');
 
 exports.getRelaciones = (req, res) => {
@@ -110,6 +111,12 @@ exports.solicitarRelacion = (req, res) => {
           return res.status(500).json({ error: "Error al solicitar relación" });
         }
         res.status(200).json({ message: "Solicitud enviada" });
+        crearNotificacion({
+          usuario_id: idBarbero,
+          emisor_id: idCliente,
+          tipo: 'solicitud',
+          mensaje: ''
+        });
       });
     });
   });

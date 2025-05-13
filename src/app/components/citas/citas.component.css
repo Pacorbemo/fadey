@@ -75,3 +75,43 @@ button:hover {
   background-color: #f44336;
   color: white;
 }
+
+.botones-cambio-semana {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px ;
+  gap: 10px;
+}
+
+.botones-cambio-semana button {
+  background: #222;
+  color: #fff;
+  border: 2px solid #444;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5em;
+  font-weight: bold;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.botones-cambio-semana button:disabled {
+  background: #444;
+  color: #888;
+  border-color: #333;
+  cursor: not-allowed;
+}
+
+.botones-cambio-semana button:hover:not(:disabled) {
+  background: #fff;
+  color: #111;
+  border-color: #fff;
+}
+/* ...existing code... */

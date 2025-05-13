@@ -6,7 +6,14 @@
   <div class="header">
     @if(!paginaPrincipal()){
     <app-buscador id="buscador"></app-buscador>
-    } 
+    }
+    <app-notificaciones></app-notificaciones>
+    @if(datosService.esBarbero()){
+    <div class="crear-citas">
+      <div id="sombra-crear-citas"></div>
+      <a routerLink="/crear-citas" id="boton-crear-citas">Crear</a>
+    </div>
+    }
     <div class="user"  (click)="alternarMenu()">
       <div class="username">{{datosService.user.username}}</div>
       <span class="marco-perfil">
@@ -37,7 +44,6 @@
       <!-- <a routerLink="inicio-sesion">Iniciar Sesión</a>
       <a routerLink="registro">Registro</a> -->
       <!-- <a routerLink="{{datosService.user.username}}/citas">Citas</a> -->
-      <a routerLink="crear-citas" *ngIf="datosService.esBarbero()">Crear citas</a>
       <a routerLink="mis-citas">Mis Citas</a>
       <a routerLink="mis-productos" *ngIf="datosService.esBarbero()">Mis Productos</a>
       <a routerLink="solicitudes" *ngIf="datosService.esBarbero()">Solicitudes</a>

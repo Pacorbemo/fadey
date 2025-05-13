@@ -16,7 +16,7 @@
   }
   
   .input:hover {
-	box-shadow: 0 0 0 0.15vw rgba(135, 207, 235, 0.186);
+	box-shadow: 0 0 0 0.1vw rgba(135, 207, 235, 0.186);
   }
   
   .input:hover + .input:focus {
@@ -34,12 +34,13 @@
 	height: 2px;
 	bottom: 0;
 	left: 0;
-	transition: width 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+	transition: width 0.6s cubic-bezier(0.6, 0.5, 0.735, 0.45);
   }
   
   .input-border-alt {
 	margin: 0 0.3vw;
 	height: 3px;
+	border-radius: 1em;	
 	background: linear-gradient(
 	  90deg,
 	  #ff0000 0%,
@@ -47,7 +48,6 @@
 	  #ffffff 55%,
 	  #2212ff 100%
 	);
-	transition: width 0.4s cubic-bezier(0.42, 0, 0.58, 1);
   }
   
   .input-alt:focus + .input-border-alt {

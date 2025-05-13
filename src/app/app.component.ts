@@ -4,11 +4,12 @@ import { DatosService } from './services/datos.service';
 import { BuscadorComponent } from "./shared/buscador/buscador.component";
 import { CommonModule } from '@angular/common';
 import { BuscadorService } from './shared/buscador/buscador.service';
+import { NotificacionesComponent } from './shared/notificaciones/notificaciones.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, BuscadorComponent, CommonModule],
+  imports: [RouterOutlet, RouterLink, BuscadorComponent, NotificacionesComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -16,11 +17,13 @@ export class AppComponent implements OnInit {
   @ViewChild(BuscadorComponent) buscadorComponent!: BuscadorComponent;
   
   menuAbierto: boolean = false;
+  // notificaciones: any[] = [];
+  // notificacionesAbierto: boolean = false;
+  // fadeOut: boolean = false;
 
   constructor(
     public datosService: DatosService,
     private router: Router,
-    private buscadorService: BuscadorService
   ) {}
 
   ngOnInit(): void {
@@ -42,5 +45,4 @@ export class AppComponent implements OnInit {
   alternarMenu(): void {
     this.menuAbierto = !this.menuAbierto;
   }
-
 }

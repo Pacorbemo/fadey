@@ -2,6 +2,7 @@
   "name": "fadey",
   "version": "0.0.0",
   "scripts": {
+    "dev": "concurrently \"ng serve\" \"nodemon server2/index.js\"",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

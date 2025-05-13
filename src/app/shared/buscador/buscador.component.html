@@ -9,6 +9,9 @@
     placeholder="Buscar usuarios..." 
     [(ngModel)]="buscadorService.buscador" 
   />
+  <div class="input-border">
+    <div class="input-border-alt"></div>
+  </div>
   <ul *ngIf="buscadorService.resultados.length > 0 && mostrarResultados" class="autocomplete-list">
     <li *ngFor="let usuario of buscadorService.resultados" 
     (click)="buscadorService.seleccionarUsuario(usuario.username)"
