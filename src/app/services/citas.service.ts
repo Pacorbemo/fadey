@@ -2,13 +2,18 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GetCitasInterface, GetCitasResponseInterface } from '../interfaces/citas.interface';
 import { HttpService } from './http.service';
+import { map, finalize } from 'rxjs/operators';
+import { CargandoService } from './cargando.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CitasService {
 
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    private cargandoService: CargandoService
+  ) {}
 
   dateAUTC(date: Date): Date {
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
@@ -94,35 +99,30 @@ export class CitasService {
   }
 
   // Obtener las citas de un BARBERO
-  async getCitas(
-      idBarbero: number,
-      inicio: Date
-    ): Promise<GetCitasResponseInterface> {
-      inicio = this.primerDiaSemana(inicio);
-      const fin = this.sumarDias(inicio, 7);
-      const body = {
-        idBarbero,
-        inicio,
-        fin,
-      };
-      
-      return new Promise<GetCitasResponseInterface>((resolve, reject) => {
-        this.httpService.httpPostToken('/citas', body)
-          .subscribe(
-            (response) => {
-              resolve(
-                ['totales', 'reservadas', 'reservadasUsuario'].reduce((acc, key) => {
-                  acc[key as keyof GetCitasResponseInterface] = this.procesarFechas(response[key as keyof GetCitasInterface]);
-                  return acc;
-                }, {} as GetCitasResponseInterface)
-              );
-            },
-            (error) => {
-              reject(error);
-            }
-          );
-      });
-    }
+  getCitas(
+    idBarbero: number,
+    inicio: Date
+  ): Observable<GetCitasResponseInterface> {
+    inicio = this.primerDiaSemana(inicio);
+    const fin = this.sumarDias(inicio, 7);
+    const body = {
+      idBarbero,
+      inicio,
+      fin,
+    };
+
+    return this.httpService.httpPostToken('/citas', body).pipe(
+      map((response) => {
+        return ['totales', 'reservadas', 'reservadasUsuario'].reduce((acc, key) => {
+          acc[key as keyof GetCitasResponseInterface] = this.procesarFechas(response[key as keyof GetCitasInterface]);
+          return acc;
+        }, {} as GetCitasResponseInterface);
+      }),
+      finalize(() => {
+        this.cargandoService.ocultarCargando();
+      })
+    );
+  }
 
   // Obtener las citas de un USUARIO
   getCitasUsuario(): Observable<any> {

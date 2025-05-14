@@ -24,19 +24,21 @@ export class CrearCitasComponent implements OnInit {
 
   constructor(private citasService: CitasService) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.diasDeLaSemana = this.citasService.calcularSemana(new Date());
-    this.recargarFechasSubidas();    
+    this.recargarFechasSubidas();
     this.franjasHorarias = this.citasService.generarFranjasHorarias();
   }
 
   recargarFechasSubidas(): void {
-    this.citasService.getCitas(this.idBarbero, this.diasDeLaSemana[0]).then((fechas) => {
-      this.fechasSubidas = fechas.totales;
+    this.citasService.getCitas(this.idBarbero, this.diasDeLaSemana[0]).subscribe({
+      next: (fechas) => {
+        this.fechasSubidas = fechas.totales;
+      }
     });
   }
 
-  async cambiarSemana(n: number) {
+  cambiarSemana(n: number): void {
     this.diasDeLaSemana = this.citasService.calcularSemana(this.diasDeLaSemana[0], n);
     this.recargarFechasSubidas();
   }
@@ -88,15 +90,15 @@ export class CrearCitasComponent implements OnInit {
         );
       }
     }
-    this.citasService.subirCitas(this.idBarbero, franjasFormateadas).subscribe(
-      () => {
+    this.citasService.subirCitas(this.idBarbero, franjasFormateadas).subscribe({
+      next: () => {
         this.franjasSeleccionadas = [];
         this.recargarFechasSubidas();
       },
-      () => {
+      error: () => {
         alert('No se han podido subir las citas');
       }
-    );
+    });
   }
 
   cancelarSeleccion(): void {

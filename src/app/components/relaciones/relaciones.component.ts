@@ -23,24 +23,38 @@ export class RelacionesComponent implements OnInit {
 
   constructor(private relacionesService: RelacionesService, public datosService: DatosService, public cargandoService: CargandoService) { }
 
-  async ngOnInit(): Promise<void> {
-    if (this.datosService.esCliente()){
-      this.barberos = await this.relacionesService.getRelacionesCliente()
-      this.barberosFiltrados = this.barberos
+  ngOnInit(): void {
+    if (this.datosService.esCliente()) {
+      this.relacionesService.getRelacionesCliente().subscribe({
+        next: barberos => {
+          this.barberos = barberos;
+          this.barberosFiltrados = this.barberos;
+        }
+      });
     }
-    else if (this.datosService.esBarbero()){
-      this.clientes = await this.relacionesService.getRelacionesBarbero()
-      this.barberos = await this.relacionesService.getRelacionesCliente()
-      this.clientesFiltrados = this.clientes
-      this.barberosFiltrados = this.barberos
+    else if (this.datosService.esBarbero()) {
+      this.relacionesService.getRelacionesBarbero().subscribe({
+        next: clientes => {
+          this.clientes = clientes;
+          this.clientesFiltrados = this.clientes;
+        }
+      });
+      this.relacionesService.getRelacionesCliente().subscribe({
+        next: barberos => {
+          this.barberos = barberos;
+          this.barberosFiltrados = this.barberos;
+        }
+      });
     }
   }
 
   eliminarRelacion(idRelacion: number): void {
-    this.relacionesService.eliminarRelacion(idRelacion).then(() => {
-      this.clientes = this.clientes.filter(r => r.id !== idRelacion);
-      this.barberos = this.barberos.filter(r => r.id !== idRelacion);
-    })
+    this.relacionesService.eliminarRelacion(idRelacion).subscribe({
+      next: () => {
+        this.clientes = this.clientes.filter(r => r.id !== idRelacion);
+        this.barberos = this.barberos.filter(r => r.id !== idRelacion);
+      }
+    });
   }
 
   filtrar(): void {

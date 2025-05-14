@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Usuario } from '../../interfaces/usuario';
+import { CargandoService } from '../../services/cargando.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,29 +13,35 @@ export class BuscadorService {
   private buscarSubject = new Subject<string>();
   private randomSubject = new Subject<void>();
 
-  constructor(private router: Router, private usuariosService: UsuariosService) {
+  constructor(
+    private router: Router,
+    private usuariosService: UsuariosService,
+    private cargandoService: CargandoService
+  ) {
     this.buscarSubject
       .pipe(
         debounceTime(300),
         switchMap((query) => this.usuariosService.buscarUsuarios(query))
       )
       .subscribe((usuarios) => {
-        if(this.buscador == '') return;  
+        if (this.buscador == '') return; //Si buscador cambio en lo que se recibia la respuesta, no se muestran los resultados
         this.resultados = usuarios;
+        this.buscadorCopia = this.buscador;
+        this.cargandoService.cargando = false;
       });
     this.randomSubject
-      .pipe(
-        switchMap(() => this.usuariosService.getRandomUsuarios())
-      )
+      .pipe(switchMap(() => this.usuariosService.getRandomUsuarios()))
       .subscribe((usuarios) => {
         this.resultadosAleatorios = usuarios;
         this.resultados = usuarios;
+        this.cargandoService.cargando = false;
       });
   }
 
-  resultados: Usuario[] = []
-  resultadosAleatorios: Usuario[] = []
+  resultados: Usuario[] = [];
+  resultadosAleatorios: Usuario[] = [];
   buscador: string = '';
+  buscadorCopia: string = '';
 
   buscarUsuarios(): void {
     this.buscador = this.buscador.trim();

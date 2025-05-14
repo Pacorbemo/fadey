@@ -1,7 +1,13 @@
 <div class="component-container">
 	<h1>Tus relaciones</h1>
 
-	<input type="text" [(ngModel)]="busqueda" placeholder="Filtrar por nombre o usuario" (input)="filtrar()" />
+	<input
+		id="busqueda-relaciones"
+		name="busqueda"
+		type="text"
+		[(ngModel)]="busqueda"
+		placeholder="Filtrar por nombre o usuario"
+		(input)="filtrar()" />
 	
 @if(!cargandoService.cargando){
 	@if(datosService.esCliente()){

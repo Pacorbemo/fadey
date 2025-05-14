@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
+import { CargandoService } from './cargando.service';
 
 export interface Notificacion {
   mensaje: string;
@@ -16,10 +17,12 @@ export class NotificacionesService {
 
   public notificaciones: Notificacion[] = [];
 
-  constructor(private httpService: HttpService) { }
+  constructor(
+    private httpService: HttpService,
+  ) { }
 
   obtenerNotificaciones(): void {
-    this.httpService.httpGetToken('/notificaciones').subscribe(
+    this.httpService.httpGetToken('/notificaciones', undefined, true).subscribe(
       {
         next: (response: any) => {
           this.notificaciones = response;
@@ -28,18 +31,19 @@ export class NotificacionesService {
           console.error('Error al obtener notificaciones:', error);
         }
       }
-    );
+    )
   }
 
   marcarTodasLeidas(): void {
-    this.httpService.httpPutToken('/notificaciones/leidas', {}).subscribe(
+    this.httpService.httpPutToken('/notificaciones/leidas', undefined, true).subscribe(
       {
         next: () => {
           this.notificaciones.forEach(notificacion => notificacion.leida = true);
+        },
+        error: () => {
+          console.error('Error al marcar todas las notificaciones como leídas');
         }
       }
-    );
+    )
   }
-
-
 }

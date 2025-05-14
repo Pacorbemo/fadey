@@ -1,112 +1,100 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
+import { CargandoService } from '../services/cargando.service'; 
+import { Observable } from 'rxjs';
+import { map, finalize } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RelacionesService {
-  constructor(private httpService: HttpService) {}
+  constructor(
+    private httpService: HttpService,
+    public cargandoService: CargandoService 
+  ) {}
 
-  getRelaciones(filtro?: string): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpGetToken('/relaciones')
-        .subscribe(
-          (response) => {
-            if (filtro) {
-              response = JSON.parse(JSON.stringify(response)).filter((solicitud: any) => solicitud.estado === filtro);
-            }
-            resolve(response);
-          },
-          (error) => reject(error)
-        );
-    });
+  getRelaciones(filtro?: string): Observable<any> {
+    return this.httpService.httpGetToken('/relaciones').pipe(
+      map((response: any) => {
+        if (filtro) {
+          response = JSON.parse(JSON.stringify(response)).filter(
+            (solicitud: any) => solicitud.estado === filtro
+          );
+        }
+        return response;
+      }),
+      finalize(() => this.cargandoService.ocultarCargando())
+    );
   }
 
-  getRelacionesCliente(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpGetToken('/relaciones/cliente')
-        .subscribe(
-          (response) => {
-            response = JSON.parse(JSON.stringify(response)).filter((solicitud: any) => solicitud.estado === 'aceptado');
-            resolve(response);
-          },
-          (error) => reject(error)
+  getRelacionesCliente(): Observable<any> {
+    return this.httpService.httpGetToken('/relaciones/cliente').pipe(
+      map((response: any) => {
+        return JSON.parse(JSON.stringify(response)).filter(
+          (solicitud: any) => solicitud.estado === 'aceptado'
         );
-    });
+      }),
+      finalize(() => this.cargandoService.ocultarCargando())
+    );
   }
 
-  getRelacionesBarbero(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpGetToken('/relaciones/barbero')
-        .subscribe(
-          (response) => {
-            response = JSON.parse(JSON.stringify(response)).filter((solicitud: any) => solicitud.estado === 'aceptado');
-            resolve(response);
-          },
-          (error) => reject(error)
+  getRelacionesBarbero(): Observable<any> {
+    return this.httpService.httpGetToken('/relaciones/barbero').pipe(
+      map((response: any) => {
+        return JSON.parse(JSON.stringify(response)).filter(
+          (solicitud: any) => solicitud.estado === 'aceptado'
         );
-    });
+      }),
+      finalize(() => this.cargandoService.ocultarCargando())
+    );
   }
 
-  getSolicitudes(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpGetToken('/relaciones/solicitudes')
-        .subscribe(
-          (response) => {
-            resolve(response);
-          },
-          (error) => reject(error)
-        );
-    });
+  getSolicitudes(): Observable<any> {
+    return this.httpService.httpGetToken('/relaciones/solicitudes').pipe(
+      finalize(() => this.cargandoService.ocultarCargando())
+    );
   }
 
-  solicitar(userBarbero: string): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/relaciones/solicitar', { userBarbero })
-        .subscribe(
-          (response) => resolve(!!response),
-          (error) => reject(error)
-        );
-    });
+  solicitar(userBarbero: string): Observable<any> {
+    return this.httpService
+      .httpPostToken('/relaciones/solicitar', { userBarbero })
+      .pipe(
+        map((response: any) => !!response),
+        finalize(() => this.cargandoService.ocultarCargando())
+      );
   }
 
-  aceptarSolicitud(idRelacion: number): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/relaciones/aceptar', { idRelacion })
-        .subscribe(
-          (response) => resolve(response),
-          (error) => reject(error)
-        );
-    });
+  aceptarSolicitud(idRelacion: number): Observable<any> {
+    return this.httpService
+      .httpPostToken('/relaciones/aceptar', { idRelacion })
+      .pipe(
+        finalize(() => this.cargandoService.ocultarCargando())
+      );
   }
 
-  rechazarSolicitud(idRelacion: number): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/relaciones/rechazar', { idRelacion })
-        .subscribe(
-          (response) => resolve(response),
-          (error) => reject(error)
-        );
-    });
+  rechazarSolicitud(idRelacion: number): Observable<any> {
+    return this.httpService
+      .httpPostToken('/relaciones/rechazar', { idRelacion })
+      .pipe(
+        finalize(() => this.cargandoService.ocultarCargando())
+      );
   }
 
-  eliminarRelacion(idRelacion: number): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpService.httpPostToken('/relaciones/eliminar', { idRelacion })
-        .subscribe(
-          (response) => resolve(response),
-          (error) => reject(error)
-        );
-    });
+  eliminarRelacion(idRelacion: number): Observable<any> {
+    return this.httpService
+      .httpPostToken('/relaciones/eliminar', { idRelacion })
+      .pipe(
+        finalize(() => this.cargandoService.ocultarCargando())
+      );
   }
 
-  comprobarRelacion(idBarbero: number): Promise<{ relacion: string }> {
-    return new Promise<{ relacion: string }>((resolve, reject) => {
-      this.httpService.httpGetToken('/relaciones/comprobar', { idBarbero: idBarbero.toString() })
-        .subscribe(
-          (response) => resolve(response),
-          (error) => reject(error)
-        );
-    });
+  comprobarRelacion(idBarbero: number): Observable<{ relacion: string }> {
+    return this.httpService
+      .httpGetToken('/relaciones/comprobar', {
+        idBarbero: idBarbero.toString(),
+      })
+      .pipe(
+        finalize(() => this.cargandoService.ocultarCargando())
+      );
   }
 }

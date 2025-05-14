@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UsuariosService } from '../../services/usuarios.service';
 import { CargandoService } from '../../services/cargando.service';
+import { Usuario } from '../../interfaces/usuario';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -26,18 +27,19 @@ export class MensajesComponent implements OnInit {
   mensajes: any[] = [];
   mensaje: string = '';
   usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
-  receptor : {id: number, username: string} = {id: 0, username: ''};
+  receptor: Usuario = { id: 0, nombre: '', username: '', foto_perfil: '' };
   constructor(private mensajesService: MensajesService, private route: ActivatedRoute, private usuariosService: UsuariosService, public cargandoService: CargandoService) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.receptor.username = params['username'];
     });
-    this.usuariosService.verificarUsername(this.receptor.username).subscribe((usuario) => {
-      this.receptor.id = usuario?.user?.id || 0;
+    this.usuariosService.datosUsername(this.receptor.username).subscribe((usuario) => {
+      this.receptor = usuario;
       this.mensajesService.conectar(this.usuarioActual);
       this.mensajesService.cargarMensajes(this.usuarioActual, this.receptor.id).subscribe((mensajes: MensajeCargado[]) => {
         this.mensajes = mensajes;
+        this.cargandoService.cargando = false;
       });
     });
     this.mensajesService.recibirMensajes().subscribe((mensaje: any) => {
@@ -55,5 +57,9 @@ export class MensajesComponent implements OnInit {
       });
       this.mensaje = '';
     }
+  }
+
+  trackByIdx(index: number, item: any) {
+    return index;
   }
 }

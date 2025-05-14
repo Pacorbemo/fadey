@@ -6,7 +6,8 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   template: `
-  <ul>
+  <div class="tabla-wrapper">
+    <ul class="tabla-ul">
       <li class="header">
         <div class="col col-1">Fecha</div>
         <div class="col col-2">Nombre</div>
@@ -20,6 +21,7 @@ import { Component, Input } from '@angular/core';
         </li>
       }
     </ul>
+  </div>
   `,
   styleUrl: './tabla.component.css'
 })

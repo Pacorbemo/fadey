@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RelacionesService } from '../../services/relaciones.service';
 import { CargandoService } from '../../services/cargando.service';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.component.html',
@@ -39,34 +40,43 @@ export class CitasComponent implements OnInit {
     public cargandoService: CargandoService
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    await this.route.params.subscribe(params => {
-      this.usernameBarbero = params['username'];
-    })
-    await new Promise<void>((resolve) => {
-      this.usuariosService.verificarUsername(this.usernameBarbero).subscribe((response) => {
-      this.usernameValido = response.exists;
-      if (response.exists && response.user?.id) {
-        this.idBarbero = response.user?.id;
-      }
-      resolve();
-      });
-    });
-    if(this.usernameValido){
-      if (this.idBarbero == this.idUsuario) this.usuarioAutorizado = true;
-      else{
-        await this.relacionesService.comprobarRelacion(this.idBarbero).then((response) => {
-          this.usuarioAutorizado = response.relacion == 'aceptado';
+  ngOnInit(): void {
+    this.route.params.subscribe({
+      next: params => {
+        this.usernameBarbero = params['username'];
+        this.usuariosService.verificarUsername(this.usernameBarbero).subscribe({
+          next: (response) => {
+            this.usernameValido = response.exists;
+            if (response.exists && response.user?.id) {
+              this.idBarbero = response.user?.id;
+            }
+            if (this.usernameValido) {
+              if (this.idBarbero == this.idUsuario) {
+                this.usuarioAutorizado = true;
+                this.esBarbero = true;
+                this.calcularSemana();
+                this.relacion = 'aceptado';
+              } else {
+                this.relacionesService.comprobarRelacion(this.idBarbero).subscribe({
+                  next: (relacionResponse) => {
+                    this.usuarioAutorizado = relacionResponse.relacion == 'aceptado';
+                    this.relacion = relacionResponse.relacion;
+                    this.usuariosService.esBarbero(this.idBarbero).subscribe({
+                      next: (esBarbero) => {
+                        this.esBarbero = esBarbero;
+                        if (this.usuarioAutorizado && this.esBarbero) {
+                          this.calcularSemana();
+                        }
+                      }
+                    });
+                  }
+                });
+              }
+            }
+          }
         });
       }
-      this.esBarbero = await this.usuariosService.esBarbero(this.idBarbero);
-      if(this.usuarioAutorizado && this.esBarbero){
-        this.calcularSemana();
-        await this.recargarCitas();
-        this.generarFranjasHorarias();  
-      }
-      this.relacion = (await this.relacionesService.comprobarRelacion(this.idBarbero)).relacion
-    }
+    });
   }
   
   semanaActual = {
@@ -82,23 +92,26 @@ export class CitasComponent implements OnInit {
     this.diasDeLaSemana = this.citasService.calcularSemana(this.semanaActual.inicio, n);
     this.semanaActual.inicio = this.diasDeLaSemana[0];
     this.semanaActual.fin = this.diasDeLaSemana[6];
+    this.recargarCitas();
   }
 
-  async cambiarSemana(n: number) {
+  cambiarSemana(n: number): void {
     this.calcularSemana(n);
-    await this.recargarCitas();
-    this.generarFranjasHorarias();
   }
 
   getStringMes(mes: number): string {
     return new Date(2025, mes - 1).toLocaleString('default', { month: 'long' });
   }
 
-  async recargarCitas(){
-    const response = await this.citasService.getCitas(this.idBarbero, this.semanaActual.inicio);
-    this.horariosReservados = response.reservadas;
-    this.horariosDisponibles = this.citasService.purgarDiasPasados(response.totales, this.semanaActual.inicio);
-    this.horariosReservadosPorUsuario = response.reservadasUsuario;
+  recargarCitas(): void {
+    this.citasService.getCitas(this.idBarbero, this.semanaActual.inicio).subscribe({
+      next: (response) => {
+        this.horariosReservados = response.reservadas;
+        this.horariosDisponibles = this.citasService.purgarDiasPasados(response.totales, this.semanaActual.inicio);
+        this.horariosReservadosPorUsuario = response.reservadasUsuario;
+        this.generarFranjasHorarias();
+      }
+    });
   }
 
   generarFranjasHorarias(): void {
@@ -146,15 +159,15 @@ export class CitasComponent implements OnInit {
   }
 
   confirmarReserva(): void {
-    this.citasService.confirmarReserva(this.idBarbero, this.diaSeleccionado).subscribe(
-      (response) => {
+    this.citasService.confirmarReserva(this.idBarbero, this.diaSeleccionado).subscribe({
+      next: () => {
         this.mostrarDialogo = false;
         this.recargarCitas(); 
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al confirmar la reserva:', error);
       }
-    );
+    });
   }
 
   cancelarReserva(): void {

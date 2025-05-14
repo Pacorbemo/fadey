@@ -49,11 +49,13 @@ h3{
 
 .notificaciones-dropdown ul {
   list-style: none;
+    max-height: 30vh;
+  overflow-y: auto;
   margin: 0;
   padding: 0;
 }
 
-.notificaciones-dropdown li {
+.notificaciones-dropdown li, .notificaciones-dropdown h3 {
   padding: 0.75rem 1.2rem;
   border-bottom: 1px solid #23234a;
   transition: background 0.2s;

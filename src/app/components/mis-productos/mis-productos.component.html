@@ -53,7 +53,7 @@
   <button type="submit">Subir Producto</button>
 </form>
 
-<ul>
+<ul *ngIf="!cargandoService.cargando">
   <li class="header">
     @for(campo of campos; track campo.field){
       <div class="col {{campo.colClass}}">

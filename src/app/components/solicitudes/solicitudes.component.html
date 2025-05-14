@@ -2,7 +2,9 @@
 	<h2>Solicitudes pendientes</h2>
 
 	@if (cargandoService.cargando) {
-		<p>Cargando...</p>
+		@if((cargandoService.cargandoProlongado | async)){
+			<p>Cargando...</p>
+		}
 	}
 	
 	@else if (solicitudes.length > 0) {

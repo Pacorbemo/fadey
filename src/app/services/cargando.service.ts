@@ -5,7 +5,7 @@ import { map, distinctUntilChanged } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class CargandoService {
+export class  CargandoService {
   private _cargandoSubject = new BehaviorSubject<boolean>(false);
   public cargando$ = this._cargandoSubject.asObservable();
   private _inicioTiempo: number = 0;
@@ -15,6 +15,10 @@ export class CargandoService {
       this._inicioTiempo = Date.now();
     }
     this._cargandoSubject.next(valor);
+  }
+
+  ocultarCargando(): void {
+    this._cargandoSubject.next(false);
   }
 
   get cargando(): boolean {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Notificacion, NotificacionesService } from '../../services/notificaciones.service';
 
 @Component({
@@ -14,10 +14,20 @@ export class NotificacionesComponent implements OnInit {
   notificacionesAbierto: boolean = false;
   fadeOut: boolean = false;
 
-  constructor(public notificacionesService: NotificacionesService) {}
+  constructor(
+    public notificacionesService: NotificacionesService,
+    private elementRef: ElementRef
+  ) {}
 
   ngOnInit(): void {
     this.notificacionesService.obtenerNotificaciones();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.notificacionesAbierto && !this.elementRef.nativeElement.contains(event.target)) {
+      this.alternarNotificaciones();
+    }
   }
 
   alternarNotificaciones(): void {
@@ -64,4 +74,5 @@ export class NotificacionesComponent implements OnInit {
   todasLeidas(): boolean {
     return this.notificacionesService.notificaciones.every(notificacion => notificacion.leida == true);
   }
+  
 }

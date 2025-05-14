@@ -34,20 +34,30 @@ export class PerfilComponent implements OnInit {
     private relacionesService: RelacionesService
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    this.route.params.subscribe((params: { [key: string]: string }) => {
-      this.user.username = params['username'];
-      this.usuariosServices.datosUsername(this.user.username).subscribe(async (response) => {
-        this.user = response;
-        if (this.user.username == this.datosService.user.username) {
-          this.usuarioAutorizado = true;
-        } else {
-          const relacionResponse = (await this.relacionesService.comprobarRelacion(this.user.id)).relacion;
-          this.usuarioAutorizado = relacionResponse == 'aceptado';
-          this.relacionActual = relacionResponse;
-        }
-        if (this.usuarioAutorizado) await this.loadComponent('citas');
-      });
+  ngOnInit(): void {
+    this.route.params.subscribe({
+      next: (params: { [key: string]: string }) => {
+        this.user.username = params['username'];
+        this.usuariosServices.datosUsername(this.user.username).subscribe({
+          next: (response) => {
+            this.user = response;
+            if (this.user.username == this.datosService.user.username) {
+              this.usuarioAutorizado = true;
+              this.loadComponent('citas');
+            } else {
+              this.relacionesService.comprobarRelacion(this.user.id).subscribe({
+                next: relacionResponse => {
+                  this.usuarioAutorizado = relacionResponse.relacion == 'aceptado';
+                  this.relacionActual = relacionResponse.relacion;
+                  if (this.usuarioAutorizado) {
+                    this.loadComponent('citas');
+                  }
+                }
+              });
+            }
+          }
+        });
+      }
     });
   }
 

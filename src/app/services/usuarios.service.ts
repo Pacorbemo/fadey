@@ -44,12 +44,10 @@ export class UsuariosService {
     return this.http.get<{ exists: boolean }>(`/usuarios/telefono/${telefono}`);
   }
 
-  esBarbero(id:number): Promise<boolean>{
-    return new Promise((resolve) =>{
-      this.http.get<{ barbero: boolean }>(`/barberos/es-barbero/${id}`).subscribe((response) => {
-        resolve(response.barbero);
-      });
-    });
+  esBarbero(id: number): Observable<boolean> {
+    return this.http.get<{ barbero: boolean }>(`/barberos/es-barbero/${id}`).pipe(
+      map(response => response.barbero)
+    );
   }
 
   // Buscar por string el nombre o username
@@ -61,3 +59,4 @@ export class UsuariosService {
     return this.http.get<Usuario[]>(`/barberos/random`);
   }
 }
+

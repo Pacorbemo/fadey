@@ -4,6 +4,7 @@ import { HttpService } from '../../services/http.service';
 import { DatosService } from '../../services/datos.service';
 import { CommonModule } from '@angular/common';
 import { debounceTime, Subject, switchMap } from 'rxjs';
+import { CargandoService } from '../../services/cargando.service';
 
 @Component({
   selector: 'app-mis-productos',
@@ -56,7 +57,8 @@ export class MisProductosComponent {
 
   constructor(
     private httpService: HttpService,
-    private datosService: DatosService
+    private datosService: DatosService,
+    public cargandoService: CargandoService
   ) {
     this.pantallaSubject.pipe(debounceTime(30)).subscribe((oscurecer) => {
       this.oscurecerPantalla = oscurecer;
@@ -74,7 +76,9 @@ export class MisProductosComponent {
         (error) => {
           console.error('Error al obtener los productos:', error);
         }
-      );
+      ).add(() => {
+      this.cargandoService.cargando = false;
+    });
     this.httpService.httpGetToken(`/productos/reservados`).subscribe(
       (response) => {
         this.reservados = response;
@@ -82,7 +86,7 @@ export class MisProductosComponent {
       (error) => {
         console.error('Error al obtener los productos reservados:', error);
       }
-    );
+    )
   }
 
   urlImagen(): string {
@@ -100,8 +104,8 @@ export class MisProductosComponent {
     formData.append('foto', file);
     this.httpService
       .httpPutToken(`/productos/${this.editingCell?.id}`, formData)
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           if (response.foto_url) {
             const producto = this.productos.find(
               (p) => p.id === this.editingCell!.id
@@ -112,10 +116,12 @@ export class MisProductosComponent {
           }
           this.editingCell = null;
         },
-        (error) => {
+        error: (error) => {
           console.error('Error al actualizar el producto:', error);
-        }
-      );
+        }}
+      ).add(() => {
+        this.cargandoService.cargando = false;
+      });
   }
 
   eliminarImagen(event: any): void {
@@ -172,7 +178,9 @@ export class MisProductosComponent {
         console.error('Error al subir el producto:', error);
         alert('Error al subir el producto');
       }
-    );
+    ).add(() => {
+      this.cargandoService.cargando = false;
+    });
     console.log('Producto subido:', this.producto);
   }
 
@@ -203,7 +211,9 @@ export class MisProductosComponent {
               (error) => {
                 console.error('Error al actualizar el producto:', error);
               }
-            );
+            ).add(() => {
+              this.cargandoService.cargando = false;
+            });
         }
       }
     }

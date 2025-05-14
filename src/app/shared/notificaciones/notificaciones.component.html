@@ -5,10 +5,8 @@
       </button>
   @if(notificacionesAbierto){
     <div class="notificaciones-dropdown" [ngClass]="{'fade-out': fadeOut}">
+      <h3>Nuevas notificaciones</h3>
       <ul>
-		<li>
-			<h3>Nuevas notificaciones</h3>
-		</li>
         @for(notificacion of notificacionesService.notificaciones; track notificacion){
           <li>
 			<span *ngIf="!notificacion.leida" class="punto-verde"></span>
