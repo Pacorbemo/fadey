@@ -11,7 +11,7 @@ import { Component, Input } from '@angular/core';
       <li class="header">
         <div class="col col-1">Fecha</div>
         <div class="col col-2">Nombre</div>
-        <div class="col col-3">Username</div>
+        <div class="col col-3">Usuario</div>
       </li>
       @for(cita of citas; track cita.id){
         <li class="row">

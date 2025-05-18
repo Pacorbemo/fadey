@@ -103,7 +103,6 @@ nav a, nav button {
   border-radius: 5px;
   margin-bottom: 5px;
   font-weight: bold;
-  /* transition: background-color 0.3s ease; */
 }
 
 nav button:hover{
@@ -121,7 +120,6 @@ nav a:hover {
 
 .app {
   width: 100%;
-  /* display: flex; */
   justify-content: center;
 }
 

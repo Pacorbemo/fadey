@@ -1,4 +1,4 @@
 export const environment = {
 	production: true,
-	serverUrl: 'https://servidor-remoto.com',
-  };
+  	serverUrl: 'http://localhost:5000',
+};

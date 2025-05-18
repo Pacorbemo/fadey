@@ -45,10 +45,6 @@
       <img [src]="urlImagen()" alt="Imagen del producto" class="preview-image" />
       <button class="remove-button" (click)="eliminarImagen($event)">Eliminar Imagen</button>
     </div>
-  } @else {
-    <div class="preview-container">
-      <p>No hay imagen seleccionada</p>
-    </div>
   }
   <button type="submit">Subir Producto</button>
 </form>
@@ -95,7 +91,7 @@
     </div>
   </li>
   @if(expandidos.includes(producto.id)){
-    <ul style="animation: fadeIn 0.3s;" style="padding-left: 30px; width: 100%;">
+    <ul class="reservados-list" style="animation: fadeIn 0.3s;">
       @if(reservados[producto.id]){
         <li class="header">
           <div class="col col-1">Usuario</div>

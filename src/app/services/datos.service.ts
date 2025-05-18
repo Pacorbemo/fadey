@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../environments/environments';
+import { environment } from '../../environments/environments';
 
 interface User {
   id: number;

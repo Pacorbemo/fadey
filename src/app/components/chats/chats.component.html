@@ -1,15 +1,15 @@
-<div class="component-container">
+<div class="chats-container">
+	<h2 class="titulo">Chats</h2>
 	<ul>
-		@for(chat of chats; track chat.usuario_id) {
+		@for (chat of chats; track chat.usuario_id){
 			<li [routerLink]="['/', chat.username, 'mensajes']">
-				<div class="chat-item">
-					<!-- <img [src]="chat.imagen" alt="Imagen de perfil" class="imagen-perfil" /> -->
-					<div class="info-chat">
-						<h3>{{ chat.username }}</h3>
-						<p>{{ chat.ultimo_mensaje }}</p>
-						<span class="fecha">{{ chat.ultima_fecha | date: 'HH:mm' }}</span>
-					</div>
+				<img class="avatar-barber" [src]="chat.foto_perfil || 'assets/barber-default.png'" alt="Avatar" />
+				<div class="info-chat">
+					<span class="username-barber">{{ chat.username }}</span>
+					<span class="ultimo-mensaje">{{ chat.ultimo_mensaje }}</span>
+					<span class="fecha">{{ chat.ultima_fecha | date: 'HH:mm' }}</span>
 				</div>
+				<!-- <div class="barber-pole" title="Barbería"></div> -->
 			</li>
 		}
 	</ul>

@@ -17,9 +17,6 @@ export class AppComponent implements OnInit {
   @ViewChild(BuscadorComponent) buscadorComponent!: BuscadorComponent;
   
   menuAbierto: boolean = false;
-  // notificaciones: any[] = [];
-  // notificacionesAbierto: boolean = false;
-  // fadeOut: boolean = false;
 
   constructor(
     public datosService: DatosService,

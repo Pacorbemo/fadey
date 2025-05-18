@@ -41,9 +41,6 @@
 <div class="container">
   @if(datosService.tokenUsuario){
   <nav>
-      <!-- <a routerLink="inicio-sesion">Iniciar Sesión</a>
-      <a routerLink="registro">Registro</a> -->
-      <!-- <a routerLink="{{datosService.user.username}}/citas">Citas</a> -->
       <a routerLink="mis-citas">Citas</a>
       <a routerLink="mis-productos" *ngIf="datosService.esBarbero()">Productos</a>
       <a routerLink="solicitudes" *ngIf="datosService.esBarbero()">Solicitudes</a>

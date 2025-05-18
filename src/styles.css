@@ -1,6 +1,4 @@
-:host {
-  --color-principal: #242424;
-}
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap");
 
 :root {
   font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
@@ -11,19 +9,44 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: var(--color-principal);
+  background-color: var(--bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --primary: #ffd700;
+  --primary-dark: #b8860b;
+  --bg: #000000;
+  --surface: #232323;
+  --surface-alt: #292929;
+  --border: #444;
+  --text: #fffbe7;
+  --text-muted: #e0e0c0;
+  --danger: #ff3333;
+  --danger-hover: #cc0000;
+  --success: #2ecc40;
+  --radius: 14px;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.component-container{
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+.component-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.titulo {
+	color: #daa520;
+	font-family: 'Cinzel', serif;
+	font-size: 2.7rem;
+	letter-spacing: 2px;
+	margin-bottom: 24px;
+	text-shadow: 0 2px 8px rgba(255, 0, 0, 0.667);
 }
 
 a {
@@ -74,9 +97,9 @@ button:focus-visible {
 #app {
   margin: 0;
   padding: 2rem;
-  /* text-align: center; */
   width: 100vw;
 }
+
 
 @media (prefers-color-scheme: light) {
   :root {

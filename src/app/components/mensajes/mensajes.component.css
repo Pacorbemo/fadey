@@ -87,12 +87,12 @@
   outline: none;
   background: #f7f8fa;
   transition: border 0.2s;
-  color: #222; /* Cambia el color del texto a oscuro */
+  color: #222;
 }
 .input-mensaje:focus {
   border: 1.5px solid #4f8cff;
   background: #fff;
-  color: #222; /* Asegura que el texto siga siendo oscuro al enfocar */
+  color: #222; 
 }
 
 .boton-enviar {

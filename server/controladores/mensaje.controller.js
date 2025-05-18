@@ -40,18 +40,20 @@ exports.obtenerChats = (req, res) => {
     
     const userIds = results.map(chat => chat.usuario_id);
     if (userIds.length > 0) {
-      const userQuery = "SELECT id, username FROM Usuarios WHERE id IN (?)";
+      // Modificado para incluir foto_perfil
+      const userQuery = "SELECT id, username, foto_perfil FROM Usuarios WHERE id IN (?)";
       db.query(userQuery, [userIds], (err, userResults) => {
         if (err) {
           console.error("Error al obtener usernames:", err);
           return res.status(500).json({ error: "Error al obtener usernames" });
         }
         const usernamesMap = userResults.reduce((map, user) => {
-          map[user.id] = user.username;
+          map[user.id] = { username: user.username, foto_perfil: user.foto_perfil };
           return map;
         }, {});
         results.forEach(chat => {
-          chat.username = usernamesMap[chat.usuario_id] || null;
+          chat.username = usernamesMap[chat.usuario_id]?.username || null;
+          chat.foto_perfil = usernamesMap[chat.usuario_id]?.foto_perfil || null;
         });
         res.status(200).json(results);
       });

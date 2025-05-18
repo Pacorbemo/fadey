@@ -1,30 +1,115 @@
-ul{
+ul {
 	list-style: none;
 	padding: 0;
-	margin: 0;
-	width: 50vw;
-}
-
-li{
+	margin: 0 auto;
+	max-width: 700px;
 	width: 100%;
-	display: flex;
-}
-
-.chat-item{
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 10px 0;
-	border-bottom: 1px solid #ccc;
+	background: #232323;
+	border-radius: 16px;
+	box-shadow: 0 4px 24px rgba(0,0,0,0.7);
 	cursor: pointer;
 }
 
-.info-chat{
+li {
 	width: 100%;
+	display: flex;
+	padding: 1em;
+	box-sizing: border-box;
+}
+
+li:hover {
+	background: #292929;
+	box-shadow: 0 2px 8px rgba(218,165,32,0.08);
+	border-radius: 12px;
+}
+.chat-item {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid #333;
+	cursor: pointer;
+	transition: background 0.2s;
+	background: transparent;
+}
+
+.chat-item:hover {
+	background: #292929;
+	box-shadow: 0 2px 8px rgba(218,165,32,0.08);
+}
+
+.avatar-barber {
+	width: 54px;
+	height: 54px;
+	border-radius: 50%;
+	border: 2px solid #daa520;
+	background: #111;
+	object-fit: cover;
+	margin-right: 18px;
+	box-shadow: 0 0 0 3px #232323;
+}
+
+.info-chat {
 	flex: 1;
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.username-barber {
+	font-size: 1.2rem;
+	font-weight: 700;
+	color: #daa520;
+	letter-spacing: 1px;
+	font-family: 'Cinzel', serif;
+	margin-bottom: 2px;
+}
+
+.ultimo-mensaje {
+	font-size: 1rem;
+	color: #e0e0e0;
+	opacity: 0.85;
+	margin-bottom: 4px;
+}
+
+.fecha {
+	font-size: 0.85rem;
+	align-self: flex-end;
+}
+
+.barber-pole {
+	width: 18px;
+	height: 54px;
+	background: repeating-linear-gradient(
+		135deg,
+		#fff 0 6px,
+		#c00 6px 12px,
+		#006 12px 18px
+	);
+	border-radius: 8px;
+	margin-left: 16px;
+	box-shadow: 0 0 6px #0008;
+}
+
+.chats-container {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 	align-items: center;
-	padding: 10px 0;
+	justify-content: flex-start;
+	padding: 32px 0;
+	background: #181818;
+}
+
+@media (max-width: 600px) {
+	ul {
+		max-width: 100vw;
+		border-radius: 0;
+	}
+	.chat-item {
+		padding: 12px 6px;
+	}
+	.avatar-barber {
+		width: 40px;
+		height: 40px;
+	}
 }

@@ -50,7 +50,6 @@ export class UsuariosService {
     );
   }
 
-  // Buscar por string el nombre o username
   buscarUsuarios(query: string): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`/barberos/buscar/${query}`);
   }

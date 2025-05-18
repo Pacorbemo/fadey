@@ -1,6 +1,5 @@
 const { db } = require('../db/db.config');
 
-// Crear notificación
 exports.crearNotificacion = (req, res) => {
   const { usuario_id, emisor_id, mensaje, tipo } = req.body;
   if (!usuario_id || !tipo) {
@@ -19,7 +18,6 @@ exports.crearNotificacion = (req, res) => {
   });
 };
 
-// Obtener notificaciones del usuario autenticado
 exports.obtenerNotificaciones = (req, res) => {
   const usuario_id = req.user.id;
   console.log(usuario_id);
@@ -48,7 +46,6 @@ exports.obtenerNotificaciones = (req, res) => {
   });
 };
 
-// Marcar como leída
 exports.marcarLeida = (req, res) => {
   const { id } = req.params;
   db.query(
@@ -64,7 +61,6 @@ exports.marcarLeida = (req, res) => {
   );
 };
 
-// Marcar todas las notificaciones del usuario como leídas
 exports.marcarTodasLeidas = (req, res) => {
   const usuario_id = req.user.id;
   db.query(

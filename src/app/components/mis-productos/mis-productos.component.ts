@@ -13,7 +13,7 @@ import { CargandoService } from '../../services/cargando.service';
   templateUrl: './mis-productos.component.html',
   styleUrl: './mis-productos.component.css',
   host: {
-    '(drop)': 'handleDrop($event)', // En cualquier lugar del componente que se arrastre la imagen la aceptará
+    '(drop)': 'handleDrop($event)', // Es necesaria esta propiedad para que el evento drop funcione en cualquier parte del componente
     '(dragover)': 'handleDragOver($event)',
   },
 })

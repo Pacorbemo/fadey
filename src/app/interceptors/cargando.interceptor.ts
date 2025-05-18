@@ -9,5 +9,4 @@ export const cargandoInterceptor: HttpInterceptorFn = (req, next) => {
   }
   req.headers.delete("SaltarCargando");
   return next(req)
-  // .pipe(finalize(() =>  (cargandoService.cargando = false)));
 };

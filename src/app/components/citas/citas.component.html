@@ -37,7 +37,6 @@
 
 @else if(usernameValido){
 	<h2>{{ semanaActual.fin | dateMesString}} {{semanaActual.fin.getFullYear()}}</h2>
-	<!-- <h2>Reservando cita a: {{usernameBarbero}}</h2> -->
 	<div class="botones-cambio-semana">
 		<button (click)="cambiarSemana(-1)"
 			[disabled]="desactivarAtras()" >-</button>

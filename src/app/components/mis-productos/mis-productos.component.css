@@ -1,135 +1,228 @@
 body {
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: #181818;
+    color: var(--text, #fffbe7);
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    letter-spacing: 0.01em;
 }
 
 form#uploadForm {
     max-width: 600px;
-    margin: 20px auto;
-    padding: 1rem;
-    border: 1px solid #444;
-    border-radius: 4px;
-    background-color: #1e1e1e;
+    margin: 24px auto;
+    padding: 1.5rem 2rem;
+    border: 1px solid var(--border, #444);
+    border-radius: 12px;
+    background-color: var(--surface-alt, #23231f);
+    box-shadow: 0 2px 12px #0003;
 }
 
 form#uploadForm h2 {
     margin-top: 0.4rem;
+    font-family: 'Cinzel', serif;
     text-align: center;
-    margin-bottom: 1rem;
-    color: #e0e0e0;
+    margin-bottom: 1.2rem;
+    color: var(--primary, #ffd700);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 form#uploadForm label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #e0e0e0;
+    font-weight: 600;
+    color: var(--text, #fffbe7);
 }
 
 form#uploadForm input[type="text"],
 form#uploadForm input[type="number"],
 form#uploadForm textarea {
     width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #555;
-    border-radius: 4px;
+    padding: 0.65rem 0.8rem;
+    margin-bottom: 1.1rem;
+    border: 1px solid var(--border, #444);
+    border-radius: 8px;
     box-sizing: border-box;
-    background-color: #2a2a2a;
-    color: #e0e0e0;
+    background-color: #23231f;
+    color: var(--text, #fffbe7);
+    font-size: 1rem;
+    transition: border 0.18s cubic-bezier(.4,0,.2,1);
+}
+
+form#uploadForm input[type="text"]:focus,
+form#uploadForm input[type="number"]:focus,
+form#uploadForm textarea:focus {
+    border-color: var(--primary, #ffd700);
+    outline: none;
 }
 
 form#uploadForm textarea {
-	resize: none;
+    resize: none;
+    min-height: 80px;
 }
-
 
 form#uploadForm input[type="file"] {
     margin-bottom: 1rem;
-    background-color: #2a2a2a;
-    color: #e0e0e0;
-    border: 1px solid #555;
-    border-radius: 4px;
+    background-color: #23231f;
+    color: var(--text, #fffbe7);
+    border: 1px solid var(--border, #444);
+    border-radius: 8px;
     padding: 0.5rem;
 }
 
 form#uploadForm button {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
     border: none;
-    border-radius: 4px;
-    background-color: #388e3c;
-    color: #fff;
+    border-radius: 8px;
+    background-color: var(--primary, #ffd700);
+    color: #23231f;
+    font-weight: 600;
+    font-size: 1.05rem;
     cursor: pointer;
+    box-shadow: 0 2px 8px #0002;
+    transition: background 0.18s cubic-bezier(.4,0,.2,1), color 0.18s cubic-bezier(.4,0,.2,1);
 }
 
 form#uploadForm button:hover {
-    background-color: #2e7d32;
+    background-color: var(--primary-dark, #b8860b);
+    color: #fffbe7;
+}
+
+.upload-area {
+    margin-bottom: 1.2rem;
 }
 
 .preview-container img {
-	max-width: 100%;
-	max-height: 100px;
-	object-fit: cover;
-	border: 1px solid #444;
-	margin-top: 1rem;
+    max-width: 100%;
+    max-height: 110px;
+    object-fit: cover;
+    border: 1px solid var(--border, #444);
+    border-radius: 8px;
+    margin-top: 1rem;
+    box-shadow: 0 2px 8px #0002;
 }
 
 ul {
     list-style-type: none;
     padding: 0;
-    margin-top: 2rem;
+    min-width: 800px;
+    width: 90%;
+    margin: 2rem auto;
 }
 
 li.header {
     display: flex;
-    font-weight: bold;
-    background-color: #2a2a2a;
-    padding: 0.5rem;
-    border-bottom: 2px solid #444;
-    color: #e0e0e0;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    background-color: var(--bg, #242424);
+    padding: 0.8rem 0.5rem;
+    border-bottom: 2px solid var(--primary-dark, #b8860b);
+    color: var(--primary, #ffd700);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 8px;
+    font-size: 1.35rem;
 }
 
 li.row {
     display: flex;
-    padding: 0.5rem;
-    border-bottom: 1px solid #444;
+    padding: 0.7rem 0.5rem;
+    border-bottom: 1px solid var(--border, #444);
     align-items: center;
+    background: var(--surface-alt, #292929);
+    color: var(--text, #fffbe7);
+    border-left: 4px solid var(--primary, #ffd700);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 10px #0002;
+    transition:
+        background 0.18s cubic-bezier(.4,0,.2,1),
+        box-shadow 0.18s cubic-bezier(.4,0,.2,1),
+        transform 0.15s cubic-bezier(.4,0,.2,1);
+    font-size: 1.10rem;
 }
 
 li.row:hover {
-    background-color: #333;
+    background: #23231f;
+    border-left: 4px solid var(--primary-dark, #b8860b);
+    box-shadow: 0 4px 18px #0003;
+    transform: scale(1.012);
 }
 
 li .col {
-    padding: 0 0.5rem;
+    padding: 0 0.7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.col-1 { flex: 1; }
-.col-2 { flex: 2; }
-.col-3, .col-4 { flex: 1; text-align: right; }
-.col-5 { flex: 1; text-align: center; }
+.col-1 { flex-basis: 15%; min-width: 80px; }
+.col-2 { flex-basis: 30%; min-width: 120px; }
+.col-3, .col-4 { flex-basis: 15%; min-width: 80px; text-align: right; }
+.col-5 { flex-basis: 15%; min-width: 80px; text-align: center; }
 
 li.row img {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 90px;
+    max-height: 90px;
     object-fit: cover;
-    border: 1px solid #444;
+    border: 1px solid var(--border, #444);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px #0002;
 }
 
 .triangle {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 8px solid rgb(255, 255, 255);
-  transition: transform 0.3s;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--primary, #ffd700);
+    transition: transform 0.3s;
 }
 
 .triangle.down {
-  transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 
 .triangle.left {
-  transform: rotate(0deg);
-}  
+    transform: rotate(0deg);
+}
+
+.reservados-list {
+    margin: 0;
+    padding: 0 30px ;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    form#uploadForm {
+        padding: 1rem 0.5rem;
+    }
+    ul {
+        min-width: 600px;
+    }
+    li.header, li.row {
+        font-size: 1rem;
+        padding: 0.5rem 0.2rem;
+    }
+    .col-1, .col-2, .col-3, .col-4, .col-5 {
+        min-width: 60px;
+    }
+}
+
+@media (max-width: 600px) {
+    form#uploadForm {
+        padding: 0.5rem 0.2rem;
+    }
+    ul {
+        min-width: 400px;
+    }
+    li.header, li.row {
+        font-size: 0.92rem;
+        padding: 0.3rem 0.1rem;
+    }
+    .col-1, .col-2, .col-3, .col-4, .col-5 {
+        min-width: 40px;
+    }
+}

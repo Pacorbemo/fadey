@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { environment } from './environments/environments';
+import { environment } from '../environments/environments';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { SocketIoModule } from 'ngx-socket-io';
 

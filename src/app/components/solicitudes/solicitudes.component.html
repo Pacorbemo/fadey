@@ -1,5 +1,5 @@
 <div class="component-container">
-	<h2>Solicitudes pendientes</h2>
+	<h2 class="titulo">Solicitudes pendientes</h2>
 
 	@if (cargandoService.cargando) {
 		@if((cargandoService.cargandoProlongado | async)){
@@ -15,20 +15,33 @@
 					<th>Nombre</th>
 					<th>Usuario</th>
 					<th>Fecha</th>
-					<!-- <th>Estado</th> -->
-					<!-- <th></th> -->
+
 				</tr>
 			</thead>
 			<tbody>
 				@for (solicitud of solicitudes; let idx = $index; track idx) {
-				<tr>
+				<tr (click)="irPerfil(solicitud.username)" style="cursor:pointer;">
 					<td>{{ solicitud.nombre }}</td>
 					<td>{{ solicitud.username }}</td>
 					<td>{{ solicitud.fecha_creacion | date:'HH:mm dd/MM'}}</td>
-					<!-- <td>{{ solicitud.estado }}</td> -->
 					<td>
-						<button (click)="aceptarSolicitud(solicitud.id)">Aceptar</button>
-						<button (click)="rechazarSolicitud(solicitud.id)">Rechazar</button>
+						<button type="button" class="btn-aceptar" (click)="aceptarSolicitud(solicitud.id); $event.stopPropagation()">
+							<span class="btn-icon">
+								<svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;" xmlns="http://www.w3.org/2000/svg">
+									<path d="M5 10l3 3 7-7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</span>
+							Aceptar
+						</button>
+						<button type="button" (click)="rechazarSolicitud(solicitud.id); $event.stopPropagation()">
+							<span class="btn-icon">
+								<svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" style="vertical-align:middle;" xmlns="http://www.w3.org/2000/svg">
+									<line x1="6" y1="6" x2="14" y2="14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+									<line x1="14" y1="6" x2="6" y2="14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+								</svg>
+							</span>
+							Rechazar
+						</button>
 					</td>
 				</tr>
 				}

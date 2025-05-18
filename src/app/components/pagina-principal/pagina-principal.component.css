@@ -62,27 +62,6 @@ h1{
 	align-items: center;
 }
 
-/* .main .sombra{
-	position: absolute;	
-	z-index: 1;
-	width: 15vw;
-	height: 100%;
-	filter: blur(10px);	
-	pointer-events: none;
-	opacity: 0.8;
-	margin: -2vw
-}
-
-.main .sombra-1{
-	left: 0;
-	background: linear-gradient(270deg, rgba(0, 0, 0, 0), #000000);	
-}
-
-.main .sombra-2{
-	right: 0;
-	background: linear-gradient(90deg, rgba(0, 0, 0, 0), #000000);
-} */
-
 .cards {
 	margin-top: 5vh;
 }

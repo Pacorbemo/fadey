@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵsetClassDebugInfo } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
 import { DateMesStringPipe } from '../../pipes/date-mes-string.pipe';
 import { UsuariosService } from '../../services/usuarios.service';
@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RelacionesService } from '../../services/relaciones.service';
 import { CargandoService } from '../../services/cargando.service';
-import { Observable } from 'rxjs';
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.component.html',
@@ -142,7 +141,6 @@ export class CitasComponent implements OnInit {
   }
 
   esFranjaDisponible(dia: Date, hora: string): boolean {
-    // console.log(this.citasService.diaHora(dia, hora).getHours())
     if (this.citasService.diaHora(dia, hora).getTime() < new Date().getTime()) return false;
     return this.horariosDisponibles[dia.getDate()]?.includes(hora) || false;
   }

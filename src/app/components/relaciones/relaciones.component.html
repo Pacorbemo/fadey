@@ -1,110 +1,118 @@
 <div class="component-container">
-	<h1>Tus relaciones</h1>
+    <h2 class="titulo">Tus relaciones</h2>
 
-	<input
-		id="busqueda-relaciones"
-		name="busqueda"
-		type="text"
-		[(ngModel)]="busqueda"
-		placeholder="Filtrar por nombre o usuario"
-		(input)="filtrar()" />
-	
-@if(!cargandoService.cargando){
-	@if(datosService.esCliente()){
-		@if (barberosFiltrados.length > 0) {
-		<div class="solicitudes-container">
-			<table>
-				<thead>
-					<tr>
-						<th>Usuario</th>
-						<th>Nombre</th>
-						<!-- <th></th> -->
-					</tr>
-				</thead>
-				<tbody>
-					@for (relacion of barberosFiltrados; let idx = $index; track idx) {
-						<tr>
-							<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
-							<td>{{ relacion.nombre }}</td>
-						<td>
-							<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
-						</td>
-					</tr>
-					}
-				</tbody>
-			</table>
-		</div>
-		}
-		
-		@else {
-			<p>Aún no tienes relaciones.</p>
-		}
-	}
+    <input
+        id="busqueda-relaciones"
+        name="busqueda"
+        type="text"
+        [(ngModel)]="busqueda"
+        placeholder="Filtrar por nombre o usuario"
+        (input)="filtrar()"
+        autocomplete="off"
+        aria-label="Buscar relaciones"
+    />
 
-	@if(datosService.esBarbero()){
-		@if(clientes.length == 0 && barberos.length == 0) {
-			<p>Aún no tienes relaciones.</p>
-		}
+    <ng-container *ngIf="!cargandoService.cargando">
+        <ng-container *ngIf="datosService.esCliente()">
+            <ng-container *ngIf="barberosFiltrados.length > 0; else noRelacionesCliente">
+                <div class="solicitudes-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let relacion of barberosFiltrados; let idx = index">
+                                <td>
+                                    <a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a>
+                                </td>
+                                <td>{{ relacion.nombre }}</td>
+                                <td>
+                                    <button (click)="eliminarRelacion(relacion.id)" title="Eliminar relación">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-container>
+            <ng-template #noRelacionesCliente>
+                <p>Aún no tienes relaciones.</p>
+            </ng-template>
+        </ng-container>
 
-		@if (clientesFiltrados.length > 0) {
-			<h3>Clientes</h3>
-			<div class="solicitudes-container">
-				<table>
-					<thead>
-						<tr>
-							<th>Usuario</th>
-							<th>Nombre</th>
-							<!-- <th></th> -->
-						</tr>
-					</thead>
-					<tbody>
-						@for (relacion of clientesFiltrados; let idx = $index; track idx) {
-						<tr>
-							<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
-							<td>{{ relacion.nombre }}</td>
-							<td>
-								<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
-							</td>
-						</tr>
-						}
-					</tbody>
-				</table>
-			</div>
-		}
-		@if (barberosFiltrados.length > 0) {
-			<h3>Barberos</h3>
-			<div class="solicitudes-container">
-				<table>
-					<thead>
-						<tr>
-							<th>Usuario</th>
-							<th>Nombre</th>
-							<!-- <th></th> -->
-						</tr>
-					</thead>
-					<tbody>
-						@for (relacion of barberosFiltrados; let idx = $index; track idx) {
-						<tr>
-							<td><a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a></td>
-							<td>{{ relacion.nombre }}</td>
-							<td>
-								<button (click)="eliminarRelacion(relacion.id)">Eliminar</button>
-							</td>
-						</tr>
-						}
-					</tbody>
-				</table>
-			</div>
-		}
+        <ng-container *ngIf="datosService.esBarbero()">
+            <ng-container *ngIf="clientes.length === 0 && barberos.length === 0">
+                <p>Aún no tienes relaciones.</p>
+            </ng-container>
 
-		@else if(clientesFiltrados.length == 0 && busqueda != "") {
-			<p>No se encontraron resultados para "{{busqueda}}"</p>
-		}
-	}
-}
-@else {
-	@if(this.cargandoService.cargandoProlongado | async){
-		<p>Cargando...</p>
-	}
-}
+            <ng-container *ngIf="clientesFiltrados.length > 0">
+                <h3>Clientes</h3>
+                <div class="solicitudes-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let relacion of clientesFiltrados; let idx = index">
+                                <td>
+                                    <a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a>
+                                </td>
+                                <td>{{ relacion.nombre }}</td>
+                                <td>
+                                    <button (click)="eliminarRelacion(relacion.id)" title="Eliminar relación">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="barberosFiltrados.length > 0">
+                <h3>Barberos</h3>
+                <div class="solicitudes-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+	                            <tr *ngFor="let relacion of barberosFiltrados; let idx = index">
+                                <td>
+                                    <a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a>
+                                </td>
+                                <td>{{ relacion.nombre }}</td>
+                                <td>
+                                    <button (click)="eliminarRelacion(relacion.id)" title="Eliminar relación">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="clientesFiltrados.length === 0 && busqueda !== ''">
+                <p>No se encontraron resultados para "{{busqueda}}"</p>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="cargandoService.cargando">
+        <p>Cargando...</p>
+    </ng-container>
 </div>
