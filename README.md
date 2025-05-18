@@ -1,27 +1,58 @@
 # Fadey
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
+Este proyecto es una aplicación web desarrollada con Angular (frontend) y Node.js/Express (backend) usando MySQL como base de datos.
 
-## Development server
+## Pasos para la configuración inicial
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1. **Crear la base de datos**
+   - Importa el archivo `estructura.sql` en tu servidor MySQL para crear la estructura de la base de datos y las tablas necesarias.
 
-## Code scaffolding
+2. **Configurar variables de entorno**
+   - Crea un archivo `.env` en la raíz del proyecto siguiendo el formato de `.env.example` y completa los valores con tu configuración local (usuario, contraseña, etc).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+3. **Instalar dependencias**
+   - Ejecuta `npm install` en la raíz del proyecto para instalar las dependencias del frontend y backend.
 
-## Build
+## Cómo ejecutar el proyecto
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Backend
 
-## Running unit tests
+Ejecuta el backend con:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+node server/index.js
+```
 
-## Running end-to-end tests
+El servidor se iniciará y mostrará la URL donde está corriendo.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Frontend
 
-## Further help
+Ejecuta el frontend con:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm run start
+```
+
+Esto levantará el servidor de desarrollo de Angular. Accede a la aplicación desde tu navegador en la URL que se muestre (por defecto suele ser http://localhost:4200/).
+
+---
+
+## Ejecución simultánea para desarrollo
+
+Adicionalmente, para facilitar el desarrollo puedes ejecutar:
+
+```bash
+npm run dev
+```
+
+Este comando levanta tanto el frontend como el backend en el mismo terminal usando concurrently y nodemon. Para que funcione, asegúrate de tener instalados los módulos:
+
+- concurrently
+- nodemon
+
+Puedes instalarlos con:
+
+```bash
+npm install concurrently nodemon --save-dev
+```
+
