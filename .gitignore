@@ -42,4 +42,6 @@ testem.log
 Thumbs.db
 
 .env
-uploads/
+uploads/*
+!uploads/.gitkeep
+Fadey.zip
