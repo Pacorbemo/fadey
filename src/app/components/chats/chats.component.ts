@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MensajesService } from '../../services/mensajes.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environments';
+import { UploadsPipe } from '../../pipes/uploads.pipe';
 
 interface Chat {
   usuario_id: number;
@@ -14,13 +16,14 @@ interface Chat {
 @Component({
   selector: 'app-chats',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, UploadsPipe],
   templateUrl: './chats.component.html',
   styleUrl: './chats.component.css'
 })
 export class ChatsComponent implements OnInit{
 
   chats: Chat[] = [];
+  public environment = environment;
 
   constructor(private mensajesService: MensajesService) {}
     

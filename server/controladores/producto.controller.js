@@ -63,18 +63,13 @@ exports.addProducto = (req, res) => {
   if (!nombre || !precio || !descripcion || !stock) {
     return res.status(400).json({ error: "Información insuficiente" });
   }
-  
-  let foto_url = null;
-  if (foto) {
-    foto_url = `${req.protocol}://${req.get('host')}/uploads/${foto.filename}`;
-  }
-  
+
   const query = `
     INSERT INTO Productos (nombre, precio, descripcion, foto, stock, barbero_id)
     VALUES (?, ?, ?, ?, ?, ?)
   `;
   
-  db.query(query, [nombre, precio, descripcion, foto_url, stock, barbero_id], (err, result) => {
+  db.query(query, [nombre, precio, descripcion, foto.filename | null, stock, barbero_id], (err, result) => {
     if (err) {
       console.error("Error al agregar producto:", err);
       return res.status(500).json({ error: "Error al agregar producto" });
@@ -89,8 +84,7 @@ exports.updateProducto = (req, res) => {
   const barbero_id = req.user.id;
 
   if (req.file) {
-    const foto_url = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-    updates.foto = foto_url;
+    updates.foto = req.file.filename;
   }
   
   if (!updates || Object.keys(updates).length === 0) {
@@ -112,7 +106,7 @@ exports.updateProducto = (req, res) => {
       return res.status(404).json({ error: "Producto no encontrado o no autorizado" });
     }
     if(updates.foto){
-      res.status(200).json({ message: "Producto actualizado correctamente", foto_url: updates.foto });
+      res.status(200).json({ message: "Producto actualizado correctamente", foto: updates.foto });
     }
     else{
       res.status(200).json({ message: "Producto actualizado correctamente" });

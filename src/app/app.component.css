@@ -1,6 +1,5 @@
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0.6rem 1.4rem;
 }
@@ -43,6 +42,7 @@ header {
 }
 
 .header{
+  margin-left: auto;
 	display:flex;
 	align-items: center;
 	gap: 1.5em;
@@ -90,27 +90,61 @@ header {
 
 nav {
   display: flex;
-  flex-direction: column;
-  margin-right: 2em;
+  margin-left: 2em;
+  gap: 2em;
 }
 
-nav a, nav button {
+nav a {
   border: 0;
   width: 100%;
   text-decoration: none;
   color: white;
-  padding: 10px;
+  padding: 6px 10px;
   border-radius: 5px;
   margin-bottom: 5px;
-  font-weight: bold;
-}
-
-nav button:hover{
-  border: 0;
+  position: relative;
 }
 
 nav a:hover {
-  background-color: rgb(34, 34, 34);
+  background-color: rgb(36, 36, 36);
+}
+
+nav a.active-link {
+  background: linear-gradient(0deg, #433dc5 0%, #0e0c27 100%);
+  background-size: 100% 200%;
+  background-position: 0% 0%;
+  animation: active-link-bg-up 0.7s forwards;
+}
+
+@keyframes active-link-bg-up {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 0% 100%;
+  }
+}
+
+nav a.active-link::after {
+  transform: scaleX(1);
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+nav a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 .container {

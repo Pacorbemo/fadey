@@ -2,50 +2,42 @@ ul {
 	list-style: none;
 	padding: 0;
 	margin: 0 auto;
-	max-width: 700px;
+	max-width: 600px;
 	width: 100%;
-	background: #232323;
-	border-radius: 16px;
-	box-shadow: 0 4px 24px rgba(0,0,0,0.7);
-	cursor: pointer;
+	background: #181a20;
+	border-radius: 18px;
+	box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+	border: 1px solid #23263a;
+	overflow: hidden;
 }
 
-li {
-	width: 100%;
-	display: flex;
-	padding: 1em;
-	box-sizing: border-box;
-}
-
-li:hover {
-	background: #292929;
-	box-shadow: 0 2px 8px rgba(218,165,32,0.08);
-	border-radius: 12px;
-}
-.chat-item {
+li, .chat-item {
 	width: 100%;
 	display: flex;
 	align-items: center;
-	border-bottom: 1px solid #333;
-	cursor: pointer;
-	transition: background 0.2s;
+	padding: 18px 18px;
+	box-sizing: border-box;
 	background: transparent;
+	border-bottom: 1px solid #23263a;
+	transition: background 0.2s;
+	cursor: pointer;
 }
 
-.chat-item:hover {
-	background: #292929;
-	box-shadow: 0 2px 8px rgba(218,165,32,0.08);
+li:hover, .chat-item:hover {
+	background: #23263a;
+	box-shadow: 0 2px 8px rgba(79,140,255,0.08);
+	border-radius: 0;
 }
 
 .avatar-barber {
-	width: 54px;
-	height: 54px;
+	width: 48px;
+	height: 48px;
 	border-radius: 50%;
-	border: 2px solid #daa520;
-	background: #111;
+	border: 2px solid #3a5be0;
+	background: #23263a;
 	object-fit: cover;
 	margin-right: 18px;
-	box-shadow: 0 0 0 3px #232323;
+	box-shadow: 0 0 0 3px #181a20;
 }
 
 .info-chat {
@@ -56,38 +48,25 @@ li:hover {
 }
 
 .username-barber {
-	font-size: 1.2rem;
+	font-size: 1.08rem;
 	font-weight: 700;
-	color: #daa520;
-	letter-spacing: 1px;
-	font-family: 'Cinzel', serif;
+	color: #3a5be0;
+	letter-spacing: 0.5px;
+	font-family: 'Inter', sans-serif;
 	margin-bottom: 2px;
 }
 
 .ultimo-mensaje {
-	font-size: 1rem;
-	color: #e0e0e0;
+	font-size: 0.98rem;
+	color: #e0e6f0;
 	opacity: 0.85;
 	margin-bottom: 4px;
 }
 
 .fecha {
 	font-size: 0.85rem;
+	color: #7a7e8a;
 	align-self: flex-end;
-}
-
-.barber-pole {
-	width: 18px;
-	height: 54px;
-	background: repeating-linear-gradient(
-		135deg,
-		#fff 0 6px,
-		#c00 6px 12px,
-		#006 12px 18px
-	);
-	border-radius: 8px;
-	margin-left: 16px;
-	box-shadow: 0 0 6px #0008;
 }
 
 .chats-container {
@@ -97,7 +76,7 @@ li:hover {
 	align-items: center;
 	justify-content: flex-start;
 	padding: 32px 0;
-	background: #181818;
+	background: #181a20;
 }
 
 @media (max-width: 600px) {
@@ -109,7 +88,7 @@ li:hover {
 		padding: 12px 6px;
 	}
 	.avatar-barber {
-		width: 40px;
-		height: 40px;
+		width: 36px;
+		height: 36px;
 	}
 }

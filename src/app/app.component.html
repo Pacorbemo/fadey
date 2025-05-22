@@ -2,6 +2,15 @@
   <div class="titulo-container" routerLink="/">
     <p>Fadey</p>
   </div>
+  @if(datosService.tokenUsuario){
+  <nav>
+      <a routerLink="mis-citas" routerLinkActive="active-link">Citas</a>
+      <a routerLink="mis-productos" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Productos</a>
+      <a routerLink="solicitudes" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Solicitudes</a>
+      <a routerLink="relaciones" routerLinkActive="active-link">Relaciones</a>
+      <a routerLink="chats" routerLinkActive="active-link">Chats</a>
+    </nav>
+  }
   @if(datosService.user.username){
   <div class="header">
     @if(!paginaPrincipal()){
@@ -21,10 +30,10 @@
           {{datosService.user.username.charAt(0).toUpperCase()}}
         }
         @else{
-          <img class="foto-perfil" [src]="datosService.user.pic" alt="Foto de perfil" />
+          <img class="foto-perfil" [src]="datosService.user.pic | uploads" alt="Foto de perfil" />
         }
       </span>
-      <ul *ngIf="menuAbierto" class="dropdown-menu">
+      <ul *ngIf="menuAbierto" class="dropdown-menu" #menu>
         <li routerLink="editar-perfil">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="mr-2 w-5 h-5"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path></svg>
           Perfil
@@ -39,15 +48,6 @@
   }
 </header>
 <div class="container">
-  @if(datosService.tokenUsuario){
-  <nav>
-      <a routerLink="mis-citas">Citas</a>
-      <a routerLink="mis-productos" *ngIf="datosService.esBarbero()">Productos</a>
-      <a routerLink="solicitudes" *ngIf="datosService.esBarbero()">Solicitudes</a>
-      <a routerLink="relaciones">Relaciones</a>
-      <a routerLink="chats">Chats</a>
-    </nav>
-}
   <div class="app">
     <router-outlet></router-outlet>
   </div>

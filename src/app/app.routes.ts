@@ -48,5 +48,5 @@ export const routes: Routes = [
   },
 
   { path: '', component: PaginaPrincipalComponent, pathMatch: 'full', canActivate: [authGuard] },
-  { path: '**', redirectTo: '/mis-citas' },
+  { path: '**', redirectTo: '/' },
 ];

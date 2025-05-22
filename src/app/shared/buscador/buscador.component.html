@@ -16,7 +16,7 @@
     <li *ngFor="let usuario of buscadorService.resultados" 
     (click)="buscadorService.seleccionarUsuario(usuario.username)"
     >
-      <img [src]="usuario.foto_perfil || datosService.noFoto " alt="Avatar" class="avatar" />
+      <img [src]="(usuario.foto_perfil | uploads) || datosService.noFoto " alt="Avatar" class="avatar" />
       <span>{{ usuario.username }}</span>
     </li>
   </ul>

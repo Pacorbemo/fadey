@@ -20,7 +20,6 @@ exports.crearNotificacion = (req, res) => {
 
 exports.obtenerNotificaciones = (req, res) => {
   const usuario_id = req.user.id;
-  console.log(usuario_id);
   const query = `
     SELECT n.*, u.username AS username
     FROM notificaciones n

@@ -9,8 +9,14 @@ const { db } = require('./db/db.config');
 const app = express();
 const server = http.createServer(app);
 const PORT = 5000;
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'saltarcargando'],
+};
 
-app.use(cors());
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
 

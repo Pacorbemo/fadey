@@ -3,7 +3,10 @@
 	<ul>
 		@for (chat of chats; track chat.usuario_id){
 			<li [routerLink]="['/', chat.username, 'mensajes']">
-				<img class="avatar-barber" [src]="chat.foto_perfil || 'assets/barber-default.png'" alt="Avatar" />
+				<img class="avatar-barber"
+				     [src]="chat.foto_perfil | uploads : 'uploads'"
+				     alt="Avatar"
+				/>
 				<div class="info-chat">
 					<span class="username-barber">{{ chat.username }}</span>
 					<span class="ultimo-mensaje">{{ chat.ultimo_mensaje }}</span>

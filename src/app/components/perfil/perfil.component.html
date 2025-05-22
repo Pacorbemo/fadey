@@ -1,6 +1,6 @@
 <section>
 	<span>
-		<img [alt]="user.username" [src]="user.foto_perfil || datosService.noFoto">
+		<img [alt]="user.username" [src]="(user.foto_perfil | uploads) || datosService.noFoto">
 	</span>
 	<aside>
 		<h1>{{user.nombre}}</h1>

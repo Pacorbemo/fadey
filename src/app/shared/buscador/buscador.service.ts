@@ -24,7 +24,10 @@ export class BuscadorService {
         switchMap((query) => this.usuariosService.buscarUsuarios(query))
       )
       .subscribe((usuarios) => {
-        if (this.buscador == '') return; //Si buscador cambia en lo que se recibe la respuesta, no se muestran los resultados
+        if (this.buscador == '') {
+          cargandoService.cargando = false;
+          return
+        } //Si buscador cambia en lo que se recibe la respuesta, no se muestran los resultados
         this.resultados = usuarios;
         this.buscadorCopia = this.buscador;
         this.cargandoService.cargando = false;

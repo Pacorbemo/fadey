@@ -1,8 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap");
-
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  font-family: Montserrat, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
   letter-spacing: 0.025em;
   line-height: 1.5;
   font-weight: 400;
@@ -16,11 +13,11 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --primary: #ffd700;
-  --primary-dark: #b8860b;
+  --primary: #1a29ce;
+  --primary-dark: #2b3bee;
   --bg: #000000;
   --surface: #232323;
-  --surface-alt: #292929;
+  --surface-alt: #1f1b1b;
   --border: #444;
   --text: #fffbe7;
   --text-muted: #e0e0c0;
@@ -40,13 +37,16 @@
   padding: 2rem;
 }
 
-.titulo {
-	color: #daa520;
-	font-family: 'Cinzel', serif;
-	font-size: 2.7rem;
-	letter-spacing: 2px;
-	margin-bottom: 24px;
-	text-shadow: 0 2px 8px rgba(255, 0, 0, 0.667);
+h2.titulo {
+	background: linear-gradient(140deg, rgb(169, 199, 255) 0%, #2b3bee 30%, #1d2a63 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	color: transparent;
+	font-size: 3rem;
+	letter-spacing: 1px;
+	margin-bottom: 18px;
+	font-weight: 700;
 }
 
 a {
@@ -88,6 +88,10 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+input{
+  font-family: inherit;
 }
 
 .container {

@@ -6,11 +6,12 @@ import { DatosService } from '../../services/datos.service';
 import { BehaviorSubject } from 'rxjs';
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
 import { RelacionesService } from '../../services/relaciones.service';
+import { UploadsPipe } from '../../pipes/uploads.pipe';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [RouterModule, NgComponentOutlet, CapitalizePipe],
+  imports: [RouterModule, NgComponentOutlet, CapitalizePipe, UploadsPipe],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })

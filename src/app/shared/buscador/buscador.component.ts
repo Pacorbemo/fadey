@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BuscadorService } from './buscador.service';
 import { DatosService } from '../../services/datos.service';
+import { UploadsPipe } from '../../pipes/uploads.pipe';
 
 @Component({
   selector: 'app-buscador',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UploadsPipe],
   templateUrl: './buscador.component.html',
   styleUrl: './buscador.component.css',
 })

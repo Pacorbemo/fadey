@@ -13,7 +13,7 @@ export const usuarioExistenteGuard: CanActivateFn = (route, state) => {
       if (response.exists) {
         return true;
       } else {
-        return router.createUrlTree(['/editar-perfil']);
+        return router.createUrlTree(['/']);
       }
     })
   );

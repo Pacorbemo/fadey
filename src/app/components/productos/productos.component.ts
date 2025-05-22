@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { FormsModule } from '@angular/forms';
+import { UploadsPipe } from '../../pipes/uploads.pipe';
 
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UploadsPipe],
   templateUrl: './productos.component.html',
   styleUrl: './productos.component.css'
 })

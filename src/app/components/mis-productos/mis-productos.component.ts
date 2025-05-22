@@ -5,11 +5,12 @@ import { DatosService } from '../../services/datos.service';
 import { CommonModule } from '@angular/common';
 import { debounceTime, Subject, switchMap } from 'rxjs';
 import { CargandoService } from '../../services/cargando.service';
+import { UploadsPipe } from '../../pipes/uploads.pipe';
 
 @Component({
   selector: 'app-mis-productos',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, UploadsPipe],
   templateUrl: './mis-productos.component.html',
   styleUrl: './mis-productos.component.css',
   host: {

@@ -1,14 +1,19 @@
 <div class="chat-container" *ngIf="!cargandoService.cargando">
-  <div class="mensajes">
-    <ng-container *ngFor="let mensaje of mensajes; let idx = index; trackBy: trackByIdx">
-      <div
-        class="burbuja"
-        [ngClass]="mensaje.emisor_id === usuarioActual ? 'emisor' : 'receptor'"
-      >
-        <span>{{ mensaje.mensaje }}</span>
-        <span class="hora">{{ mensaje.fecha_envio | date: 'HH:mm' }}</span>
+  <div class="mensajes" #mensajesContainer>
+    @for (grupo of mensajesAgrupadosPorDia(); track grupo.fecha) {
+      <div class="separador-dia">
+        <span>{{ grupo.fecha }}</span>
       </div>
-    </ng-container>
+      @for (mensaje of grupo.mensajes; let idx = $index; track idx) {
+        <div
+          class="burbuja"
+          [ngClass]="mensaje.emisor_id === usuarioActual ? 'emisor' : 'receptor'"
+        >
+          <span>{{ mensaje.mensaje }}</span>
+          <span class="hora">{{ mensaje.fecha_envio | date: 'HH:mm' }}</span>
+        </div>
+      }
+    }
   </div>
   <div class="input-container">
     <input

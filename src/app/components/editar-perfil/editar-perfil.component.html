@@ -3,7 +3,7 @@
     @if(this.datosService.user.pic){
       <img
         [alt]="this.datosService.user.username"
-        [src]="this.datosService.user.pic">
+        [src]="this.datosService.user.pic | uploads">
     }
     @else{
       <img
