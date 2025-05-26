@@ -30,11 +30,12 @@ export class ChatsComponent implements OnInit{
   ngOnInit(): void {
     this.mensajesService.cargarChats().subscribe((chats: Chat[]) => {
       this.chats = chats;
-      console.log(chats)
     });
   }
 
-  trackByIdx(index: number, item: Chat): number {
-    return index;
+  hoy(date: string | Date): boolean {
+    const d = new Date(date);
+    const today = new Date();
+    return d.toLocaleDateString() === today.toLocaleDateString()
   }
 }

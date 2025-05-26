@@ -19,7 +19,7 @@ form#uploadForm {
     background-size: 55px 55px;
 }
 
-form#uploadForm label {
+form#uploadForm label { 
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
@@ -66,7 +66,7 @@ form#uploadForm button {
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 8px;
-    background-color: var(--primary, #ffd700);
+    background-color: var(--primary);
     color: #23231f;
     font-weight: 600;
     font-size: 1.05rem;

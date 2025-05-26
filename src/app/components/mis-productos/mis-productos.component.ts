@@ -63,7 +63,7 @@ export class MisProductosComponent {
   ) {
     this.pantallaSubject.pipe(debounceTime(30)).subscribe((oscurecer) => {
       this.oscurecerPantalla = oscurecer;
-      console.log(oscurecer)
+      console.log(oscurecer);
     });
   }
 
@@ -77,9 +77,10 @@ export class MisProductosComponent {
         (error) => {
           console.error('Error al obtener los productos:', error);
         }
-      ).add(() => {
-      this.cargandoService.cargando = false;
-    });
+      )
+      .add(() => {
+        this.cargandoService.cargando = false;
+      });
     this.httpService.httpGetToken(`/productos/reservados`).subscribe(
       (response) => {
         this.reservados = response;
@@ -87,7 +88,7 @@ export class MisProductosComponent {
       (error) => {
         console.error('Error al obtener los productos reservados:', error);
       }
-    )
+    );
   }
 
   urlImagen(): string {
@@ -119,8 +120,9 @@ export class MisProductosComponent {
         },
         error: (error) => {
           console.error('Error al actualizar el producto:', error);
-        }}
-      ).add(() => {
+        },
+      })
+      .add(() => {
         this.cargandoService.cargando = false;
       });
   }
@@ -170,18 +172,21 @@ export class MisProductosComponent {
       formData.append('foto', this.producto.foto);
     }
 
-    this.httpService.httpPostToken('/productos', formData).subscribe(
-      (response) => {
-        console.log('Producto subido correctamente:', response);
-        alert('Producto subido correctamente');
-      },
-      (error) => {
-        console.error('Error al subir el producto:', error);
-        alert('Error al subir el producto');
-      }
-    ).add(() => {
-      this.cargandoService.cargando = false;
-    });
+    this.httpService
+      .httpPostToken('/productos', formData)
+      .subscribe(
+        (response) => {
+          console.log('Producto subido correctamente:', response);
+          alert('Producto subido correctamente');
+        },
+        (error) => {
+          console.error('Error al subir el producto:', error);
+          alert('Error al subir el producto');
+        }
+      )
+      .add(() => {
+        this.cargandoService.cargando = false;
+      });
     console.log('Producto subido:', this.producto);
   }
 
@@ -206,15 +211,17 @@ export class MisProductosComponent {
         if (input) {
           producto[field] = input.value;
           this.httpService
-            .httpPutToken(`/productos/${id}`, { [field]: producto[field] })
+            .httpPutToken(
+              `/productos/${id}`,
+              { [field]: producto[field] },
+              true
+            )
             .subscribe(
               () => {},
               (error) => {
                 console.error('Error al actualizar el producto:', error);
               }
-            ).add(() => {
-              this.cargandoService.cargando = false;
-            });
+            );
         }
       }
     }
