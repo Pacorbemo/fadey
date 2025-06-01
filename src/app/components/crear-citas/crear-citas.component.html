@@ -1,14 +1,22 @@
 <div class="component-container">
-	<h2>{{diasDeLaSemana[6] | dateMesString}}</h2>
-	<div class="botones-cambio-mes">
-		<button (click)="cambiarSemana(-1)" [disabled]="desactivarAtras()">-</button>
-		<button (click)="cambiarSemana(1)">+</button>
+	<h2 class="titulo">{{diasDeLaSemana[6] | dateMesString}}</h2>
+	<div class="input-fecha-container">
+		<input type="date" class="input-fecha" [(ngModel)]="inputFecha" (change)="cambioFecha()"/>
+		@if(mostrarWarningInput){
+			<p style="color: red;">Debes introducir una fecha futura</p>
+		}
 	</div>
-	<div class="botones" [style.visibility]="1 > 0 ? 'visible' : 'hidden'">
-		<button (click)="confirmarSeleccion()">Confirmar</button>
-		<button (click)="cancelarSeleccion()">Cancelar</button>
+	<div class="botones-cambio-semana">
+		<div>
+			<button (click)="cambiarSemana(-1)" [disabled]="desactivarAtras()" aria-label="Semana anterior"><svg fill="#000000" viewBox="0 0 24 24" id="left-arrow" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><line id="primary" x1="21" y1="12" x2="3" y2="12" style="fill: none; stroke: #ffffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></line><polyline id="primary-2" data-name="primary" points="6 9 3 12 6 15" style="fill: none; stroke: #ffffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></polyline></g></svg></button>
+			<button (click)="cambiarSemana(1)" aria-label="Semana siguiente"><svg fill="#000000" viewBox="0 0 24 24" id="right-arrow" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><line id="primary" x1="3" y1="12" x2="21" y2="12" style="fill: none; stroke: #ffffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></line><polyline id="primary-2" data-name="primary" points="18 15 21 12 18 9" style="fill: none; stroke: #ffffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></polyline></g></svg></button>
+		</div>
 	</div>
-	
+	<div class="botones">
+		<button class="btn-confirmar" (click)="confirmarSeleccion()">Confirmar</button>
+		<button class="btn-cancelar" (click)="cancelarSeleccion()">Cancelar</button>
+	</div>
+	<p class="input-tramos">Mostrando tramos de <input type="number" [min]="0" [max]="tramo.fin - 1" [(ngModel)]="tramo.inicio" (change)="actualizarTramo()" (blur)="actualizarTramo()"> a <input type="number" [min]="tramo.inicio + 1" max="24" [(ngModel)]="tramo.fin" (change)="actualizarTramo()" (blur)="actualizarTramo()"></p>
 	<table>
 		<thead>
 		  <tr>

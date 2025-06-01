@@ -58,4 +58,31 @@ export class EditarPerfilComponent {
       }
     );
   }
+
+  editarNombre(){
+    const nombreElemento = document.getElementById('nombre');
+    if (nombreElemento) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = this.datosService.user.nombre;
+      input.id = 'nombre';
+      input.style.fontSize = '24px';
+      input.style.fontWeight = 'bold';
+      input.addEventListener('blur', () => {
+        this.datosService.user.nombre = input.value;
+        input.replaceWith(nombreElemento);  
+        this.httpService.httpPutToken('/usuarios/nombre', { nombre: input.value }).subscribe({
+          error: (error) => {
+            console.error('Error al actualizar el nombre:', error);
+            alert('Error al actualizar el nombre');
+          }
+        })
+      });
+      nombreElemento.replaceWith(input);
+      setTimeout(() => {
+        input.focus();
+        input.select();
+      }, 0);
+    }
+  }
 }

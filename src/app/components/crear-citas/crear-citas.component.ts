@@ -2,18 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { CitasService } from '../../services/citas.service';
 import { DateMesStringPipe } from '../../pipes/date-mes-string.pipe';
 import { ArrayCitasInterface } from '../../interfaces/citas.interface';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-crear-citas',
   templateUrl: './crear-citas.component.html',
   styleUrls: ['./crear-citas.component.css'],
   standalone: true,
-  imports: [DateMesStringPipe]
+  imports: [DateMesStringPipe, FormsModule]
 })
 export class CrearCitasComponent implements OnInit {
   diasDeLaSemana: Date[] = [];
   franjasHorarias: string[] = [];
+  hoyString: string = new Date().toISOString().slice(0, 10);
+  inputFecha = this.hoyString;
+  mostrarWarningInput: boolean = false;
   idBarbero: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
+
+  tramo = {
+    inicio: 8,
+    fin: 17,
+    ultimoInicio: 8,
+    ultimoFin: 17
+  }
 
   seleccionando: boolean = false;
   agregando: boolean = false;
@@ -27,7 +38,21 @@ export class CrearCitasComponent implements OnInit {
   ngOnInit(): void {
     this.diasDeLaSemana = this.citasService.calcularSemana(new Date());
     this.recargarFechasSubidas();
-    this.franjasHorarias = this.citasService.generarFranjasHorarias();
+    this.franjasHorarias = this.citasService.generarFranjasHorarias([this.tramo.inicio + ':00', this.tramo.fin + ':00']);
+  }
+
+  actualizarTramo(): void {
+    if( this.tramo.inicio >= this.tramo.fin || this.tramo.inicio < 0 || this.tramo.fin > 24) {
+      this.tramo.inicio = this.tramo.ultimoInicio;
+      this.tramo.fin = this.tramo.ultimoFin;
+      return;
+    }
+    this.tramo.ultimoInicio = this.tramo.inicio;
+    this.tramo.ultimoFin = this.tramo.fin;
+
+    this.franjasHorarias = this.citasService.generarFranjasHorarias([this.tramo.inicio + ':00', this.tramo.fin - 1 + ':30']);
+    this.franjasSeleccionadas = [];
+    this.ultimasFranjasSeleccionadas = [];
   }
 
   recargarFechasSubidas(): void {
@@ -40,6 +65,7 @@ export class CrearCitasComponent implements OnInit {
 
   cambiarSemana(n: number): void {
     this.diasDeLaSemana = this.citasService.calcularSemana(this.diasDeLaSemana[0], n);
+    this.inputFecha = this.desactivarAtras() ? this.hoyString : this.diasDeLaSemana[0].toISOString().slice(0, 10);  
     this.recargarFechasSubidas();
   }
 
@@ -109,4 +135,21 @@ export class CrearCitasComponent implements OnInit {
     return this.diasDeLaSemana[0].getTime() <= new Date().getTime();
   }
 
+  cambioFecha(): void {
+    const hoy = new Date();
+    let fecha = new Date(this.inputFecha);
+    if (!this.inputFecha || (fecha.getTime() + (1000 * 60 * 60 * 24) < hoy.getTime())) {
+      this.mostrarWarningInput = !!this.inputFecha;
+      this.inputFecha = hoy.toISOString().slice(0, 10);
+      fecha = new Date(this.inputFecha)
+    }else{
+      this.mostrarWarningInput = false;
+    }
+    this.calcularSemana(fecha);
+  }
+
+  calcularSemana(fecha: Date): void{
+    this.diasDeLaSemana = this.citasService.calcularSemana(fecha);
+    this.recargarFechasSubidas();
+  }
 }

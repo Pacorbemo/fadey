@@ -21,6 +21,14 @@ export class NotificacionesComponent implements OnInit {
 
   ngOnInit(): void {
     this.notificacionesService.obtenerNotificaciones();
+    const usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
+    this.notificacionesService.conectar(usuarioActual);
+    this.notificacionesService.recibirNotificacion().subscribe((notificacion: Notificacion) => {
+      this.notificacionesService.notificaciones.unshift(notificacion);
+      // if (this.notificacionesAbierto) {
+      //   this.notificacionesService.marcarTodasLeidas();
+      // }
+    });
   }
 
   @HostListener('document:click', ['$event'])

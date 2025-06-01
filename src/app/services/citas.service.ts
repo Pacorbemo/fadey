@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GetCitasInterface, GetCitasResponseInterface } from '../interfaces/citas.interface';
+import {
+  GetCitasInterface,
+  GetCitasResponseInterface,
+} from '../interfaces/citas.interface';
 import { HttpService } from './http.service';
 import { map, finalize } from 'rxjs/operators';
 import { CargandoService } from './cargando.service';
@@ -9,7 +12,6 @@ import { CargandoService } from './cargando.service';
   providedIn: 'root',
 })
 export class CitasService {
-
   constructor(
     private httpService: HttpService,
     private cargandoService: CargandoService
@@ -22,7 +24,9 @@ export class CitasService {
   // Si le pasamos cualquier día de la semana, devuelve el lunes de esa semana
   primerDiaSemana(diaInicio: Date): Date {
     const copiaDiaInicio = new Date(diaInicio);
-    copiaDiaInicio.setDate(copiaDiaInicio.getDate() - copiaDiaInicio.getDay() + 1);
+    const dia = copiaDiaInicio.getDay();
+    const diff = dia === 0 ? -6 : 1 - dia;
+    copiaDiaInicio.setDate(copiaDiaInicio.getDate() + diff);
     return copiaDiaInicio;
   }
 
@@ -113,10 +117,15 @@ export class CitasService {
 
     return this.httpService.httpPostToken('/citas', body).pipe(
       map((response) => {
-        return ['totales', 'reservadas', 'reservadasUsuario'].reduce((acc, key) => {
-          acc[key as keyof GetCitasResponseInterface] = this.procesarFechas(response[key as keyof GetCitasInterface]);
-          return acc;
-        }, {} as GetCitasResponseInterface);
+        return ['totales', 'reservadas', 'reservadasUsuario'].reduce(
+          (acc, key) => {
+            acc[key as keyof GetCitasResponseInterface] = this.procesarFechas(
+              response[key as keyof GetCitasInterface]
+            );
+            return acc;
+          },
+          {} as GetCitasResponseInterface
+        );
       }),
       finalize(() => {
         this.cargandoService.ocultarCargando();
@@ -126,25 +135,33 @@ export class CitasService {
 
   // Obtener las citas de un USUARIO
   getCitasUsuario(): Observable<any> {
-    return this.httpService.httpGetToken('/citas/cliente')
+    return this.httpService.httpGetToken('/citas/cliente');
   }
 
   getCitasBarbero(): Observable<any> {
-    return this.httpService.httpGetToken('/citas/barbero')
+    return this.httpService.httpGetToken('/citas/barbero');
   }
 
-
-  purgarDiasPasados(horarios: { [dia: number]: string[] }, primerDiaSemana: Date): { [dia: number]: string[] } {
+  purgarDiasPasados(
+    horarios: { [dia: number]: string[] },
+    primerDiaSemana: Date
+  ): { [dia: number]: string[] } {
     const hoy = new Date();
     const horariosPurgados: { [dia: number]: string[] } = {};
 
     Object.entries(horarios).forEach(([diaStr, horas]) => {
       const dia = parseInt(diaStr);
       if (dia === hoy.getDate()) {
-        horariosPurgados[dia] = horas.filter(hora => 
-          hora > `${hoy.getHours().toString().padStart(2, '0')}:${hoy.getMinutes().toString().padStart(2, '0')}`
+        horariosPurgados[dia] = horas.filter(
+          (hora) =>
+            hora >
+            `${hoy.getHours().toString().padStart(2, '0')}:${hoy
+              .getMinutes()
+              .toString()
+              .padStart(2, '0')}`
         );
-      } else if (dia > hoy.getDate() || dia < hoy.getDate() - 7) { // La segunda condicion añade los días de inicio de mes, en las semanas que contienen dias de dos meses (30,31,1,2...)
+      } else if (dia > hoy.getDate() || dia < hoy.getDate() - 7) {
+        // La segunda condicion añade los días de inicio de mes, en las semanas que contienen dias de dos meses (30,31,1,2...)
         horariosPurgados[dia] = horas;
       }
     });
@@ -154,9 +171,7 @@ export class CitasService {
 
   // Transformar un array de Date a un objeto con claves los días y valores los horarios
   // { 1: ['08:00', '08:30'], 2: ['09:00', '09:30'], ... }
-  private procesarFechas(
-    fechas: Date[],
-  ): { [dia: number]: string[] } {
+  private procesarFechas(fechas: Date[]): { [dia: number]: string[] } {
     const resultado: { [dia: number]: string[] } = {};
     fechas.forEach((fecha: Date) => {
       const parsedFecha = new Date(fecha);
@@ -174,9 +189,8 @@ export class CitasService {
     return resultado;
   }
 
-  confirmarReserva(idBarbero:number, dia: Date): Observable<any> {
-      const body = { idBarbero, dia };
-      return this.httpService.httpPostToken('/citas/confirmar', body);
-    }
-
+  confirmarReserva(idBarbero: number, dia: Date): Observable<any> {
+    const body = { idBarbero, dia };
+    return this.httpService.httpPostToken('/citas/confirmar', body);
+  }
 }

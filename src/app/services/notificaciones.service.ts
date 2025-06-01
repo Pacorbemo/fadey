@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
-import { CargandoService } from './cargando.service';
+import { Socket } from 'ngx-socket-io';
 
 export interface Notificacion {
   mensaje: string;
@@ -19,6 +19,7 @@ export class NotificacionesService {
 
   constructor(
     private httpService: HttpService,
+    private socket: Socket,
   ) { }
 
   obtenerNotificaciones(): void {
@@ -45,5 +46,13 @@ export class NotificacionesService {
         }
       }
     )
+  }
+
+  conectar(emisor_id: number): void {
+    this.socket.emit('registro', emisor_id);
+  }
+
+  recibirNotificacion() {
+    return this.socket.fromEvent('nuevaNotificacion');
   }
 }

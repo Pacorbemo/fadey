@@ -1,12 +1,10 @@
 const { Server } = require('socket.io');
+const usuarioController = require('./controladores/usuario.controller');
 
-module.exports = (server, db) => {
-  const io = new Server(server, {
-    cors: {
-      origin: '*',
-    },
-  });
+let emitirNotificacion = () => {};
 
+function socketHandler(server, db) {
+  const io = new Server(server, { cors: { origin: '*' } });
   const users = {}; 
 
   io.on('connection', (socket) => {
@@ -23,7 +21,6 @@ module.exports = (server, db) => {
             console.error('Error al guardar el mensaje:', err);
             return;
           }
-
           io.to(users[receptor_id]).emit('nuevoMensaje', { emisor_id, mensaje, fecha_envio: new Date() });
         });
       } catch (error) {
@@ -37,4 +34,22 @@ module.exports = (server, db) => {
       }
     });
   });
-};
+
+  emitirNotificacion = function(usuario_id, tipo, emisor_id, mensaje) {
+    if (users[usuario_id]) {
+      usuarioController.usuarioExisteById(usuario_id, (err, user) => {
+        if (err) {
+          console.error("Error al verificar el usuario:", err);
+          return;
+        }
+        if(user){
+          io.to(users[usuario_id]).emit('nuevaNotificacion', { tipo, username : user.username, mensaje, leida : 0 });
+        }
+      })
+    }
+  }
+}
+
+module.exports = socketHandler;
+module.exports.emitirNotificacion = (...args) => emitirNotificacion(...args);
+

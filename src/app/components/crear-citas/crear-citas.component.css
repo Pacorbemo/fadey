@@ -1,37 +1,242 @@
+.component-container {
+  max-width: 80vw;
+  margin: 40px auto;
+  background: #39445a18;
+  border-radius: 22px;
+  box-shadow: 0 4px 70px rgba(74, 116, 201, 0.25);
+  padding: 20px 32px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  font-family: Montserrat, ui-sans-serif, system-ui, sans-serif;
+  color: #eaf0fa;
+  margin-bottom: 22px;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+.botones-cambio-semana {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.botones {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+
+.botones button:focus,
+.botones-cambio-semana button:focus {
+  outline: none;
+}
+
+.botones-cambio-semana div{
+  top: -16px;
+  position:absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 130px;
+}
+
+.botones-cambio-semana button {
+  background: none;
+  color: #eaf0fa;
+  border: none;
+  width: 45px;
+  height: 45px;
+  box-sizing: border-box;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+
+  font-size: 2rem;
+  padding: 0;
+}
+
+.botones-cambio-semana button:disabled * {
+  stroke: #313131 !important;
+  cursor: not-allowed;
+}
+
+.input-tramos{
+  width: 100%;
+  padding-left: 2vw;
+}
+
+/* .botones-cambio-semana button:hover:not(:disabled) {
+  background: #363636;
+} */
+
 table {
-	width: 100%;
-	border-collapse: collapse;
-	text-align: center;
-  }
-  
-  th, td {
-	padding: 10px;
-	border: 1px solid #ddd;
-  }
-  
-  button {
-	width: 100%;
-	padding: 5px;
-	border: none;
-	cursor: pointer;
-	transition: background-color 0.4s ease, color 0.4s ease;
-  }
-  
-  button:hover {
-	background-color: #808080;
-  }
-  
-  button.selected {
-	background-color: #4caf50;
-	color: white;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #23272f;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px -8px #000a;
+}
+
+tr {
+  width: 100%;
+  display: flex;
+}
+
+th,
+td {
+  padding: 12px 0;
+  border-bottom: 1px solid #353b48;
+  font-size: 1.13rem;
+  margin: auto;
+}
+
+th {
+  background: #2d323c;
+  color: #eaf0fa;
+  font-weight: 600;
+  width: 100%;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+td {
+  flex: 1;
+  padding: 12px 16px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+td button {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 7px;
+  border: none;
+  font-size: 1.05rem;
+  font-family: inherit;
+  background: #353b48;
+  color: #eaf0fa;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px -2px #0008;
+  margin: 2px 0;
+}
+
+td button:hover {
+  background: #eaf73c;
+  color: #23272f;
+}
+
+td button.selected {
+  background: #4caf50;
+  color: #fff;
+  font-weight: 600;
+}
+
+td button.subido {
+  background: #ffe066;
+  color: #23272f;
+  font-weight: 600;
+}
+
+td button.subido.selected {
+  background: #af5b4c;
+  color: #fff;
+}
+
+.btn-confirmar {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-confirmar:hover {
+  background: #43a047;
+  transform: scale(1.04);
+}
+
+.btn-cancelar {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-cancelar:hover {
+  background: #b71c1c;
+  transform: scale(1.04);
+}
+
+.input-fecha-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.input-fecha {
+  background: #23272f;
+  color: #eaf0fa;
+  border: 1.5px solid #353b48;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 1.08rem;
+  font-family: inherit;
+  margin-bottom: 6px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px -2px #0008;
+}
+
+.input-fecha:focus {
+  border: 1.5px solid #4caf50;
+  box-shadow: 0 2px 8px -4px #4caf5040;
+}
+
+.input-fecha::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.input-fecha-container p {
+  margin: 0;
+  font-size: 0.98rem;
+  color: #ff5f5f;
+}
+
+@media (max-width: 1100px) {
+  .component-container {
+    padding: 10px 2vw;
+    max-width: 99vw;
   }
 
-  button.subido {
-	background-color: #eaf73c;
-	color: black;
+  table {
+    font-size: 0.97rem;
   }
 
-  button.subido.selected {
-	background-color: #af5b4c;
-	color: white;
+  th,
+  td {
+    padding: 7px 0;
   }
+}
+
+body {
+  background: #181a20;
+}

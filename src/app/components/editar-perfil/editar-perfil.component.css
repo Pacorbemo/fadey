@@ -1,5 +1,5 @@
 section {
-	margin: 1vw 4vw ;
+	margin: 1vw 4vw;
 	width: 100%;
 	display: flex;
 	gap: 8px;
@@ -24,7 +24,7 @@ span img {
 	height: 100%;
 }
 
-aside{
+aside {
 	margin-left: 1vw;
 }
 
@@ -50,18 +50,24 @@ h2 {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	opacity: 0;
-	transition: opacity 0.3s ease; 
-  }
-  
-  span .change-button-container:hover {
-	opacity: 1; 
-  }
-  
-  .file-input {
-	display: none; 
-  }
-  
-  form {
+	transition: opacity 0.3s ease;
+}
+
+span .change-button-container:hover {
+	opacity: 1;
+}
+
+.file-input {
 	display: none;
-  }
-  
+}
+
+form {
+	display: none;
+}
+
+.nombre-container{
+	display: flex;
+}
+.nombre-container h1 {
+	margin: 0;
+}

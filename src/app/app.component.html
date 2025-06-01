@@ -6,8 +6,8 @@
   <nav>
       <a routerLink="mis-citas" routerLinkActive="active-link">Citas</a>
       <a routerLink="mis-productos" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Productos</a>
-      <a routerLink="solicitudes" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Solicitudes</a>
       <a routerLink="relaciones" routerLinkActive="active-link">Relaciones</a>
+      <a routerLink="solicitudes" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Solicitudes</a>
       <a routerLink="chats" routerLinkActive="active-link">Chats</a>
     </nav>
   }
