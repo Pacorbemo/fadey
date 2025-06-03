@@ -59,9 +59,9 @@
     <div class="col col-5">Imagen</div>
   </li>
   @for(producto of productos; track producto.id){
-  <li class="row">
+  <li class="row" (click)="expandir(producto)">
     <div class="toggle-container" style="display: inline-block; margin-right: 8px;">
-      <span class="toggle-button" (click)="expandir(producto)">
+      <span class="toggle-button">
         <i class="triangle" [ngClass]="{'down': expandidos.includes(producto.id), 'left': !expandidos.includes(producto.id)}"></i>
       </span>
     </div>

@@ -9,6 +9,6 @@ router.get('/username/:username', usuarioController.usuarioExiste);
 router.get('/email/:email', usuarioController.emailExiste);
 router.get('/telefono/:telefono', usuarioController.telefonoExiste);
 router.put('/imagen-perfil', autenticarToken, upload.single('imagen'), usuarioController.putImagenPerfil);
-router.put('/nombre', autenticarToken, usuarioController.putNombre);
+router.put('/', autenticarToken, usuarioController.editarCampo);
 
 module.exports = router;

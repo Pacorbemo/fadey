@@ -7,6 +7,9 @@ interface User {
   nombre: string;
   rol: string;
   pic: string;
+  localizacion: string;
+  bio: string;
+  email: string;
 }
 
 @Injectable({
@@ -21,7 +24,7 @@ export class DatosService {
   public noFoto: string = `${environment.serverUrl}/uploads/default-avatar.jpg`;
 
   limpiarUser(): void {
-    this.user = { id: 0, username: '', nombre: '', rol: '' , pic: '' };
+    this.user = { id: 0, username: '', nombre: '', rol: '', pic: '', localizacion: '', bio: '', email: '' };
   }
 
   esBarbero(): boolean {

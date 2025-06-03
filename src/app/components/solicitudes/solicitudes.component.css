@@ -121,12 +121,6 @@
     opacity: 0.85;
 }
 
-p {
-    color: var(--text-muted);
-    font-size: 1.25em;
-    margin: 10px 0;
-}
-
 @media (max-width: 900px) {
     .component-container {
         padding: 24px 4vw 32px 4vw;

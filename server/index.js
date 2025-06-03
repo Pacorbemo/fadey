@@ -3,22 +3,19 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const http = require("http");
 const socketHandler = require('./socket');
+const { corsOptions, limiter } = require('./config/serverConfig');
 
 const { db } = require('./db/db.config');
 
 const app = express();
 const server = http.createServer(app);
 const PORT = 5000;
-const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'saltarcargando'],
-};
 
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
+app.use(limiter);
 
 const authRoutes = require('./routes/auth.routes');
 const productoRoutes = require('./routes/producto.routes');

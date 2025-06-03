@@ -36,9 +36,8 @@ export class CrearCitasComponent implements OnInit {
   constructor(private citasService: CitasService) {}
 
   ngOnInit(): void {
-    this.diasDeLaSemana = this.citasService.calcularSemana(new Date());
-    this.recargarFechasSubidas();
-    this.franjasHorarias = this.citasService.generarFranjasHorarias([this.tramo.inicio + ':00', this.tramo.fin + ':00']);
+    this.calcularSemana(new Date());
+    this.actualizarTramo();
   }
 
   actualizarTramo(): void {
@@ -64,8 +63,9 @@ export class CrearCitasComponent implements OnInit {
   }
 
   cambiarSemana(n: number): void {
-    this.diasDeLaSemana = this.citasService.calcularSemana(this.diasDeLaSemana[0], n);
+    this.calcularSemana(this.diasDeLaSemana[0], n);
     this.inputFecha = this.desactivarAtras() ? this.hoyString : this.diasDeLaSemana[0].toISOString().slice(0, 10);  
+    this.cambioFecha()
     this.recargarFechasSubidas();
   }
 
@@ -148,8 +148,8 @@ export class CrearCitasComponent implements OnInit {
     this.calcularSemana(fecha);
   }
 
-  calcularSemana(fecha: Date): void{
-    this.diasDeLaSemana = this.citasService.calcularSemana(fecha);
+  calcularSemana(fecha: Date, n: number = 0): void{
+    this.diasDeLaSemana = this.citasService.calcularSemana(fecha, n);
     this.recargarFechasSubidas();
   }
 }

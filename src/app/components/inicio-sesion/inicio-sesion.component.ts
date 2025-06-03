@@ -6,12 +6,12 @@ import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  templateUrl: './inicio-sesion.component.html',
+  styleUrls: ['./inicio-sesion.component.css'],
   standalone: true,
   imports: [FormsModule, RouterLink],
 })
-export class LoginComponent {
+export class InicioSesionComponent {
   username: string = '';
   password: string = '';
 

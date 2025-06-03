@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { CitasComponent } from './components/citas/citas.component';
 import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
+import { InicioSesionComponent } from './components/inicio-sesion/inicio-sesion.component';
 import { CrearCitasComponent } from './components/crear-citas/crear-citas.component';
 import { MisCitasComponent } from './components/mis-citas/mis-citas.component';
 import { authGuard } from './guards/auth.guard';
@@ -15,22 +15,21 @@ import { usuarioExistenteGuard } from './guards/usuario-existente.guard';
 import { PaginaPrincipalComponent } from './components/pagina-principal/pagina-principal.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { MisProductosComponent } from './components/mis-productos/mis-productos.component';
+import { usuarioNoLogeadoGuard } from './guards/usuario-no-logeado.guard';
 
 export const routes: Routes = [
+  { path: 'registro', component: RegisterComponent, canActivate:[usuarioNoLogeadoGuard] },
+  { path: 'inicio-sesion', component: InicioSesionComponent, canActivate:[usuarioNoLogeadoGuard] },
   { path: 'crear-citas', component: CrearCitasComponent, canActivate: [authGuard] },
-  { path: 'registro', component: RegisterComponent },
-  { path: 'inicio-sesion', component: LoginComponent },
   {
     path: 'mis-citas',
     component: MisCitasComponent,
     canActivate: [authGuard],
-    canMatch: [authGuard],
   },
   {
     path: 'mis-productos',
     component: MisProductosComponent,
     canActivate: [authGuard],
-    canMatch: [authGuard],
   },
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [authGuard] },
   { path: 'relaciones', component: RelacionesComponent, canActivate: [authGuard] },

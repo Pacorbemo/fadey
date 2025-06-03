@@ -3,21 +3,25 @@ import { Component } from '@angular/core';
 import { DatosService } from '../../services/datos.service';
 import { HttpService } from '../../services/http.service';
 import { UploadsPipe } from '../../pipes/uploads.pipe';
+import { FormsModule } from '@angular/forms';
+import { UsuariosService } from '../../services/usuarios.service';
 
 @Component({
   selector: 'app-editar-perfil',
   standalone: true,
-  imports: [CommonModule, UploadsPipe],
+  imports: [CommonModule, UploadsPipe, FormsModule],
   templateUrl: './editar-perfil.component.html',
   styleUrl: './editar-perfil.component.css'
 })
 export class EditarPerfilComponent {
   imagenSeleccionada: File | null = null;
   imagenUrl: string | null = null;
+  username: string = this.datosService.user.username;
 
   constructor(
     private httpService: HttpService,
-    public datosService: DatosService
+    public datosService: DatosService,
+    private usuariosService: UsuariosService
   ) {}
 
   activarInput() {
@@ -59,30 +63,43 @@ export class EditarPerfilComponent {
     );
   }
 
-  editarNombre(){
-    const nombreElemento = document.getElementById('nombre');
-    if (nombreElemento) {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = this.datosService.user.nombre;
-      input.id = 'nombre';
-      input.style.fontSize = '24px';
-      input.style.fontWeight = 'bold';
-      input.addEventListener('blur', () => {
-        this.datosService.user.nombre = input.value;
-        input.replaceWith(nombreElemento);  
-        this.httpService.httpPutToken('/usuarios/nombre', { nombre: input.value }).subscribe({
-          error: (error) => {
-            console.error('Error al actualizar el nombre:', error);
-            alert('Error al actualizar el nombre');
-          }
-        })
-      });
-      nombreElemento.replaceWith(input);
-      setTimeout(() => {
-        input.focus();
-        input.select();
-      }, 0);
+  async editar(campo: string, valor: string) {
+    if (!valor.trim()) {
+      return;
     }
+    valor = valor.trim();
+
+    if (campo === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
+      alert('Por favor, introduce un email válido');
+      return;
+    }
+    if (campo === 'localizacion' && valor.length > 30) {
+      alert('La localización no puede exceder los 30 caracteres');
+      return;
+    }
+
+    if(campo === 'username'){
+      if (valor.length < 3 || valor.length > 20) {
+        alert('El nombre de usuario debe tener entre 3 y 20 caracteres');
+        return;
+      }
+      if (!/^[a-zA-Z0-9_]+$/.test(valor)) {
+        alert('El nombre de usuario solo puede contener letras, números y guiones bajos');
+        return;
+      }
+      const response = await this.usuariosService.verificarUsername(valor).toPromise()
+      if (response?.exists) {
+        alert('El nombre de usuario ya está en uso');
+        return;
+      }
+      this.datosService.user.username = valor;
+    }
+
+    this.httpService.httpPutToken('/usuarios', { campo, valor }).subscribe({
+      error: (error) => {
+        console.error(`Error al actualizar el campo ${campo}:`, error);
+        alert(`Error al actualizar el campo ${campo}`);
+      }
+    });
   }
 }

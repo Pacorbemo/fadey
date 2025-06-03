@@ -17,16 +17,59 @@
       />
       <button type="submit">Subir Imagen</button>
     </form>
+
   </span>
   <aside>
-    <div class="nombre-container">
-      <h1 id="nombre">{{this.datosService.user.nombre}}</h1>
-      <button (click)="editarNombre()" aria-label="Editar nombre" style="background: none; border: none; cursor: pointer;">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M14.85 2.85a2.12 2.12 0 0 1 3 3l-9.1 9.1a1 1 0 0 1-.47.26l-3.5.88a.5.5 0 0 1-.61-.62l.88-3.5a1 1 0 0 1 .26-.47l9.1-9.1Zm2.12.88a1.12 1.12 0 0 0-1.59 0l-.88.88 1.59 1.59.88-.88a1.12 1.12 0 0 0 0-1.59ZM13.21 5.21l-8.1 8.1-.59 2.34 2.34-.59 8.1-8.1-1.85-1.85Z"/>
-        </svg>
-      </button>
+
+    <div>
+      <label for="nombre">Nombre: </label>
+      <input 
+        type="text" 
+        id="nombre" 
+        [(ngModel)]="datosService.user.nombre" 
+        (change)="editar('nombre', datosService.user.nombre)"
+      />
     </div>
-    <h2>{{'@' + this.datosService.user.username}}</h2>
+
+    <div>
+      <label for="username">Username: </label>
+      <input 
+        type="text" 
+        id="username" 
+        [(ngModel)]="username" 
+        (change)="editar('username', username)"
+        value="datosService.user.username"
+      />
+    </div>
+
+    <div>
+      <label for="localizacion">Localizacion: </label>
+      <input 
+        type="text" 
+        id="localizacion" 
+        [(ngModel)]="datosService.user.localizacion" 
+        (change)="editar('localizacion', datosService.user.localizacion)"
+      />
+    </div>
+
+    <div>
+      <label for="email">Email: </label>
+      <input 
+        type="email" 
+        id="email" 
+        [(ngModel)]="datosService.user.email" 
+        (change)="editar('email', datosService.user.email)"
+      />
+    </div>
+
+    <div id="bio-container">
+      <label for="bio">Bio: </label>
+      <textarea 
+        id="bio" 
+        [(ngModel)]="datosService.user.bio" 
+        (change)="editar('bio', datosService.user.bio)"
+      ></textarea>
+    </div>
+
   </aside>
 </section>

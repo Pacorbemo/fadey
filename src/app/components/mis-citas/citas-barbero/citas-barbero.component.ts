@@ -18,7 +18,7 @@ import { CargandoService } from '../../../services/cargando.service';
         <mis-citas-tabla [citas]="citasComoCliente" />
       }
       @else if(citasComoBarbero.length == 0) {
-        <h3>No tienes citas pendientes</h3>
+        <p class="vacio">No tienes citas pendientes</p>
       }
     }
   `,
