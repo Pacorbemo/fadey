@@ -116,7 +116,7 @@ export class CitasService {
     };
 
     return this.httpService.httpPostToken('/citas', body).pipe(
-      map((response) => {
+      map((response: any) => {
         return ['totales', 'reservadas', 'reservadasUsuario'].reduce(
           (acc, key) => {
             acc[key as keyof GetCitasResponseInterface] = this.procesarFechas(

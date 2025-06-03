@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
         this.datosService.user = response;
         localStorage.setItem('user', JSON.stringify(response));
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error al cargar el usuario:', error);
         this.router.navigate(['/inicio-sesion']);
       },
