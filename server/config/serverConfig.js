@@ -1,5 +1,3 @@
-// server/config/serverConfig.js
-
 const corsOptions = {
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -8,7 +6,7 @@ const corsOptions = {
 
 const rateLimit = require('express-rate-limit');
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
+  windowMs: 60 * 1000, // 1 minuto
   max: 100, // máximo 100 peticiones
   message: 'Has realizado demasiadas peticiones, intentalo de nuevo más tarde.',
   standardHeaders: true,

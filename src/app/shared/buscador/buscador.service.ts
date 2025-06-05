@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { UsuariosService } from '../../services/usuarios.service';
-import { Usuario } from '../../interfaces/usuario';
+import { Usuario } from '../../interfaces/usuario.interface';
 import { CargandoService } from '../../services/cargando.service';
 
 @Injectable({

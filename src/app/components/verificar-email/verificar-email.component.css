@@ -1,0 +1,17 @@
+.verificacion-container {
+  max-width: 400px;
+  margin: 3em auto;
+  padding: 2em;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-align: center;
+}
+.exito {
+  color: #2e7d32;
+  font-weight: bold;
+}
+.error {
+  color: #c62828;
+  font-weight: bold;
+}

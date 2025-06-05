@@ -23,7 +23,7 @@ export class NotificacionesService {
   ) { }
 
   obtenerNotificaciones(): void {
-    this.httpService.httpGetToken('/notificaciones', undefined, true).subscribe(
+    this.httpService.getToken('/notificaciones', undefined, true).subscribe(
       {
         next: (response: any) => {
           this.notificaciones = response;
@@ -36,7 +36,7 @@ export class NotificacionesService {
   }
 
   marcarTodasLeidas(): void {
-    this.httpService.httpPutToken('/notificaciones/leidas', undefined, true).subscribe(
+    this.httpService.putToken('/notificaciones/leidas', undefined, true).subscribe(
       {
         next: () => {
           this.notificaciones.forEach(notificacion => notificacion.leida = true);

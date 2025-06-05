@@ -26,11 +26,11 @@
     <div class="user"  (click)="alternarMenu()">
       <div class="username">{{datosService.user.username}}</div>
       <span class="marco-perfil">
-        @if(!datosService.user.pic){
+        @if(!datosService.user.foto_perfil){
           {{datosService.user.username.charAt(0).toUpperCase()}}
         }
         @else{
-          <img class="foto-perfil" [src]="datosService.user.pic | uploads" alt="Foto de perfil" />
+          <img class="foto-perfil" [src]="datosService.user.foto_perfil | uploads" alt="Foto de perfil" />
         }
       </span>
       <ul *ngIf="menuAbierto" class="dropdown-menu" #menu>

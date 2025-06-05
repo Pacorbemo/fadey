@@ -1,8 +1,8 @@
 <section>
-  <span>
+  <span class="foto-perfil-container">
     <img
       [alt]="datosService.user.username"
-      [src]="datosService.user.pic ? (datosService.user.pic | uploads) : datosService.noFoto">
+      [src]="datosService.user.foto_perfil ? (datosService.user.foto_perfil | uploads) : datosService.noFoto">
 
     <div class="change-button-container">
       <button (click)="activarInput()">Cambiar Foto</button>
@@ -65,11 +65,19 @@
     <div id="bio-container">
       <label for="bio">Bio: </label>
       <textarea 
-        id="bio" 
-        [(ngModel)]="datosService.user.bio" 
-        (change)="editar('bio', datosService.user.bio)"
+      id="bio" 
+      [(ngModel)]="datosService.user.bio" 
+      (change)="editar('bio', datosService.user.bio)"
       ></textarea>
     </div>
-
+    
   </aside>
 </section>
+<div *ngIf="datosService.user.email && datosService.user.email_verificado === false" class="email-warning">
+  <span>Tu email no está verificado.</span>
+  <button (click)="reenviarVerificacionEmail()" [disabled]="reenviandoEmail">Reenviar email de verificación</button>
+  <span *ngIf="mensajeVerificacion">{{mensajeVerificacion}}</span>
+</div>
+<div class="enlace-cambiar-password">
+  <a routerLink="/cambiar-password">Cambiar contraseña</a>
+</div>

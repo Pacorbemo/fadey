@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Usuario } from '../../../interfaces/usuario';
+import { Usuario } from '../../../interfaces/usuario.interface';
 import { DatosService } from '../../../services/datos.service';
 import { UploadsPipe } from '../../../pipes/uploads.pipe';
 

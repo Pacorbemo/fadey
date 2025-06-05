@@ -1,16 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environments';
-
-interface User {
-  id: number;
-  username: string;
-  nombre: string;
-  rol: string;
-  pic: string;
-  localizacion: string;
-  bio: string;
-  email: string;
-}
+import { Usuario, usuarioVacio } from '../interfaces/usuario.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +9,12 @@ interface User {
 export class DatosService {
 
   private _tokenUsuario: string = '';
-  public user!: User;
+  public user!: Usuario;
   public rol: string = '';
   public noFoto: string = `${environment.serverUrl}/uploads/default-avatar.jpg`;
 
   limpiarUser(): void {
-    this.user = { id: 0, username: '', nombre: '', rol: '', pic: '', localizacion: '', bio: '', email: '' };
+    this.user = usuarioVacio
   }
 
   esBarbero(): boolean {

@@ -7,7 +7,7 @@ section {
 	box-sizing: border-box;
 }
 
-span {
+.foto-perfil-container {
 	position: relative;
 	display: flex;
 	flex-shrink: 0;
@@ -18,7 +18,7 @@ span {
 	height: 14vw;
 }
 
-span img {
+.foto-perfil-container img {
 	object-fit: cover;
 	width: 100%;
 	height: 100%;
@@ -106,6 +106,88 @@ span .change-button-container:hover {
 
 form {
 	display: none;
+}
+
+.email-warning {
+	width: 80%;
+  background: #f72c2c94;
+  border: 1px solid #d32f2f;
+  color: #ffffff;
+  padding: 1em;
+  border-radius: 6px;
+  margin: 1em 0;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin: 1em auto;
+}
+.email-warning button {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  font-weight: bold;
+}
+.email-warning button[disabled] {
+  background: #f8bbbc;
+  color: #b71c1c;
+  cursor: not-allowed;
+}
+
+.cambiar-password-container {
+  background: #f7f7f7;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2em 1.5em;
+  margin: 2em 0 1em 0;
+  max-width: 400px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.cambiar-password-container h3 {
+  color: #d32f2f;
+  margin-bottom: 1em;
+  font-size: 1.2em;
+}
+.cambiar-password-container .input-group {
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+}
+.cambiar-password-container label {
+  font-weight: 500;
+  margin-bottom: 0.3em;
+}
+.cambiar-password-container input[type="password"] {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1em;
+  background: #fff;
+}
+.cambiar-password-container button[type="submit"] {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.7em 1.5em;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5em;
+  transition: background 0.2s;
+}
+.cambiar-password-container button[disabled] {
+  background: #f8bbbc;
+  color: #b71c1c;
+  cursor: not-allowed;
+}
+.mensaje-password {
+  color: #d32f2f;
+  margin-top: 0.7em;
+  font-size: 1em;
+  font-weight: 500;
 }
 
 

@@ -5,13 +5,17 @@
 	<aside>
 		<h1>{{user.nombre}}</h1>
 		<h2>{{'@' + user.username}}</h2>
+		<p class="localizacion">{{user.localizacion}}</p>
+		<p>{{user.bio}}</p>
 	</aside>
 	@if(usuarioAutorizado){
 		<div class="perfil-botones">	
 			@for(componente of getMapaComponentesEntries(); track componente){
-				<button (click)="loadComponent(componente)">
-					{{componente | capitalize}}
-				</button>
+				@if(user.username != datosService.user.username ||componente != 'mensajes'){
+					<button (click)="loadComponent(componente)">
+						{{componente | capitalize}}
+					</button>
+				}
 			}
 		</div>
 	}

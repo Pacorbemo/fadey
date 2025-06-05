@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
         username: usuario.username,
         nombre: usuario.nombre,
         rol: usuario.barbero ? 'barbero' : 'cliente',
-        pic: usuario.foto_perfil,
+        foto_perfil: usuario.foto_perfil,
         email: usuario.email,
         bio: usuario.bio || '',
         localizacion: usuario.localizacion || '',

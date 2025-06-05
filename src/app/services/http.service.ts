@@ -31,19 +31,19 @@ export class HttpService {
     }
   }
 
-  httpGetToken(url: string, params?: {}, saltarCargando: boolean = false): Observable<any> {
+  getToken(url: string, params?: {}, saltarCargando: boolean = false): Observable<any> {
     return this.requestWithToken('get', url, { params }, saltarCargando);
   }
 
-  httpPostToken(url: string, body: any = {}, saltarCargando: boolean = false): Observable<any> {
+  postToken(url: string, body: any = {}, saltarCargando: boolean = false): Observable<any> {
     return this.requestWithToken('post', url, { body }, saltarCargando);
   }
 
-  httpPutToken(url: string, body: any = {}, saltarCargando: boolean = false): Observable<any> {
+  putToken(url: string, body: any = {}, saltarCargando: boolean = false): Observable<any> {
     return this.requestWithToken('put', url, { body }, saltarCargando);
   }
 
-  httpDeleteToken(url: string, saltarCargando: boolean = false): Observable<any> {
+  deleteToken(url: string, saltarCargando: boolean = false): Observable<any> {
     return this.requestWithToken('delete', url, {}, saltarCargando);
   }
 }

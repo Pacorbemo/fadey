@@ -5,11 +5,12 @@ import { HttpService } from '../../services/http.service';
 import { UploadsPipe } from '../../pipes/uploads.pipe';
 import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../services/usuarios.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-editar-perfil',
   standalone: true,
-  imports: [CommonModule, UploadsPipe, FormsModule],
+  imports: [CommonModule, UploadsPipe, FormsModule, RouterLink],
   templateUrl: './editar-perfil.component.html',
   styleUrl: './editar-perfil.component.css'
 })
@@ -17,12 +18,16 @@ export class EditarPerfilComponent {
   imagenSeleccionada: File | null = null;
   imagenUrl: string | null = null;
   username: string = this.datosService.user.username;
+  reenviandoEmail = false;
+  mensajeVerificacion: string = '';
 
   constructor(
     private httpService: HttpService,
     public datosService: DatosService,
     private usuariosService: UsuariosService
-  ) {}
+  ) {
+    console.log(datosService.user);
+  }
 
   activarInput() {
     const inputFile = document.getElementById('fileInput');
@@ -48,12 +53,12 @@ export class EditarPerfilComponent {
     const formData = new FormData();
     formData.append('imagen', this.imagenSeleccionada);
 
-    this.httpService.httpPutToken('/usuarios/imagen-perfil', formData).subscribe(
+    this.httpService.putToken('/usuarios/imagen-perfil', formData).subscribe(
       (response) => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
-        user.pic = response.imageUrl;
+        user.foto_perfil = response.imageUrl;
         localStorage.setItem('user', JSON.stringify(user));
-        this.datosService.user.pic = response.imageUrl;
+        this.datosService.user.foto_perfil = response.imageUrl;
         alert('Imagen subida correctamente');
       },
       (error) => {
@@ -95,10 +100,25 @@ export class EditarPerfilComponent {
       this.datosService.user.username = valor;
     }
 
-    this.httpService.httpPutToken('/usuarios', { campo, valor }).subscribe({
+    this.httpService.putToken('/usuarios', { campo, valor }).subscribe({
       error: (error) => {
         console.error(`Error al actualizar el campo ${campo}:`, error);
         alert(`Error al actualizar el campo ${campo}`);
+      }
+    });
+  }
+
+  reenviarVerificacionEmail() {
+    this.reenviandoEmail = true;
+    this.mensajeVerificacion = '';
+    this.usuariosService.enviarVerificacionEmail().subscribe({
+      next: () => {
+        this.mensajeVerificacion = 'Email de verificación enviado. Revisa tu bandeja de entrada.';
+        this.reenviandoEmail = false;
+      },
+      error: (err) => {
+        this.mensajeVerificacion = err?.error?.error || 'Error al enviar el email de verificación.';
+        this.reenviandoEmail = false;
       }
     });
   }

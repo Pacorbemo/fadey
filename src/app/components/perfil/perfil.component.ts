@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
 import { RelacionesService } from '../../services/relaciones.service';
 import { UploadsPipe } from '../../pipes/uploads.pipe';
+import { Usuario, usuarioVacio } from '../../interfaces/usuario.interface';
 
 @Component({
   selector: 'app-perfil',
@@ -16,13 +17,7 @@ import { UploadsPipe } from '../../pipes/uploads.pipe';
   styleUrl: './perfil.component.css',
 })
 export class PerfilComponent implements OnInit {
-  user: { foto_perfil: string; username: string; nombre: string; id: number } =
-    {
-      foto_perfil: '',
-      username: '',
-      nombre: '',
-      id: 0,
-    };
+  user: Usuario = usuarioVacio;
 
   component$ = new BehaviorSubject<any>(null);
   usuarioAutorizado: boolean = false;
@@ -83,7 +78,13 @@ export class PerfilComponent implements OnInit {
   }
 
   solicitar(usernameBarbero: string): void {
-    this.relacionesService.solicitar(usernameBarbero);
-    this.relacionActual = 'pendiente';
+    this.relacionesService.solicitar(usernameBarbero).subscribe({
+      next: () => {
+        this.relacionActual = 'pendiente';
+      },
+      error: (error) => {
+        console.error('Error al solicitar relación:', error);
+      }
+    });
   }
 }

@@ -27,10 +27,10 @@ export class MensajesService {
       receptor_id: receptor_id.toString(),
     };
 
-    return this.httpService.httpGetToken('/mensajes', params);
+    return this.httpService.getToken('/mensajes', params);
   }
 
   cargarChats(): Observable<any> {
-    return this.httpService.httpGetToken('/mensajes/chats');
+    return this.httpService.getToken('/mensajes/chats');
   }
 }

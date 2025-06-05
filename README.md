@@ -11,7 +11,7 @@ Este proyecto es una aplicación web desarrollada con Angular (frontend) y Node.
    - Crea un archivo `.env` en la raíz del proyecto siguiendo el formato de `.env.example` y completa los valores con tu configuración local (usuario, contraseña, etc).
 
 3. **Instalar dependencias**
-   - Ejecuta `npm install --legacy-peer-deps` en la raíz del proyecto para instalar las dependencias del frontend y backend.
+   - Ejecuta `npm install` en la raíz del proyecto para instalar las dependencias del frontend y backend.
 
 ## Cómo ejecutar el proyecto
 

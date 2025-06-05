@@ -69,7 +69,7 @@ export class MisProductosComponent {
 
   ngOnInit(): void {
     this.httpService
-      .httpGetToken(`/productos/barbero/${this.datosService.user.username}`)
+      .getToken(`/productos/barbero/${this.datosService.user.username}`)
       .subscribe(
         (response) => {
           this.productos = response;
@@ -81,7 +81,7 @@ export class MisProductosComponent {
       .add(() => {
         this.cargandoService.cargando = false;
       });
-    this.httpService.httpGetToken(`/productos/reservados`).subscribe(
+    this.httpService.getToken(`/productos/reservados`).subscribe(
       (response) => {
         this.reservados = response;
       },
@@ -105,7 +105,7 @@ export class MisProductosComponent {
     const formData = new FormData();
     formData.append('foto', file);
     this.httpService
-      .httpPutToken(`/productos/${this.editingCell?.id}`, formData)
+      .putToken(`/productos/${this.editingCell?.id}`, formData)
       .subscribe({
         next: (response) => {
           if (response.foto_url) {
@@ -173,7 +173,7 @@ export class MisProductosComponent {
     }
 
     this.httpService
-      .httpPostToken('/productos', formData)
+      .postToken('/productos', formData)
       .subscribe(
         (response) => {
           console.log('Producto subido correctamente:', response);
@@ -211,7 +211,7 @@ export class MisProductosComponent {
         if (input) {
           producto[field] = input.value;
           this.httpService
-            .httpPutToken(
+            .putToken(
               `/productos/${id}`,
               { [field]: producto[field] },
               true

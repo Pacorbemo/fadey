@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UsuariosService } from '../../services/usuarios.service';
 import { CargandoService } from '../../services/cargando.service';
-import { Usuario } from '../../interfaces/usuario';
+import { Usuario, usuarioVacio } from '../../interfaces/usuario.interface';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -35,7 +35,7 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
   }
   mensaje: string = '';
   usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
-  receptor: Usuario = { id: 0, nombre: '', username: '', foto_perfil: '' };
+  receptor: Usuario = usuarioVacio;
   @ViewChild('mensajesContainer') contenedorMensajes!: ElementRef;
   private debeHacerScroll = false;
   constructor(

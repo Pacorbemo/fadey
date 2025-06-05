@@ -16,6 +16,8 @@ import { PaginaPrincipalComponent } from './components/pagina-principal/pagina-p
 import { ProductosComponent } from './components/productos/productos.component';
 import { MisProductosComponent } from './components/mis-productos/mis-productos.component';
 import { usuarioNoLogeadoGuard } from './guards/usuario-no-logeado.guard';
+import { VerificarEmailComponent } from './components/verificar-email/verificar-email.component';
+import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
 
 export const routes: Routes = [
   { path: 'registro', component: RegisterComponent, canActivate:[usuarioNoLogeadoGuard] },
@@ -35,6 +37,8 @@ export const routes: Routes = [
   { path: 'relaciones', component: RelacionesComponent, canActivate: [authGuard] },
   { path: 'chats', component: ChatsComponent, canActivate: [authGuard] },
   { path: 'editar-perfil', component: EditarPerfilComponent, canActivate: [authGuard] },
+  { path: 'verificar-email', component: VerificarEmailComponent },
+  { path: 'cambiar-password', component: CambiarPasswordComponent, canActivate: [authGuard] },
   {
     path: ':username',
     canActivate: [usuarioExistenteGuard, authGuard],
@@ -45,7 +49,6 @@ export const routes: Routes = [
       { path: '', component: PerfilComponent },
     ],
   },
-
   { path: '', component: PaginaPrincipalComponent, pathMatch: 'full', canActivate: [authGuard] },
   { path: '**', redirectTo: '/' },
 ];

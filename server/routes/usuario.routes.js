@@ -10,5 +10,8 @@ router.get('/email/:email', usuarioController.emailExiste);
 router.get('/telefono/:telefono', usuarioController.telefonoExiste);
 router.put('/imagen-perfil', autenticarToken, upload.single('imagen'), usuarioController.putImagenPerfil);
 router.put('/', autenticarToken, usuarioController.editarCampo);
+router.put('/password', autenticarToken, usuarioController.cambiarPassword);
+router.post('/enviar-verificacion-email', autenticarToken, usuarioController.enviarVerificacionEmail);
+router.get('/verificar-email/:token', usuarioController.verificarEmail);
 
 module.exports = router;

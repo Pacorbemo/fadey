@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.datosService.tokenUsuario = localStorage.getItem('token') || '';
     this.datosService.user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.httpService.httpGetToken('/usuarios').subscribe({
+    this.httpService.getToken('/usuarios').subscribe({
       next: (response: any) => {
         this.datosService.user = response;
         localStorage.setItem('user', JSON.stringify(response));

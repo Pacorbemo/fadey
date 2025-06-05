@@ -99,7 +99,7 @@ export class CitasService {
 
   subirCitas(idBarbero: number, fechas: Date[]): Observable<any> {
     const body = { idBarbero, fechas };
-    return this.httpService.httpPostToken('/citas/crear', body);
+    return this.httpService.postToken('/citas/crear', body);
   }
 
   // Obtener las citas de un BARBERO
@@ -115,7 +115,7 @@ export class CitasService {
       fin,
     };
 
-    return this.httpService.httpPostToken('/citas', body).pipe(
+    return this.httpService.postToken('/citas', body).pipe(
       map((response: any) => {
         return ['totales', 'reservadas', 'reservadasUsuario'].reduce(
           (acc, key) => {
@@ -135,11 +135,11 @@ export class CitasService {
 
   // Obtener las citas de un USUARIO
   getCitasUsuario(): Observable<any> {
-    return this.httpService.httpGetToken('/citas/cliente');
+    return this.httpService.getToken('/citas/cliente');
   }
 
   getCitasBarbero(): Observable<any> {
-    return this.httpService.httpGetToken('/citas/barbero');
+    return this.httpService.getToken('/citas/barbero');
   }
 
   purgarDiasPasados(
@@ -191,6 +191,6 @@ export class CitasService {
 
   confirmarReserva(idBarbero: number, dia: Date): Observable<any> {
     const body = { idBarbero, dia };
-    return this.httpService.httpPostToken('/citas/confirmar', body);
+    return this.httpService.postToken('/citas/confirmar', body);
   }
 }
