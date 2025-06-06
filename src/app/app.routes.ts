@@ -1,26 +1,29 @@
 import { Routes } from '@angular/router';
-import { CitasComponent } from './components/citas/citas.component';
-import { RegisterComponent } from './components/register/register.component';
-import { InicioSesionComponent } from './components/inicio-sesion/inicio-sesion.component';
-import { CrearCitasComponent } from './components/crear-citas/crear-citas.component';
-import { MisCitasComponent } from './components/mis-citas/mis-citas.component';
+
 import { authGuard } from './guards/auth.guard';
-import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+
+import { ReservarCitasComponent } from './components/citas/reservar-citas/reservar-citas.component';
+import { RegisterComponent } from './components/auth/register/register.component';
+import { InicioSesionComponent } from './components/auth/inicio-sesion/inicio-sesion.component';
+import { CrearCitasComponent } from './components/citas/crear-citas/crear-citas.component';
+import { MisCitasComponent } from './components/citas/mis-citas/mis-citas.component';
+import { SolicitudesComponent } from './components/relaciones/solicitudes/solicitudes.component';
 import { RelacionesComponent } from './components/relaciones/relaciones.component';
-import { MensajesComponent } from './components/mensajes/mensajes.component';
-import { ChatsComponent } from './components/chats/chats.component';
-import { EditarPerfilComponent } from './components/editar-perfil/editar-perfil.component';
+import { MensajesComponent } from './components/mensajes/chat/mensajes.component';
+import { ChatsComponent } from './components/mensajes/lista-chats/chats.component';
+import { EditarPerfilComponent } from './components/perfil/editar-perfil/editar-perfil.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
 import { usuarioExistenteGuard } from './guards/usuario-existente.guard';
 import { PaginaPrincipalComponent } from './components/pagina-principal/pagina-principal.component';
 import { ProductosComponent } from './components/productos/productos.component';
-import { MisProductosComponent } from './components/mis-productos/mis-productos.component';
+import { MisProductosComponent } from './components/productos/mis-productos/mis-productos.component';
 import { usuarioNoLogeadoGuard } from './guards/usuario-no-logeado.guard';
-import { VerificarEmailComponent } from './components/verificar-email/verificar-email.component';
-import { CambiarPasswordComponent } from './components/cambiar-password/cambiar-password.component';
+import { VerificarEmailComponent } from './components/auth/verificar-email/verificar-email.component';
+import { CambiarPasswordComponent } from './components/auth/cambiar-password/cambiar-password.component';
+import { ConfirmarEliminacionComponent } from './components/auth/confirmar-eliminacion/confirmar-eliminacion.component';
 
 export const routes: Routes = [
-  { path: 'registro', component: RegisterComponent, canActivate:[usuarioNoLogeadoGuard] },
+  { path: 'registro', component: RegisterComponent},
   { path: 'inicio-sesion', component: InicioSesionComponent, canActivate:[usuarioNoLogeadoGuard] },
   { path: 'crear-citas', component: CrearCitasComponent, canActivate: [authGuard] },
   {
@@ -39,12 +42,15 @@ export const routes: Routes = [
   { path: 'editar-perfil', component: EditarPerfilComponent, canActivate: [authGuard] },
   { path: 'verificar-email', component: VerificarEmailComponent },
   { path: 'cambiar-password', component: CambiarPasswordComponent, canActivate: [authGuard] },
+  { path: 'recuperar-password', loadComponent: () => import('./components/auth/recuperar-password/recuperar-password.component').then(m => m.RecuperarPasswordComponent), canActivate:[usuarioNoLogeadoGuard]},
+  { path: 'restablecer-password/:token', loadComponent: () => import('./components/auth/restablecer-password/restablecer-password.component').then(m => m.RestablecerPasswordComponent) },
+  { path: 'confirmar-eliminacion', component: ConfirmarEliminacionComponent },
   {
     path: ':username',
     canActivate: [usuarioExistenteGuard, authGuard],
     children: [
       { path: 'mensajes', component: MensajesComponent },
-      { path: 'citas', component: CitasComponent },
+      { path: 'citas', component: ReservarCitasComponent },
       { path: 'productos', component: ProductosComponent },
       { path: '', component: PerfilComponent },
     ],

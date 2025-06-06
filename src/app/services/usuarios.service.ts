@@ -66,5 +66,9 @@ export class UsuariosService {
   cambiarPassword(data: { actual: string; nueva: string }) {
     return this.httpService.putToken('/usuarios/password', data);
   }
+
+  enviarConfirmacionEliminacion(): Observable<any> {
+    return this.httpService.postToken('/usuarios/enviar-confirmacion-eliminacion', {});
+  }
 }
 

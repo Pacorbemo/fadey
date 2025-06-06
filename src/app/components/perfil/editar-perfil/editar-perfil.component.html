@@ -1,0 +1,140 @@
+<section>
+  <span class="foto-perfil-container">
+    <img
+      [alt]="datosService.user.username"
+      [src]="datosService.user.foto_perfil ? (datosService.user.foto_perfil | uploads) : datosService.noFoto">
+
+    <div class="change-button-container">
+      <button (click)="activarInput()">Cambiar Foto</button>
+    </div>
+  
+    <form id="uploadForm" (submit)="subirImagen($event)">
+      <input 
+        type="file" 
+        id="fileInput" 
+        (change)="seleccionarImagen($event)" 
+        class="file-input"
+      />
+      <button type="submit">Subir Imagen</button>
+    </form>
+
+  </span>
+  <aside>
+
+    <div>
+      <label for="nombre">Nombre: </label>
+      <input 
+        type="text" 
+        id="nombre" 
+        [(ngModel)]="datosService.user.nombre" 
+        (change)="editar('nombre', datosService.user.nombre)"
+      />
+    </div>
+
+    <div>
+      <label for="username">Username: </label>
+      <input 
+        type="text" 
+        id="username" 
+        [(ngModel)]="username" 
+        (change)="editar('username', username)"
+        value="datosService.user.username"
+      />
+    </div>
+
+    <div>
+      <label for="localizacion">Localizacion: </label>
+      <input 
+        type="text" 
+        id="localizacion" 
+        [(ngModel)]="datosService.user.localizacion" 
+        (change)="editar('localizacion', datosService.user.localizacion)"
+      />
+    </div>
+
+    <div>
+      <label for="email">Email: </label>
+      <input 
+        type="email" 
+        id="email" 
+        [(ngModel)]="datosService.user.email" 
+        (change)="editar('email', datosService.user.email)"
+      />
+    </div>
+
+    <div id="bio-container">
+      <label for="bio">Bio: </label>
+      <textarea 
+      id="bio" 
+      [(ngModel)]="datosService.user.bio" 
+      (change)="editar('bio', datosService.user.bio)"
+      ></textarea>
+    </div>
+    
+    <div class="opciones-cuenta">
+      @if(datosService.user.email && datosService.user.email_verificado === false) {
+        <div class="email-warning">
+          <span>Tu email no está verificado.</span>
+            <span class="email-info">Verificar tu email es importante para poder recuperar tu cuenta, recibir notificaciones y garantizar la seguridad de tu perfil.</span>
+          <button (click)="reenviarVerificacionEmail()" [disabled]="reenviandoEmail">Reenviar email de verificación</button>
+          @if(mensajeVerificacion) {
+            <span>{{mensajeVerificacion}}</span>
+          }
+        </div>
+      }
+      <h3>Opciones de cuenta</h3>
+      <a routerLink="/cambiar-password" class="btn-opciones">
+        <img src="/svgs/icono-candado.svg" alt="Cambiar contraseña">
+        Cambiar contraseña
+      </a>
+      <div id="notificaciones-container">
+        <button type="button" class="btn-opciones" 
+        (click)="datosService.user.email_verificado && toggleNotificacionesEmail()" 
+        [class.btn-disabled]="!datosService.user.email_verificado"
+        [class.btn-activo]="notificacionesEmail"
+        [class.btn-inactivo]="!notificacionesEmail"
+        [attr.aria-disabled]="!datosService.user.email_verificado"
+        [attr.tabindex]="datosService.user.email_verificado ? 0 : -1">
+        <img [src]="notificacionesEmail ? '/svgs/icono-ojo.svg' : '/svgs/icono-ojo-off.svg'" alt="Notificaciones por email">
+        Notificaciones por email
+        <span class="estado-notificacion" @if(datosService.user.email_verificado)>
+          {{ notificacionesEmail ? '(activadas)' : '(desactivadas)' }}
+        </span>
+      </button>
+      @if(!datosService.user.email_verificado) {
+        <div class="mensaje-notificacion-disabled">
+          Debes verificar tu cuenta para poder modificar esta opción.
+        </div>
+      }
+      </div>
+
+      <button type="button" class="btn-opciones"
+        (click)="cambiarTipoCuenta()">
+        <img src="/svgs/icono-cambiar-cuenta.svg" alt="Cambiar tipo de cuenta">
+        Cambiar cuenta a {{ datosService.user.rol === 'barbero' ? 'Barbero' : 'Cliente' }}
+      </button>
+      <button type="button" class="btn-opciones" (click)="mostrarDialogoEliminar = true">
+        <img src="/svgs/icono-papelera.svg" alt="Eliminar cuenta">
+        Eliminar cuenta
+      </button>
+    </div>
+  </aside>
+</section>
+
+@if(mostrarDialogoEliminar) {
+  <div class="dialogo-eliminar-overlay">
+    <div class="dialogo-eliminar">
+      <h2>¿Estás seguro de que deseas eliminar tu cuenta?</h2>
+      <p>
+        Esta acción es irreversible. Se eliminarán todos tus datos y no podrás recuperarlos.
+      </p>
+      <div class="botones-eliminar">
+        <button (click)="confirmarEliminarCuenta()" class="btn-eliminar-definitivo">Estoy seguro, eliminar cuenta</button>
+        <button (click)="mostrarDialogoEliminar = false" class="btn-cancelar">Cancelar</button>
+      </div>
+      @if(mensajeEliminacion) {
+        <div class="mensaje-eliminacion">{{mensajeEliminacion}}</div>
+      }
+    </div>
+  </div>
+}

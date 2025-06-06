@@ -59,9 +59,9 @@ export class PerfilComponent implements OnInit {
 
   mapaComponentes: { [key: string]: () => Promise<any> } = {
     citas: () =>
-      import('../citas/citas.component').then((m) => m.CitasComponent),
+      import('../citas/reservar-citas/reservar-citas.component').then((m) => m.ReservarCitasComponent),
     mensajes: () =>
-      import('../mensajes/mensajes.component').then((m) => m.MensajesComponent),
+      import('../mensajes/chat/mensajes.component').then((m) => m.MensajesComponent),
     productos: () =>
       import('../productos/productos.component').then(
         (m) => m.ProductosComponent

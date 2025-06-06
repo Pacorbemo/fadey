@@ -1,0 +1,73 @@
+<!-- Email de confirmación de eliminación de cuenta Fadey -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirma la eliminación de tu cuenta | Fadey</title>
+  <style>
+    body {
+      background: #181c23;
+      color: #eaf0fa;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      background: #23272f;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+      padding: 2.5em 2em 2em 2em;
+      text-align: center;
+    }
+    h1 {
+      color: #ff5252;
+      font-size: 1.7em;
+      margin-bottom: 0.5em;
+    }
+    p {
+      color: #b3b3b3;
+      font-size: 1.1em;
+      margin-bottom: 1.5em;
+    }
+    .btn {
+      display: inline-block;
+      background: #d32f2f;
+      color: #fff !important;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 0.9em 2em;
+      border-radius: 6px;
+      font-size: 1.1em;
+      margin-top: 1.2em;
+      box-shadow: 0 2px 8px rgba(220,0,0,0.10);
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #b71c1c;
+    }
+    .footer {
+      margin-top: 2.5em;
+      color: #888;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Confirma la eliminación de tu cuenta</h1>
+    <p>Hola {{username}},<br><br>
+      Has solicitado eliminar tu cuenta de Fadey.<br>
+      Para confirmar esta acción irreversible, haz clic en el siguiente botón:
+    </p>
+    <a href="{{url}}" class="btn">Eliminar mi cuenta definitivamente</a>
+    <p style="margin-top:2em; color:#ff5252; font-size:1em;">
+      Si no has solicitado esta acción, ignora este mensaje y tu cuenta no se eliminará.
+    </p>
+    <div class="footer">
+      &copy; {{year}} Fadey. Todos los derechos reservados.
+    </div>
+  </div>
+</body>
+</html>

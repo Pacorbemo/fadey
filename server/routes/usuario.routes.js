@@ -12,6 +12,10 @@ router.put('/imagen-perfil', autenticarToken, upload.single('imagen'), usuarioCo
 router.put('/', autenticarToken, usuarioController.editarCampo);
 router.put('/password', autenticarToken, usuarioController.cambiarPassword);
 router.post('/enviar-verificacion-email', autenticarToken, usuarioController.enviarVerificacionEmail);
+router.post('/enviar-confirmacion-eliminacion', autenticarToken, usuarioController.enviarConfirmacionEliminacion);
 router.get('/verificar-email/:token', usuarioController.verificarEmail);
+router.post('/recuperar-password', usuarioController.recuperarPassword);
+router.post('/restablecer-password/:token', usuarioController.restablecerPassword);
+router.post('/confirmar-eliminacion', usuarioController.confirmarEliminacion);
 
 module.exports = router;

@@ -15,6 +15,7 @@ export class DatosService {
 
   limpiarUser(): void {
     this.user = usuarioVacio
+    this._tokenUsuario = '';
   }
 
   esBarbero(): boolean {

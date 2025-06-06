@@ -46,4 +46,22 @@ export class HttpService {
   deleteToken(url: string, saltarCargando: boolean = false): Observable<any> {
     return this.requestWithToken('delete', url, {}, saltarCargando);
   }
+
+  get(url: string, params?: {}, saltarCargando: boolean = false): Observable<any> {
+    const headers = new HttpHeaders().set('SaltarCargando', saltarCargando ? '1' : '0');
+    return this.http.get(url, { params, headers });
+  }
+  post(url: string, body: any = {}, saltarCargando: boolean = false): Observable<any> {
+    const headers = new HttpHeaders().set('SaltarCargando', saltarCargando ? '1' : '0');
+    return this.http.post(url, body, { headers });
+  }
+  put(url: string, body: any = {}, saltarCargando: boolean = false): Observable<any> {
+    const headers = new HttpHeaders().set('SaltarCargando', saltarCargando ? '1' : '0');
+    return this.http.put(url, body, { headers });
+  }
+  delete(url: string, saltarCargando: boolean = false): Observable<any> {
+    const headers = new HttpHeaders().set('SaltarCargando', saltarCargando ? '1' : '0');
+    return this.http.delete(url, { headers });
+  }
+  
 }

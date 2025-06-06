@@ -6,7 +6,7 @@ export const usuarioNoLogeadoGuard: CanActivateFn = (route, state) => {
   const datosService = inject(DatosService);
   const router = inject(Router);
 
-  return datosService.tokenUsuario
+  return datosService.tokenUsuario && datosService.tokenUsuario.trim() !== ''
     ? router.createUrlTree(['/'])
     : true;
 };

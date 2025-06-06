@@ -101,6 +101,9 @@ exports.login = async (req, res) => {
         email: usuario.email,
         bio: usuario.bio || '',
         localizacion: usuario.localizacion || '',
+        telefono: usuario.telefono || '',
+        enviar_emails: usuario.enviar_emails || false,
+        email_verificado: usuario.email_verificado || false
       }
     });
   });

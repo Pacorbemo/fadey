@@ -151,14 +151,44 @@ exports.editarCampo = (req, res) => {
     "email",
     "localizacion",
     "bio",
+    "enviar_emails",
+    "barbero"
   ];
 
-  if (!campo || !valor) {
+  if (!campo || valor === undefined) {
     return res.status(400).json({ error: "Campo y valor son requeridos" });
   }
 
   if (!camposValidos.includes(campo)) {
     return res.status(400).json({ error: `Campo inválido.` });
+  }
+
+  if (campo === 'enviar_emails') {
+    db.query('SELECT email_verificado FROM Usuarios WHERE id = ?', [userId], (err, results) => {
+      if (err || results.length === 0) {
+        return res.status(500).json({ error: 'Error validando usuario.' });
+      }
+      if (!results[0].email_verificado) {
+        return res.status(403).json({ error: 'Debes verificar tu email para modificar esta opción.' });
+      }
+      const query = `UPDATE Usuarios SET ${campo} = ? WHERE id = ?`;
+      db.query(query, [valor, userId], (err, results) => {
+        if (err) {
+          console.error(`Error al actualizar el campo ${campo}:`, err);
+          return res.status(500).json({ error: `Error al actualizar ${campo}` });
+        }
+        if (results.affectedRows > 0) {
+          res.status(200).json({ message: `${campo.charAt(0).toUpperCase() + campo.slice(1)} actualizado correctamente` });
+        } else {
+          res.status(404).json({ error: "Usuario no encontrado" });
+        }
+      });
+    });
+    return;
+  }
+
+  if (campo === 'barbero' && typeof valor !== 'boolean') {
+    return res.status(400).json({ error: "El valor de 'barbero' debe ser booleano (true o false)." });
   }
 
   const query = `UPDATE Usuarios SET ${campo} = ? WHERE id = ?`;
@@ -277,6 +307,124 @@ exports.cambiarPassword = (req, res) => {
         return res.status(500).json({ error: 'Error actualizando la contraseña.' });
       }
       res.status(200).json({ message: 'Contraseña cambiada correctamente.' });
+    });
+  });
+};
+
+// Recuperar contraseña: enviar email con token
+exports.recuperarPassword = (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ error: 'El email es requerido.' });
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: 'Email inválido.' });
+  }
+  db.query('SELECT id, username FROM Usuarios WHERE email = ?', [email], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error buscando usuario.' });
+    }
+    if (results.length === 0) {
+      // No revelamos si existe o no
+      return res.status(200).json({ message: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' });
+    }
+    const { id, username } = results[0];
+    const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const url = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/restablecer-password/${token}`;
+    const htmlTemplate = renderEmailTemplate(
+      path.join(__dirname, '../emails/recuperar-password.html'),
+      { username, url }
+    );
+    enviarEmail({
+      to: email,
+      subject: 'Recupera tu contraseña en Fadey',
+      text: `Hola ${username},\n\nPara restablecer tu contraseña, haz clic en el siguiente enlace:\n${url}\n\nSi no has solicitado este cambio, ignora este mensaje.`,
+      html: htmlTemplate
+    })
+      .then(() => res.status(200).json({ message: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' }))
+      .catch((e) => {
+        console.error('Error enviando email:', e);
+        res.status(500).json({ error: 'Error enviando email' });
+      });
+  });
+};
+
+// Restablecer contraseña usando token
+exports.restablecerPassword = (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  if (!password || password.length < 6) {
+    return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 6 caracteres.' });
+  }
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: 'Token inválido o expirado.' });
+    }
+    const { id, email } = decoded;
+    const bcrypt = require('bcrypt');
+    const nuevaHash = await bcrypt.hash(password, 10);
+    db.query('UPDATE Usuarios SET password = ? WHERE id = ? AND email = ?', [nuevaHash, id, email], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error actualizando la contraseña.' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado.' });
+      }
+      res.status(200).json({ message: 'Contraseña restablecida correctamente.' });
+    });
+  });
+};
+
+// Enviar confirmación de eliminación de cuenta
+exports.enviarConfirmacionEliminacion = (req, res) => {
+  const userId = req.user.id;
+  db.query('SELECT email, email_verificado, username FROM Usuarios WHERE id = ?', [userId], (err, results) => {
+    if (err || results.length === 0) {
+      return res.status(500).json({ error: 'Error al obtener el usuario' });
+    }
+    const { email, email_verificado, username } = results[0];
+    if (!email_verificado) {
+      return res.status(400).json({ error: 'El email no está verificado.' });
+    }
+    // Generar token de confirmación
+    const jwt = require('jsonwebtoken');
+    const token = jwt.sign({ id: userId, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const url = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/confirmar-eliminacion?token=${token}`;
+    const year = new Date().getFullYear();
+    const htmlTemplate = renderEmailTemplate(
+      path.join(__dirname, '../emails/confirmar-eliminacion.html'),
+      { username, url, year }
+    );
+    enviarEmail({
+      to: email,
+      subject: 'Confirma la eliminación de tu cuenta',
+      html: htmlTemplate
+    })
+      .then(() => res.status(200).json({ message: 'Correo de confirmación enviado' }))
+      .catch(() => res.status(500).json({ error: 'No se pudo enviar el correo de confirmación.' }));
+  });
+};
+
+exports.confirmarEliminacion = (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    return res.status(400).json({ error: 'Token requerido.' });
+  }
+  const jwt = require('jsonwebtoken');
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(400).json({ error: 'Token inválido o expirado.' });
+    }
+    const { id, email } = decoded;
+    db.query('DELETE FROM Usuarios WHERE id = ? AND email = ?', [id, email], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error eliminando la cuenta.' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado.' });
+      }
+      res.status(200).json({ message: 'Cuenta eliminada correctamente.' });
     });
   });
 };

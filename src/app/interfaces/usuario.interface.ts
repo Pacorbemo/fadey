@@ -8,6 +8,7 @@ export interface Usuario {
 	bio: string;
 	email: string;
 	email_verificado: boolean;
+	enviar_emails?: boolean;
 }
 
 export const usuarioVacio: Usuario = {
@@ -19,5 +20,6 @@ export const usuarioVacio: Usuario = {
 	localizacion: '',
 	bio: '',
 	email: '',
-	email_verificado: false
+	email_verificado: false,
+	enviar_emails: true
 };

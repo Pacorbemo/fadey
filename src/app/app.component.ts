@@ -12,9 +12,9 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { DatosService } from './services/datos.service';
-import { BuscadorComponent } from './shared/buscador/buscador.component';
+import { BuscadorComponent } from './components/shared/buscador/buscador.component';
 import { CommonModule } from '@angular/common';
-import { NotificacionesComponent } from './shared/notificaciones/notificaciones.component';
+import { NotificacionesComponent } from './components/shared/notificaciones/notificaciones.component';
 import { UploadsPipe } from './pipes/uploads.pipe';
 import { HttpService } from './services/http.service';
 
@@ -48,16 +48,18 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.datosService.tokenUsuario = localStorage.getItem('token') || '';
     this.datosService.user = JSON.parse(localStorage.getItem('user') || '{}');
-    this.httpService.getToken('/usuarios').subscribe({
-      next: (response: any) => {
-        this.datosService.user = response;
-        localStorage.setItem('user', JSON.stringify(response));
-      },
-      error: (error: any) => {
-        console.error('Error al cargar el usuario:', error);
-        this.router.navigate(['/inicio-sesion']);
-      },
-    });
+    if(this.datosService.tokenUsuario) {
+      this.httpService.getToken('/usuarios').subscribe({
+        next: (response: any) => {
+          this.datosService.user = response;
+          localStorage.setItem('user', JSON.stringify(response));
+        },
+        error: (error: any) => {
+          console.error('Error al cargar el usuario:', error);
+          this.router.navigate(['/inicio-sesion'])
+        },
+      });
+    }
   }
 
   paginaPrincipal(): boolean {
