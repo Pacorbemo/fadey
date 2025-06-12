@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BuscadorService } from './buscador.service';
+import { BuscadorService } from '../../../services/buscador.service';
 import { DatosService } from '../../../services/datos.service';
 import { UploadsPipe } from '../../../pipes/uploads.pipe';
 

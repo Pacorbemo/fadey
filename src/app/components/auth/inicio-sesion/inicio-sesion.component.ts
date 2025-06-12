@@ -3,13 +3,16 @@ import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { DatosService } from '../../../services/datos.service';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ToastService } from '../../../services/toast.service';
+import { ToastComponent } from '../../shared/toast/toast.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './inicio-sesion.component.html',
   styleUrls: ['./inicio-sesion.component.css'],
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CommonModule, ToastComponent],
 })
 export class InicioSesionComponent {
   username: string = '';
@@ -18,7 +21,8 @@ export class InicioSesionComponent {
   constructor(
     private usuariosService: UsuariosService,
     private datosService: DatosService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   iniciarSesion(): void {
@@ -27,17 +31,22 @@ export class InicioSesionComponent {
       password: this.password,
     };
 
-    this.usuariosService.login(credenciales).subscribe(
-      (response) => {
+    if (!credenciales.username || !credenciales.password) {
+      this.toastService.mostrar('Debes rellenar todos los campos. Por favor, introduce tu usuario y contraseña.');
+      return;
+    }
+
+    this.usuariosService.login(credenciales).subscribe({
+      next: (response) => {
         this.datosService.tokenUsuario = response.token;
         this.datosService.user = response.user;
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
         this.router.navigate(["/mis-citas"]);
       },
-      (error) => {
-        alert('Error al iniciar sesión');
+      error: (error) => {
+        this.toastService.mostrar(error);
       }
-    );
+    });
   }
 }

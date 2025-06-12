@@ -79,6 +79,8 @@ li.row:hover {
 
 .tabla-wrapper {
   width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   overflow-x: auto;
   overflow-y: visible; 
   margin-bottom: 1rem;
@@ -102,6 +104,37 @@ li.row:hover {
   width: 100%;
 }
 
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.paginacion button {
+  border: none;
+  outline: none;
+  background: var(--primary);
+  color: #fffbe7;
+  border-radius: 6px;
+  padding: 6px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  box-shadow: 0 1px 4px #0002;
+  cursor: pointer;
+}
+
+.paginacion button:hover,
+.paginacion button:focus {
+  border: none !important;
+  outline: none !important;
+  background: var(--primary-dark);
+  color: #23231f;
+  box-shadow: 0 2px 8px #0003;
+}
+
 @media (max-width: 900px) {
   li, li.header {
     padding: 14px 8px;
@@ -116,14 +149,51 @@ li.row:hover {
 }
 
 @media (max-width: 600px) {
-  li, li.header {
-    padding: 8px 4px;
-    font-size: 0.95rem;
+  ul {
+    min-width: 0;
+    width: 100%;
+    padding: 0 2vw;
   }
-  .col-1, .col-2, .col-3 {
-    min-width: 60px;
+  .tabla-ul {
+    min-width: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  li, li.header {
+    padding: 6px 2px;
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+    border-radius: 7px;
   }
   li.header {
     font-size: 0.98rem;
+    letter-spacing: 0.5px;
+    border-bottom-width: 1.5px;
+    margin-bottom: 6px;
+    padding: 8px 2px;
+  }
+  .col-1, .col-2, .col-3 {
+    min-width: 48px;
+    padding: 0 2px;
+    font-size: 0.85em;
+  }
+  .col-3 {
+    text-align: right;
+  }
+  .tabla-wrapper {
+    padding: 8px 0;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 4px #0002;
+  }
+  .paginacion {
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .paginacion button {
+    padding: 4px 10px;
+    font-size: 0.95em;
+    border-radius: 5px;
   }
 }

@@ -36,7 +36,7 @@ export class PerfilComponent implements OnInit {
         this.user.username = params['username'];
         this.usuariosServices.datosUsername(this.user.username).subscribe({
           next: (response) => {
-            this.user = response;
+            this.user = response.user;
             if (this.user.username == this.datosService.user.username) {
               this.usuarioAutorizado = true;
               this.loadComponent('citas');

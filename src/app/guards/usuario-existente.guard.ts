@@ -8,7 +8,7 @@ export const usuarioExistenteGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const username = route.params['username'];
-  return usuariosService.verificarUsername(username).pipe(
+  return usuariosService.datosUsername(username).pipe(
     map(response => {
       if (response.exists) {
         return true;

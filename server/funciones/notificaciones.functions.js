@@ -73,7 +73,7 @@ function crearNotificacion(
           mensajeEmail = `${username} ha ${mensaje} tu solicitud`;
           break;
         default:
-          mensajeEmail = `Notificación de ${username}`;
+          return;
       }
 
       enviarEmail({

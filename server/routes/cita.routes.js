@@ -9,5 +9,6 @@ router.get('/barbero', autenticarToken, citaController.obtenerCitasBarbero);
 router.get('/cliente', autenticarToken, citaController.obtenerCitasCliente);
 router.post('/', autenticarToken, citaController.obtenerCitas);
 router.get('/proximas', autenticarToken, citaController.obtenerProximasCitas);
+router.post('/generar-semana', autenticarToken, citaController.generarCitasSemana);
 
 module.exports = router;

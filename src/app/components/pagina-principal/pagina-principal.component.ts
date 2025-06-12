@@ -1,7 +1,7 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CardComponent } from './card/card.component';
-import { BuscadorService } from '../shared/buscador/buscador.service';
+import { BuscadorService } from '../../services/buscador.service';
 import { CommonModule } from '@angular/common';
 import { CargandoService } from '../../services/cargando.service';
 import { UsuariosService } from '../../services/usuarios.service';

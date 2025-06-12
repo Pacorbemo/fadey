@@ -26,9 +26,8 @@ exports.crearCitas = async (req, res) => {
         await db.promise().query(insertQuery, [idBarbero, fechaHora]);
       }
     }
-    res.status(200).json({ message: "Citas creadas exitosamente" });
+    res.status(200).json({ mensaje: "Citas creadas exitosamente" });
   } catch (err) {
-    console.error("Error al crear citas:", err);
     res.status(500).json({ error: "Error al procesar las citas" });
   }
 };
@@ -67,69 +66,73 @@ exports.obtenerCitas = async (req, res) => {
     
     res.status(200).json({ totales, reservadas, reservadasUsuario });
   } catch (err) {
-    console.error("Error al obtener citas:", err);
+    // Error al obtener citas
     res.status(500).json({ error: "Error al obtener citas" });
   }
 };
 
 exports.obtenerCitasBarbero = async (req, res) => {
   const { id } = req.user;
-
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT Citas.id, Citas.fecha_hora, Usuarios.nombre AS usuario_nombre, Usuarios.username AS usuario_username 
     FROM Citas 
     JOIN Usuarios ON Citas.cliente_id = Usuarios.id 
     WHERE Citas.barbero_id = ? AND Citas.fecha_hora > NOW()
     ORDER BY Citas.fecha_hora ASC
+    LIMIT ? OFFSET ?
     `;
-  db.query(query, [id], (err, results) => {
+  db.query(query, [id, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener citas del barbero:", err);
+      // Error al obtener citas del barbero
       return res.status(500).json({ error: "Error al obtener citas del barbero" });
     }
-
     res.status(200).json(results);
   });
 };
 
 exports.obtenerCitasCliente = async (req, res) => {
   const { id } = req.user;
-
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT Citas.id, Citas.fecha_hora, Usuarios.nombre AS usuario_nombre, Usuarios.username AS usuario_username 
     FROM Citas 
     JOIN Usuarios ON Citas.barbero_id = Usuarios.id 
     WHERE Citas.cliente_id = ? AND Citas.fecha_hora > NOW()
     ORDER BY Citas.fecha_hora ASC
+    LIMIT ? OFFSET ?
     `;
-  db.query(query, [id], (err, results) => {
+  db.query(query, [id, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener citas del usuario:", err);
+      // Error al obtener citas del usuario
       return res.status(500).json({ error: "Error al obtener citas del usuario" });
     }
-
     res.status(200).json(results);
   });
-}
+};
 
 exports.obtenerProximasCitas = async (req, res) => {
   const { id } = req.user;
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT Citas.id, Citas.fecha_hora, Usuarios.nombre AS usuario_nombre, Usuarios.username AS usuario_username 
     FROM Citas 
     JOIN Usuarios ON Citas.cliente_id = Usuarios.id 
     WHERE Citas.barbero_id = ? AND Citas.fecha_hora > NOW()
     ORDER BY Citas.fecha_hora ASC
+    LIMIT ? OFFSET ?
   `;
-  db.query(query, [id], (err, results) => {
+  db.query(query, [id, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener próximas citas del barbero:", err);
+      // Error al obtener próximas citas del barbero
       return res.status(500).json({ error: "Error al obtener próximas citas del barbero" });
     }
-
     res.status(200).json(results);
   });
-}
+};
 
 exports.confirmarCita = async (req, res) => {
   const { dia, idBarbero } = req.body;
@@ -153,7 +156,7 @@ exports.confirmarCita = async (req, res) => {
 
   db.query(checkQuery, [idBarbero, fechaHora], (err, results) => {
     if (err) {
-      console.error('Error al comprobar la cita:', err);
+      // Error al comprobar la cita
       return res.status(500).json({ error: 'Error al comprobar la cita' });
     }
 
@@ -163,7 +166,7 @@ exports.confirmarCita = async (req, res) => {
 
     db.query(updateQuery, [idCliente, new Date(), idBarbero, fechaHora], (err, result) => {
       if (err) {
-        console.error('Error al confirmar reserva:', err);
+        // Error al confirmar reserva
         return res.status(500).json({ error: 'Error al confirmar reserva' });
       }
 
@@ -174,7 +177,73 @@ exports.confirmarCita = async (req, res) => {
         mensaje: fechaHora,
       });
 
-      res.status(200).json({ message: 'Reserva confirmada', dia });
+      res.status(200).json({ mensaje: 'Reserva confirmada', dia });
     });
   });
 }
+
+exports.generarCitasSemana = async (req, res) => {
+  const idBarbero = req.user.id;
+  const { inicio, fin } = req.body;
+  if (!inicio || !fin) {
+    return res.status(400).json({ error: "Faltan fechas de inicio o fin" });
+  }
+  try {
+    const [usuarios] = await db.promise().query(
+      "SELECT horario FROM Usuarios WHERE id = ? AND barbero = 1",
+      [idBarbero]
+    );
+    if (!usuarios.length || !usuarios[0].horario) {
+      return res.status(400).json({ error: "No hay patrón de horario guardado" });
+    }
+    let horario;
+    try {
+      if (typeof usuarios[0].horario === 'string') {
+        horario = JSON.parse(usuarios[0].horario);
+      } else if (Array.isArray(usuarios[0].horario)) {
+        horario = usuarios[0].horario;
+      } else {
+        horario = JSON.parse(JSON.stringify(usuarios[0].horario));
+      }
+    } catch (e) {
+      return res.status(400).json({ error: "Formato de horario inválido" });
+    }
+    const fechaInicio = new Date(inicio);
+    const fechaFin = new Date(fin);
+    const franjas = [];
+    for (let d = new Date(fechaInicio); d <= fechaFin; d.setDate(d.getDate() + 1)) {
+      const diaSemana = d.getDay() === 0 ? 6 : d.getDay() - 1; // Lunes=0 Domingo=6
+      const dia = horario[diaSemana];
+      if (dia && dia.abierto) {
+        let [hIni, mIni] = dia.inicio.split(":").map(Number);
+        let [hFin, mFin] = dia.fin.split(":").map(Number);
+        let actual = new Date(d);
+        actual.setHours(hIni, mIni, 0, 0);
+        const finDia = new Date(d);
+        finDia.setHours(hFin, mFin, 0, 0);
+        while (actual < finDia) {
+          franjas.push(new Date(actual));
+          actual = new Date(actual.getTime() + 30 * 60000);
+        }
+      }
+    }
+    console.log(fechaInicio, fechaFin)
+    const deleteLibresQuery = `DELETE FROM Citas WHERE barbero_id = ? AND fecha_hora >= ? AND fecha_hora <= ? AND cliente_id IS NULL`;
+    fechaInicio.setHours(0, 0, 0, 0);
+    fechaFin.setHours(23, 59, 59, 999);
+    await db.promise().query(deleteLibresQuery, [idBarbero, fechaInicio, fechaFin]);
+    const checkQuery = 'SELECT COUNT(*) as existe FROM Citas WHERE barbero_id = ? AND fecha_hora = ?';
+    const insertQuery = 'INSERT INTO Citas (barbero_id, fecha_hora) VALUES (?, ?)';
+    let creadas = 0;
+    for (const franja of franjas) {
+      const [existe] = await db.promise().query(checkQuery, [idBarbero, franja]);
+      if (existe[0].existe === 0) {
+        await db.promise().query(insertQuery, [idBarbero, franja]);
+        creadas++;
+      }
+    }
+    res.status(200).json({ ok: true, creadas });
+  } catch (err) {
+    res.status(500).json({ error: "Error al generar citas" });
+  }
+};

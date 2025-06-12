@@ -21,10 +21,11 @@ export class MensajesService {
     return this.socket.fromEvent('nuevoMensaje');
   }
 
-  cargarMensajes(emisor_id: number, receptor_id: number): Observable<any> {
+  cargarMensajes(receptor_id: number, limit: number = 30, offset: number = 0): Observable<any> {
     const params = {
-      emisor_id: emisor_id.toString(),
       receptor_id: receptor_id.toString(),
+      limit: limit.toString(),
+      offset: offset.toString(),
     };
 
     return this.httpService.getToken('/mensajes', params);
@@ -32,5 +33,9 @@ export class MensajesService {
 
   cargarChats(): Observable<any> {
     return this.httpService.getToken('/mensajes/chats');
+  }
+
+  marcarMensajesLeidos(emisor_id: number) {
+    return this.httpService.postToken('/mensajes/marcar-leidos', { emisor_id });
   }
 }

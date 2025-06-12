@@ -3,50 +3,61 @@
     <p>Fadey</p>
   </div>
   @if(datosService.tokenUsuario){
-  <nav>
-      <a routerLink="mis-citas" routerLinkActive="active-link">Citas</a>
-      <a routerLink="mis-productos" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Productos</a>
-      <a routerLink="relaciones" routerLinkActive="active-link">Relaciones</a>
-      <a routerLink="solicitudes" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Solicitudes</a>
-      <a routerLink="chats" routerLinkActive="active-link">Chats</a>
-    </nav>
+    <div class="nav-burguer-container">
+      <button class="burguer" (click)="burguerAbierto = !burguerAbierto" aria-label="Abrir menú de navegación">
+        <ng-container *ngIf="!burguerAbierto">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 block" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24"><path d="M4 12h16M4 18h16M4 6h16"></path></svg>
+        </ng-container>
+        <ng-container *ngIf="burguerAbierto">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 block" width="24" height="24"><path d="M0 0h24v24H0z" fill="none"></path><path fill="currentColor" d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"></path></svg>
+        </ng-container>
+      </button>
+      <nav [class.abierto]="burguerAbierto">
+        <a id="crear-citas" routerLink="crear-citas" routerLinkActive="active-link">Crear</a>
+        <a routerLink="mis-citas" routerLinkActive="active-link">Citas</a>
+        <a routerLink="mis-productos" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Productos</a>
+        <a routerLink="relaciones" routerLinkActive="active-link">Relaciones</a>
+        <a routerLink="solicitudes" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Solicitudes</a>
+        <a routerLink="chats" routerLinkActive="active-link">Chats</a>
+      </nav>
+    </div>
   }
   @if(datosService.user.username){
-  <div class="header">
-    @if(!paginaPrincipal()){
-    <app-buscador id="buscador"></app-buscador>
-    }
-    <app-notificaciones></app-notificaciones>
-    @if(datosService.esBarbero()){
-    <div class="crear-citas">
-      <div id="sombra-crear-citas"></div>
-      <a routerLink="/crear-citas" id="boton-crear-citas">Crear</a>
-    </div>
-    }
-    <div class="user"  (click)="alternarMenu()">
-      <div class="username">{{datosService.user.username}}</div>
-      <span class="marco-perfil">
-        @if(!datosService.user.foto_perfil){
-          {{datosService.user.username.charAt(0).toUpperCase()}}
-        }
-        @else{
-          <img class="foto-perfil" [src]="datosService.user.foto_perfil | uploads" alt="Foto de perfil" />
-        }
-      </span>
-      @if (menuAbierto) {
-        <ul class="dropdown-menu" #menu>
-          <li routerLink="editar-perfil">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="mr-2 w-5 h-5"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path></svg>
-            Perfil
-          </li>
-          <li (click)="logout()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="mr-2 w-5 h-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M18.189 9a15 15 0 0 1 2.654 2.556c.105.13.157.287.157.444m-2.811 3a14.998 14.998 0 0 0 2.654-2.556A.704.704 0 0 0 21 12m0 0H8m5-7.472A6 6 0 0 0 3 9v6a6 6 0 0 0 10 4.472"></path></svg>
-           Cerrar Sesión
-          </li>
-        </ul>
+    <div class="header-usuario">
+      @if(!paginaPrincipal()){
+        <app-buscador id="buscador"></app-buscador>
       }
+      <app-notificaciones></app-notificaciones>
+      @if(datosService.esBarbero()){
+        <div class="crear-citas">
+          <div id="sombra-crear-citas"></div>
+          <a routerLink="/crear-citas" id="boton-crear-citas">Crear</a>
+        </div>
+      }
+      <div class="user"  (click)="alternarMenu()">
+        <div class="username">{{datosService.user.username}}</div>
+        <span class="marco-perfil">
+          @if(!datosService.user.foto_perfil){
+            {{datosService.user.username.charAt(0).toUpperCase()}}
+          }
+          @else{
+            <img class="foto-perfil" [src]="datosService.user.foto_perfil | uploads" alt="Foto de perfil" />
+          }
+        </span>
+        @if (menuAbierto) {
+          <ul class="dropdown-menu" #menu>
+            <li routerLink="editar-perfil">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="mr-2 w-5 h-5"><path fill="none" d="M0 0h24v24H0z"></path><path fill="currentColor" d="M20 22h-2v-2a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v2H4v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2zm-8-9a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path></svg>
+              Perfil
+            </li>
+            <li (click)="logout()">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" class="mr-2 w-5 h-5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M18.189 9a15 15 0 0 1 2.654 2.556c.105.13.157.287.157.444m-2.811 3a14.998 14.998 0 0 0 2.654-2.556A.704.704 0 0 0 21 12m0 0H8m5-7.472A6 6 0 0 0 3 9v6a6 6 0 0 0 10 4.472"></path></svg>
+             Cerrar Sesión
+            </li>
+          </ul>
+        }
+      </div>
     </div>
-  </div>
   }
 </header>
 <div class="container">

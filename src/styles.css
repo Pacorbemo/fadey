@@ -13,7 +13,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --primary: #1a29ce;
+  --primary: #2434e0;
   --primary-dark: #2b3bee;
   --bg: #181a20;
 
@@ -36,6 +36,7 @@
   flex-direction: column;
   align-items: center;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 h2.titulo {
@@ -44,7 +45,7 @@ h2.titulo {
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
 	color: transparent;
-	font-size: 3rem;
+	font-size: 2.6vw;
 	letter-spacing: 1px;
 	margin-bottom: 18px;
 	font-weight: 700;
@@ -108,20 +109,26 @@ input{
 
 p.vacio{
   color: var(--text-muted);
-  font-size: 1.25em;
+  font-size: 1.2vw;
   margin: 10px 0;
 }
 
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@media (max-width: 600px) {
+  .component-container {
+    padding: 1rem;
   }
-  a:hover {
-    color: #747bff;
+  
+  h2.titulo {
+    font-size: 2.5rem;
+    margin-top: 0;
   }
+  
   button {
-    background-color: #f9f9f9;
+    padding: 0.5em 1em;
+    font-size: 0.9em;
+  }
+  
+  p.vacio {
+    font-size: 1em;
   }
 }

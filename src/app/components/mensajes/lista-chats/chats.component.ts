@@ -11,6 +11,7 @@ interface Chat {
   username: string;
   ultimo_mensaje: string;
   foto_perfil: string;
+  no_leidos?: number;
 }
 
 @Component({

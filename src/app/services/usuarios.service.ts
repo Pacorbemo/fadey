@@ -10,7 +10,6 @@ interface UsuarioRegister {
   email: string;
   password: string;
   barbero: boolean;
-  telefono: string;
 }
 
 @Injectable({
@@ -27,22 +26,16 @@ export class UsuariosService {
     return this.http.post(`/auth/login`, credenciales);
   }
 
-  verificarUsername(username: string): Observable<{ exists: boolean, user?: Usuario }> {
-    return this.http.get<{ exists: boolean }>(`/usuarios/username/${username}`);
+  validarUsername(username: string): Observable<{ valido: boolean, error?: string }> {
+    return this.http.get<{ valido: boolean, error?: string }>(`/usuarios/validar/${username}`);
   }
 
-  datosUsername(username: string): Observable<Usuario> {
-    return this.http.get<{ user: Usuario }>(`/usuarios/username/${username}`).pipe(
-      map((response) => response.user)
-    );
+  datosUsername(username: string): Observable<{ exists:boolean, user: Usuario }> {
+    return this.http.get<{ exists:boolean, user: Usuario }>(`/usuarios/username/${username}`);
   }
 
   verificarEmail(email: string): Observable<{ exists: boolean }> {
     return this.http.get<{ exists: boolean }>(`/usuarios/email/${email}`);
-  }
-
-  verificarTelefono(telefono: string): Observable<{ exists: boolean }> {
-    return this.http.get<{ exists: boolean }>(`/usuarios/telefono/${telefono}`);
   }
 
   esBarbero(id: number): Observable<boolean> {
@@ -69,6 +62,14 @@ export class UsuariosService {
 
   enviarConfirmacionEliminacion(): Observable<any> {
     return this.httpService.postToken('/usuarios/enviar-confirmacion-eliminacion', {});
+  }
+
+  getHorarioBarbero(): Observable<any> {
+    return this.httpService.getToken('/barberos/horario');
+  }
+
+  setHorarioBarbero(horario: any): Observable<any> {
+    return this.httpService.putToken('/barberos/horario', { horario });
   }
 }
 

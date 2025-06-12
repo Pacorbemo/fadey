@@ -221,14 +221,19 @@ td button.subido.selected {
   color: #ff5f5f;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 600px) {
   .component-container {
     padding: 10px 2vw;
     max-width: 99vw;
+    margin: 0;
   }
 
   table {
     font-size: 0.97rem;
+  }
+
+  table *{
+    font-size: 0.9rem !important;
   }
 
   th,

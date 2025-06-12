@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'mis-citas-tabla',
@@ -21,10 +21,29 @@ import { Component, Input } from '@angular/core';
         </li>
       }
     </ul>
+    <div class="paginacion">
+      <button (click)="anteriorPagina()" [disabled]="pagina === 0">Anterior</button>
+      <span>Página {{pagina + 1}}</span>
+      <button (click)="siguientePagina()" [disabled]="citas.length < limite">Siguiente</button>
+    </div>
   </div>
   `,
   styleUrl: './tabla.component.css'
 })
 export class TablaComponent {
   @Input() citas: { id: number; fecha_hora: Date; usuario_nombre: string; usuario_username: string }[] = [];
+  @Input() pagina = 0;
+  @Input() limite = 20;
+  @Output() paginaCambiada = new EventEmitter<number>();
+
+  anteriorPagina() {
+    if (this.pagina > 0) {
+      this.paginaCambiada.emit(this.pagina - 1);
+    }
+  }
+  siguientePagina() {
+    if (this.citas.length >= this.limite) {
+      this.paginaCambiada.emit(this.pagina + 1);
+    }
+  }
 }

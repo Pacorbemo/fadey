@@ -11,8 +11,7 @@ exports.getProductosByBarbero = (req, res) => {
   `;
   db.query(query, [username], (err, results) => {
     if (err) {
-      console.error("Error al obtener productos:", err);
-      return res.status(500).json({ error: "Error al obtener productos del barbero" });
+      return res.status(500).json({ mensaje: "Error al obtener productos del barbero" });
     }
     res.status(200).json(results);
   });
@@ -36,8 +35,7 @@ exports.getReservadosByBarbero = (req, res) => {
 
   db.query(query, [username], (err, results) => {
     if (err) {
-      console.error("Error al obtener productos reservados:", err);
-      return res.status(500).json({ error: "Error al obtener productos reservados" });
+      return res.status(500).json({ mensaje: "Error al obtener productos reservados" });
     }
 
     const reservados = {};
@@ -61,7 +59,7 @@ exports.addProducto = (req, res) => {
   const barbero_id = req.user.id;
   
   if (!nombre || !precio || !descripcion || !stock) {
-    return res.status(400).json({ error: "Información insuficiente" });
+    return res.status(400).json({ mensaje: "Información insuficiente" });
   }
 
   const query = `
@@ -71,10 +69,9 @@ exports.addProducto = (req, res) => {
   
   db.query(query, [nombre, precio, descripcion, foto.filename | null, stock, barbero_id], (err, result) => {
     if (err) {
-      console.error("Error al agregar producto:", err);
-      return res.status(500).json({ error: "Error al agregar producto" });
+      return res.status(500).json({ mensaje: "Error al agregar producto" });
     }
-    res.status(200).json({ message: "Producto agregado exitosamente" });
+    res.status(200).json({ mensaje: "Producto agregado exitosamente" });
   });
 };
 
@@ -88,7 +85,7 @@ exports.updateProducto = (req, res) => {
   }
   
   if (!updates || Object.keys(updates).length === 0) {
-    return res.status(400).json({ error: "No se proporcionaron datos para actualizar" });
+    return res.status(400).json({ mensaje: "No se proporcionaron datos para actualizar" });
   }
   
   const query = `
@@ -99,17 +96,16 @@ exports.updateProducto = (req, res) => {
   
   db.query(query, [...Object.values(updates), id, barbero_id], (err, result) => {
     if (err) {
-      console.error("Error al actualizar producto:", err);
-      return res.status(500).json({ error: "Error al actualizar el producto" });
+      return res.status(500).json({ mensaje: "Error al actualizar el producto" });
     }
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Producto no encontrado o no autorizado" });
+      return res.status(404).json({ mensaje: "Producto no encontrado o no autorizado" });
     }
     if(updates.foto){
-      res.status(200).json({ message: "Producto actualizado correctamente", foto: updates.foto });
+      res.status(200).json({ mensaje: "Producto actualizado correctamente", foto: updates.foto });
     }
     else{
-      res.status(200).json({ message: "Producto actualizado correctamente" });
+      res.status(200).json({ mensaje: "Producto actualizado correctamente" });
     }
   });
 };
@@ -127,51 +123,45 @@ exports.reservarProducto = (req, res) => {
   
   db.query(checkQuery, [idProducto], (err, results) => {
     if (err) {
-      console.error('Error al comprobar el producto:', err);
-      return res.status(500).json({ error: 'Error al comprobar el producto' });
+      return res.status(500).json({ mensaje: 'Error al comprobar el producto' });
     }
 
     if (results.length === 0) {
-      return res.status(400).json({ error: 'El producto no está disponible o no existe' });
+      return res.status(400).json({ mensaje: 'El producto no está disponible o no existe' });
     }
     
     const producto = results[0];
     if (producto.barbero_id === idCliente) {
-      return res.status(400).json({ error: 'No puedes reservar tu propio producto' });
+      return res.status(400).json({ mensaje: 'No puedes reservar tu propio producto' });
     }
 
     db.query(selectQuery, [idCliente, idProducto], (err, results) => {
       if (err) {
-        console.error('Error al comprobar la reserva:', err);
-        return res.status(500).json({ error: 'Error al comprobar la reserva' });
+        return res.status(500).json({ mensaje: 'Error al comprobar la reserva' });
       }
 
       if (results.length > 0) {
         db.query(updateQuery, [cantidad, idProducto, cantidad], (err, resultStock) => {
           if (err) {
-            console.error('Error al actualizar stock del producto:', err);
-            return res.status(500).json({ error: 'Error al actualizar stock del producto' });
+            return res.status(500).json({ mensaje: 'Error al actualizar stock del producto' });
           }
           db.query(updateReservaQuery, [cantidad, idCliente, idProducto], (err, result) => {
             if (err) {
-              console.error('Error al actualizar la reserva:', err);
-              return res.status(500).json({ error: 'Error al actualizar la reserva' });
+              return res.status(500).json({ mensaje: 'Error al actualizar la reserva' });
             }
-            res.status(200).json({ message: 'Reserva actualizada correctamente' });
+            res.status(200).json({ mensaje: 'Reserva actualizada correctamente' });
           });
         });
       } else {
         db.query(updateQuery, [1, idProducto, 1], (err, result) => {
           if (err) {
-            console.error('Error al reservar el producto:', err);
-            return res.status(500).json({ error: 'Error al reservar el producto' });
+            return res.status(500).json({ mensaje: 'Error al reservar el producto' });
           }
           db.query(insertQuery, [idCliente, idProducto, cantidad], (err, result) => {
             if (err) {
-              console.error('Error al insertar la reserva:', err);
-              return res.status(500).json({ error: 'Error al insertar la reserva' });
+              return res.status(500).json({ mensaje: 'Error al insertar la reserva' });
             }
-            res.status(200).json({ message: 'Reserva realizada correctamente' });
+            res.status(200).json({ mensaje: 'Reserva realizada correctamente' });
           });
         });
       }
@@ -181,6 +171,54 @@ exports.reservarProducto = (req, res) => {
         tipo: 'producto',
         mensaje: JSON.stringify({producto: producto.nombre, cantidad: cantidad}),
       })
+    });
+  });
+};
+
+// Endpoint para marcar un producto reservado como entregado
+exports.marcarProductoEntregado = (req, res) => {
+  const { producto_id, username } = req.body;
+  const barbero_id = req.user.id;
+  if (!producto_id || !username) {
+    return res.status(400).json({ mensaje: "Faltan datos obligatorios" });
+  }
+  // Obtener el id del cliente a partir del username
+  const getClienteIdQuery = "SELECT id FROM Usuarios WHERE username = ?";
+  db.query(getClienteIdQuery, [username], (err, results) => {
+    if (err) {
+      return res.status(500).json({ mensaje: "Error al buscar usuario" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+    const cliente_id = results[0].id;
+    // Verificar que la reserva existe y pertenece a este barbero
+    const checkReservaQuery = `SELECT rp.*, p.nombre as producto_nombre FROM reservas_productos rp JOIN Productos p ON rp.producto_id = p.id WHERE rp.producto_id = ? AND rp.cliente_id = ? AND rp.entregado = 0 AND p.barbero_id = ?`;
+    db.query(checkReservaQuery, [producto_id, cliente_id, barbero_id], (err, reservas) => {
+      if (err) {
+        return res.status(500).json({ mensaje: "Error al comprobar reserva" });
+      }
+      if (reservas.length === 0) {
+        return res.status(404).json({ mensaje: "Reserva no encontrada o ya entregada" });
+      }
+      // Marcar como entregado
+      const updateQuery = "UPDATE reservas_productos SET entregado = 1, updated_at = NOW() WHERE producto_id = ? AND cliente_id = ? AND entregado = 0";
+      db.query(updateQuery, [producto_id, cliente_id], (err, result) => {
+        if (err) {
+          return res.status(500).json({ mensaje: "Error al marcar como entregado" });
+        }
+        if (result.affectedRows === 0) {
+          return res.status(404).json({ mensaje: "No se pudo marcar como entregado" });
+        }
+        // Notificar al cliente
+        crearNotificacion({
+          usuario_id: cliente_id,
+          emisor_id: barbero_id,
+          tipo: 'producto_entregado',
+          mensaje: JSON.stringify({ producto: reservas[0].producto_nombre, cantidad: reservas[0].cantidad })
+        });
+        res.status(200).json({ mensaje: "Producto marcado como entregado" });
+      });
     });
   });
 };

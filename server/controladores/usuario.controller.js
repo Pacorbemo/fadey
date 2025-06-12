@@ -1,5 +1,5 @@
 const { db } = require("../db/db.config");
-const { validarUsername } = require('../funciones/validaciones');
+const { validarUsername, existeUsername } = require('../funciones/validaciones');
 const enviarEmail = require('../funciones/email');
 const jwt = require('jsonwebtoken');
 const path = require('path');
@@ -11,7 +11,6 @@ exports.getUsuario = (req, res) => {
     "SELECT * FROM Usuarios WHERE id = ?";
   db.query(query, [userId], (err, results) => {
     if (err) {
-      console.error("Error al obtener el usuario:", err);
       return res.status(500).json({ error: "Error al obtener el usuario" });
     }
     if (results.length > 0) {
@@ -26,7 +25,6 @@ exports.getUsuario = (req, res) => {
         email: results[0].email,
         email_verificado: results[0].email_verificado || false,
         enviar_emails: results[0].enviar_emails || false,
-        telefono: results[0].telefono || null,
       });
     } else {
       res.status(404).json({ error: "Usuario no encontrado" });
@@ -34,19 +32,13 @@ exports.getUsuario = (req, res) => {
   });
 };
 
-exports.usuarioExiste = (req, res) => {
+exports.usuarioExiste = async (req, res) => {
   let { username } = req.params;
-
-  const usernameError = validarUsername(username);
-  if (usernameError) {
-    return res.status(400).json({ error: usernameError });
-  }
 
   const query =
     "SELECT id, nombre, username, foto_perfil, bio, localizacion FROM Usuarios WHERE username = ?";
   db.query(query, [username], (err, results) => {
     if (err) {
-      console.error("Error al buscar el usuario:", err);
       return res.status(500).json({ error: "Error al buscar el usuario" });
     }
 
@@ -57,6 +49,16 @@ exports.usuarioExiste = (req, res) => {
     }
   });
 };
+
+exports.validarUsername = async (req, res) => {
+  const { username } = req.params;
+  const noValido = await validarUsername(username);
+  const existe = await existeUsername(username);
+  if (noValido || existe) {
+    return res.status(400).json(noValido || existe);
+  }
+  res.status(200).json({ valido: true });
+}
 
 exports.emailExiste = (req, res) => {
   const { email } = req.params;
@@ -69,25 +71,7 @@ exports.emailExiste = (req, res) => {
   const query = "SELECT 1 FROM Usuarios WHERE email = ? LIMIT 1";
   db.query(query, [email], (err, results) => {
     if (err) {
-      console.error("Error al buscar el usuario:", err);
-      return res.status(500).json({ error: "Error al buscar el usuario" });
-    }
-
-    res.status(200).json({ exists: results.length > 0 });
-  });
-};
-
-exports.telefonoExiste = (req, res) => {
-  const { telefono } = req.params;
-
-  if (!telefono) {
-    return res.status(400).json({ error: "El teléfono es requerido" });
-  }
-
-  const query = "SELECT 1 FROM Usuarios WHERE telefono = ? LIMIT 1";
-  db.query(query, [telefono], (err, results) => {
-    if (err) {
-      console.error("Error al buscar el usuario:", err);
+      // Error al buscar email
       return res.status(500).json({ error: "Error al buscar el usuario" });
     }
 
@@ -107,7 +91,7 @@ exports.putImagenPerfil = (req, res) => {
   const getPhotoQuery = "SELECT foto_perfil FROM Usuarios WHERE id = ?";
   db.query(getPhotoQuery, [userId], (err, results) => {
     if (err) {
-      console.error("Error al obtener la foto actual:", err);
+      // Error al obtener foto de perfil
       return res.status(500).json({ error: "Error al obtener la foto actual" });
     }
 
@@ -127,16 +111,13 @@ exports.putImagenPerfil = (req, res) => {
     const updatePhotoQuery = "UPDATE Usuarios SET foto_perfil = ? WHERE id = ?";
     db.query(updatePhotoQuery, [fotoPerfil, userId], (err) => {
       if (err) {
-        console.error(
-          "Error al guardar la URL de la imagen en la base de datos:",
-          err
-        );
+        // Error al actualizar foto de perfil
         return res.status(500).json({ error: "Error al guardar la imagen" });
       }
 
       res
         .status(200)
-        .json({ message: "Imagen subida correctamente", fotoPerfil });
+        .json({ mensaje: "Imagen subida correctamente", fotoPerfil });
     });
   });
 };
@@ -147,7 +128,6 @@ exports.editarCampo = (req, res) => {
   const camposValidos = [
     "nombre",
     "username",
-    "telefono",
     "email",
     "localizacion",
     "bio",
@@ -174,11 +154,11 @@ exports.editarCampo = (req, res) => {
       const query = `UPDATE Usuarios SET ${campo} = ? WHERE id = ?`;
       db.query(query, [valor, userId], (err, results) => {
         if (err) {
-          console.error(`Error al actualizar el campo ${campo}:`, err);
+          // Error al actualizar campo
           return res.status(500).json({ error: `Error al actualizar ${campo}` });
         }
         if (results.affectedRows > 0) {
-          res.status(200).json({ message: `${campo.charAt(0).toUpperCase() + campo.slice(1)} actualizado correctamente` });
+          res.status(200).json({ mensaje: `${campo.charAt(0).toUpperCase() + campo.slice(1)} actualizado correctamente` });
         } else {
           res.status(404).json({ error: "Usuario no encontrado" });
         }
@@ -194,7 +174,7 @@ exports.editarCampo = (req, res) => {
   const query = `UPDATE Usuarios SET ${campo} = ? WHERE id = ?`;
   db.query(query, [valor, userId], (err, results) => {
     if (err) {
-      console.error(`Error al actualizar el campo ${campo}:`, err);
+      // Error al actualizar campo
       return res.status(500).json({ error: `Error al actualizar ${campo}` });
     }
 
@@ -202,7 +182,7 @@ exports.editarCampo = (req, res) => {
       res
         .status(200)
         .json({
-          message: `${
+          mensaje: `${
             campo.charAt(0).toUpperCase() + campo.slice(1)
           } actualizado correctamente`,
         });
@@ -217,7 +197,7 @@ exports.usuarioExisteById = (id, callback) => {
     "SELECT id, nombre, username, foto_perfil FROM Usuarios WHERE id = ?";
   db.query(query, [id], (err, results) => {
     if (err) {
-      console.error("Error al buscar el usuario:", err);
+      // Error al buscar usuario por id
       return callback(err, null);
     }
     if (results.length > 0) {
@@ -252,9 +232,9 @@ exports.enviarVerificacionEmail = (req, res) => {
       text: `Hola ${username},\n\n¡Bienvenido a Fadey!\n\nPara proteger tu cuenta y acceder a todas las funciones, por favor verifica tu dirección de correo electrónico haciendo clic en el siguiente enlace:\n\n${url}\n\nEste enlace es válido por 24 horas. Si no has solicitado esta verificación, puedes ignorar este mensaje.\n\nGracias por confiar en Fadey.\n\nEl equipo de Fadey`,
       html: htmlTemplate
     })
-      .then(() => res.status(200).json({ message: 'Email de verificación enviado' }))
+      .then(() => res.status(200).json({ mensaje: 'Email de verificación enviado' }))
       .catch((e) => {
-        console.error('Error enviando email:', e);
+        // Error al enviar email de verificación
         res.status(500).json({ error: 'Error enviando email' });
       });
   });
@@ -265,6 +245,7 @@ exports.verificarEmail = (req, res) => {
   const { token } = req.params;
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
+      // Error al verificar email
       return res.status(400).json({ error: 'Token inválido o expirado' });
     }
     const { id, email } = decoded;
@@ -276,7 +257,7 @@ exports.verificarEmail = (req, res) => {
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: 'Usuario no encontrado o email no coincide' });
       }
-      res.status(200).json({ message: 'Email verificado correctamente' });
+      res.status(200).json({ mensaje: 'Email verificado correctamente' });
     });
   });
 };
@@ -293,6 +274,7 @@ exports.cambiarPassword = (req, res) => {
   }
   db.query('SELECT password FROM Usuarios WHERE id = ?', [userId], async (err, results) => {
     if (err || results.length === 0) {
+      // Error al obtener contraseña
       return res.status(500).json({ error: 'Error validando usuario.' });
     }
     const bcrypt = require('bcrypt');
@@ -306,7 +288,7 @@ exports.cambiarPassword = (req, res) => {
       if (err) {
         return res.status(500).json({ error: 'Error actualizando la contraseña.' });
       }
-      res.status(200).json({ message: 'Contraseña cambiada correctamente.' });
+      res.status(200).json({ mensaje: 'Contraseña cambiada correctamente.' });
     });
   });
 };
@@ -323,11 +305,12 @@ exports.recuperarPassword = (req, res) => {
   }
   db.query('SELECT id, username FROM Usuarios WHERE email = ?', [email], (err, results) => {
     if (err) {
+      // Error al buscar usuario por email
       return res.status(500).json({ error: 'Error buscando usuario.' });
     }
     if (results.length === 0) {
       // No revelamos si existe o no
-      return res.status(200).json({ message: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' });
+      return res.status(200).json({ mensaje: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' });
     }
     const { id, username } = results[0];
     const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -342,9 +325,9 @@ exports.recuperarPassword = (req, res) => {
       text: `Hola ${username},\n\nPara restablecer tu contraseña, haz clic en el siguiente enlace:\n${url}\n\nSi no has solicitado este cambio, ignora este mensaje.`,
       html: htmlTemplate
     })
-      .then(() => res.status(200).json({ message: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' }))
+      .then(() => res.status(200).json({ mensaje: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' }))
       .catch((e) => {
-        console.error('Error enviando email:', e);
+        // Error al enviar email de recuperación
         res.status(500).json({ error: 'Error enviando email' });
       });
   });
@@ -366,12 +349,13 @@ exports.restablecerPassword = (req, res) => {
     const nuevaHash = await bcrypt.hash(password, 10);
     db.query('UPDATE Usuarios SET password = ? WHERE id = ? AND email = ?', [nuevaHash, id, email], (err, result) => {
       if (err) {
+        // Error al restablecer contraseña
         return res.status(500).json({ error: 'Error actualizando la contraseña.' });
       }
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: 'Usuario no encontrado.' });
       }
-      res.status(200).json({ message: 'Contraseña restablecida correctamente.' });
+      res.status(200).json({ mensaje: 'Contraseña restablecida correctamente.' });
     });
   });
 };
@@ -401,8 +385,11 @@ exports.enviarConfirmacionEliminacion = (req, res) => {
       subject: 'Confirma la eliminación de tu cuenta',
       html: htmlTemplate
     })
-      .then(() => res.status(200).json({ message: 'Correo de confirmación enviado' }))
-      .catch(() => res.status(500).json({ error: 'No se pudo enviar el correo de confirmación.' }));
+      .then(() => res.status(200).json({ mensaje: 'Correo de confirmación enviado' }))
+      .catch(() => {
+        // Error al enviar confirmación de eliminación
+        res.status(500).json({ error: 'No se pudo enviar el correo de confirmación.' });
+      });
   });
 };
 
@@ -414,6 +401,7 @@ exports.confirmarEliminacion = (req, res) => {
   const jwt = require('jsonwebtoken');
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
+      // Error al confirmar eliminación
       return res.status(400).json({ error: 'Token inválido o expirado.' });
     }
     const { id, email } = decoded;
@@ -424,7 +412,7 @@ exports.confirmarEliminacion = (req, res) => {
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: 'Usuario no encontrado.' });
       }
-      res.status(200).json({ message: 'Cuenta eliminada correctamente.' });
+      res.status(200).json({ mensaje: 'Cuenta eliminada correctamente.' });
     });
   });
 };

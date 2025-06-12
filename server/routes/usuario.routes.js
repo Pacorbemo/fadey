@@ -6,8 +6,8 @@ const autenticarToken = require('../middlewares/autenticarToken');
 
 router.get('/', autenticarToken, usuarioController.getUsuario);
 router.get('/username/:username', usuarioController.usuarioExiste);
+router.get('/validar/:username', usuarioController.validarUsername);
 router.get('/email/:email', usuarioController.emailExiste);
-router.get('/telefono/:telefono', usuarioController.telefonoExiste);
 router.put('/imagen-perfil', autenticarToken, upload.single('imagen'), usuarioController.putImagenPerfil);
 router.put('/', autenticarToken, usuarioController.editarCampo);
 router.put('/password', autenticarToken, usuarioController.cambiarPassword);

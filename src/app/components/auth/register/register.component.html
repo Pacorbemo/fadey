@@ -2,6 +2,7 @@
 <div class="form-container">
   <p class="title">Registro</p>
 
+  <app-toast></app-toast>
   <form (ngSubmit)="registrarUsuario()" class="form">
     
     <div class="input-group">
@@ -43,24 +44,6 @@
       />
       @if(!emailValido) {
         <p class="error">{{ mensajeErrorEmail }}</p>
-      }
-    </div>
-
-    <div class="input-group">
-      <label for="telefono">Teléfono</label>
-      <input 
-        type="tel" 
-        id="telefono" 
-        name="telefono" 
-        [(ngModel)]="telefono" 
-        required 
-        minlength="9" 
-        maxlength="15" 
-        pattern="^[0-9]+$" 
-        (blur)="verificarTelefono()" 
-      />
-      @if(!telefonoValido) {
-        <p class="error">{{ mensajeErrorTelefono }}</p>
       }
     </div>
 
@@ -110,7 +93,7 @@
     <button 
       type="submit" 
       class="sign" 
-      [disabled]="!usernameValido || !emailValido || !telefonoValido"
+      [disabled]="!usernameValido || !emailValido || username === '' || email === '' || password === '' || confirmPassword === ''"
     >
       Registrar
     </button>

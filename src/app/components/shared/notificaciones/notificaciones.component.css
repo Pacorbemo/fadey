@@ -109,3 +109,11 @@ h3{
   border-radius: 50%;
   vertical-align: middle;
 }
+
+@media (max-width: 600px) {
+  .notificaciones-dropdown {
+    min-width: 100px;
+    width: 60vw;
+    right: -20px;
+  }
+}

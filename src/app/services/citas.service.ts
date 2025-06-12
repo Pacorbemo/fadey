@@ -133,13 +133,12 @@ export class CitasService {
     );
   }
 
-  // Obtener las citas de un USUARIO
-  getCitasUsuario(): Observable<any> {
-    return this.httpService.getToken('/citas/cliente');
+  getCitasBarbero(params: { limit?: number; offset?: number } = {}): Observable<any> {
+    return this.httpService.getToken('/citas/barbero', params);
   }
 
-  getCitasBarbero(): Observable<any> {
-    return this.httpService.getToken('/citas/barbero');
+  getCitasUsuario(params: { limit?: number; offset?: number } = {}): Observable<any> {
+    return this.httpService.getToken('/citas/cliente', params);
   }
 
   purgarDiasPasados(
@@ -192,5 +191,9 @@ export class CitasService {
   confirmarReserva(idBarbero: number, dia: Date): Observable<any> {
     const body = { idBarbero, dia };
     return this.httpService.postToken('/citas/confirmar', body);
+  }
+
+  generarCitasSemana(inicio: Date, fin: Date): Observable<any> {
+    return this.httpService.postToken('/citas/generar-semana', { inicio, fin });
   }
 }

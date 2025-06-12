@@ -32,7 +32,7 @@ function actualizarEstadoSolicitud(req, estado, res, db) {
         return res.status(404).json({ error: "Solicitud no encontrada o no tienes permiso para procesarla" });
       }
 
-      res.status(200).json({ message: `Solicitud ${estado}` });
+      res.status(200).json({ mensaje: `Solicitud ${estado}` });
       crearNotificacion({
         usuario_id: results[0].cliente_id,
         emisor_id: idBarbero,
@@ -62,7 +62,7 @@ function eliminarRelacion(req, res, db) {
       return res.status(404).json({ error: "Relación no encontrada o no tienes permiso para eliminarla" });
     }
 
-    res.status(200).json({ message: "Relación eliminada correctamente" });
+    res.status(200).json({ mensaje: "Relación eliminada correctamente" });
   });
 }
 

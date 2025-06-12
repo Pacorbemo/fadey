@@ -3,42 +3,42 @@ import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { DatosService } from '../../../services/datos.service';
 import { Router, RouterLink } from '@angular/router';
+import { ToastService } from '../../../services/toast.service';
+import { ToastComponent } from '../../shared/toast/toast.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ FormsModule, RouterLink ],
+  imports: [ FormsModule, RouterLink, ToastComponent ],
 })
 export class RegisterComponent {
   username: string = '';
   nombre: string = '';
   email: string = '';
-  telefono: string = '';
   barbero: boolean = true;
   password: string = '';
   confirmPassword: string = '';
 
   usernameValido: boolean = true; 
   emailValido: boolean = true;
-  telefonoValido: boolean = true;
 
   mensajeErrorUsername: string = '';
   mensajeErrorEmail: string = '';
-  mensajeErrorTelefono: string = '';
 
   esCliente:boolean = !this.barbero;
 
   constructor(
     private usuariosService: UsuariosService,
     private datosService: DatosService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {}
 
   registrarUsuario(): void {
-    if (this.password !== this.confirmPassword || !this.usernameValido || !this.emailValido) {
-      alert('Corrige los errores antes de continuar.');
+    if (this.password !== this.confirmPassword) {
+      this.toastService.mostrar('Las contraseñas no coinciden.');
       return;
     }
 
@@ -47,22 +47,24 @@ export class RegisterComponent {
       nombre: this.nombre.trim(),
       email: this.email.trim(),
       barbero: this.barbero,
-      telefono: this.telefono.trim(),
       password: this.password
     };
 
-    this.usuariosService.registrar(usuario).subscribe(
-      (response) => {
+    this.usuariosService.registrar(usuario).subscribe({
+      next: (response) => {
         localStorage.setItem('token', response.token);
         this.datosService.tokenUsuario = response.token;
         localStorage.setItem('user', JSON.stringify(response.user));
         this.datosService.user = response.user;
         this.router.navigate(['/mis-citas']);
       },
-      (error) => {
-        alert('Error al registrar usuario');
+      error: (error) => {
+        const err = error.error?.error;
+        let mensaje = typeof err === 'string' ? err : err?.mensaje || 'Ha ocurrido un error inesperado. Inténtalo de nuevo.';
+        let sugerencia = err?.sugerencia || '';
+        this.toastService.mostrar(mensaje + (sugerencia ? ' ' + sugerencia : ''));
       }
-    );
+    });
   }
 
   verificarUsername(): void {
@@ -72,17 +74,16 @@ export class RegisterComponent {
       return;
     }
 
-    this.usuariosService.verificarUsername(this.username).subscribe(
-      (response) => {
-        this.usernameValido = !response.exists;
-        this.mensajeErrorUsername = response.exists ? 'El username ya está en uso.' : '';
+    this.usuariosService.validarUsername(this.username).subscribe({
+      next: (response) => {
+        this.usernameValido = response.valido;
+        this.mensajeErrorUsername = '';
       },
-      (error) => {
-        console.error('Error al verificar el username:', error);
+      error: (error) => {
         this.usernameValido = false;
-        this.mensajeErrorUsername = 'Error al verificar el username.';
+        this.mensajeErrorUsername = error.error;
       }
-    );
+    });
   }
 
   verificarEmail(): void {
@@ -110,35 +111,6 @@ export class RegisterComponent {
         console.error('Error al verificar el correo electrónico:', error);
         this.emailValido = false;
         this.mensajeErrorEmail = 'Error al verificar el correo electrónico.';
-      }
-    );
-  }
-
-  verificarTelefono(): void {
-    this.telefono = this.telefono.trim();
-  
-    if (this.telefono === '') {
-      this.telefonoValido = false;
-      this.mensajeErrorTelefono = 'El teléfono no puede estar vacío.';
-      return;
-    }
-  
-    const telefonoPattern = /^[0-9]{9,15}$/;
-    if (!telefonoPattern.test(this.telefono)) {
-      this.telefonoValido = false;
-      this.mensajeErrorTelefono = 'El teléfono debe contener entre 9 y 15 dígitos y solo números.';
-      return;
-    }
-
-    this.usuariosService.verificarTelefono(this.telefono).subscribe(
-      (response) => {
-        this.telefonoValido = !response.exists;
-        this.mensajeErrorTelefono = response.exists ? 'El teléfono ya está en uso.' : '';
-      },
-      (error) => {
-        console.error('Error al verificar el teléfono:', error);
-        this.telefonoValido = false;
-        this.mensajeErrorTelefono = 'Error al verificar el teléfono.';
       }
     );
   }

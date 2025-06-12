@@ -10,7 +10,7 @@ import { CargandoService } from '../../../../services/cargando.service';
   template: `
     @if(!cargandoService.cargando){
       @if(citas.length){
-        <mis-citas-tabla [citas]="citas"/>
+        <mis-citas-tabla [citas]="citas" [pagina]="pagina" [limite]="limite" (paginaCambiada)="cambiarPagina($event)" />
       }@else {
         <h3>No tienes citas pendientes</h3>
       }
@@ -19,15 +19,26 @@ import { CargandoService } from '../../../../services/cargando.service';
 })
 export class CitasClienteComponent {
   citas: {id:number, fecha_hora : Date, usuario_nombre : string, usuario_username:string}[] = [];
+  pagina = 0;
+  limite = 20;
   constructor(
     private citasService: CitasService,
     public cargandoService: CargandoService
-  ){}
+ ) {}
 
   ngOnInit(): void {
-    this.citasService.getCitasUsuario().subscribe((citas) => {
+    this.cargarCitas();
+  }
+
+  cargarCitas() {
+    this.citasService.getCitasUsuario({ limit: this.limite, offset: this.pagina * this.limite }).subscribe((citas) => {
       this.citas = citas;
       this.cargandoService.cargando = false;
     });
+  }
+
+  cambiarPagina(pagina: number) {
+    this.pagina = pagina;
+    this.cargarCitas();
   }
 }

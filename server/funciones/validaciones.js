@@ -48,75 +48,85 @@ const reservados = [
 ];
 
 function validarUsername(username) {
-  if (!username || username.trim() === "") {
-    return "El nombre de usuario es requerido";
-  }
-  username = unicode.nfkc(username);
-  if (username.length < 3 || username.length > 20) {
-    return "El nombre de usuario debe tener entre 3 y 20 caracteres";
-  }
-  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-    return "El nombre de usuario solo puede contener letras, números y guiones bajos";
-  }
-  if (username.startsWith("_") || username.endsWith("_")) {
-    return "El nombre de usuario no puede comenzar o terminar con un guion bajo";
-  }
-  if (
-    /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(username) ||
-    /^(http|www\.|https)/i.test(username)
-  ) {
-    return "El nombre de usuario es inválido";
-  }
-  if (/^\d+$/.test(username)) {
-    return "El nombre de usuario no puede ser solo números";
-  }
-  if (
-    reservados.includes(username.toLowerCase()) ||
-    oficiales.includes(username.toLowerCase())
-  ) {
-    return "El nombre de usuario no está disponible";
-  }
-  db.query(
-	"SELECT COUNT(*) AS count FROM Usuarios WHERE username = ?",
-	[username],
-	(err, results) => {
-	  if (err) {
-		console.error("Error al validar el nombre de usuario:", err);
-		return "Error al validar el nombre de usuario";
-	  }
-	  if (results[0].count > 0) {
-		return "El nombre de usuario ya está en uso";
-	  }
-	  return null;
-	}
-  );
+  return new Promise((resolve) => {
+    if (!username || username.trim() === "") {
+      return resolve("El nombre de usuario es requerido");
+    }
+    username = unicode.nfkc(username);
+    if (username.length < 3 || username.length > 20) {
+      return resolve("El nombre de usuario debe tener entre 3 y 20 caracteres");
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      return resolve("El nombre de usuario solo puede contener letras, números y guiones bajos");
+    }
+    if (username.startsWith("_") || username.endsWith("_")) {
+      return resolve("El nombre de usuario no puede comenzar o terminar con un guion bajo");
+    }
+    if (
+      /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(username) ||
+      /^(http|www\.|https)/i.test(username)
+    ) {
+      return resolve("El nombre de usuario es inválido");
+    }
+    if (/^\d+$/.test(username)) {
+      return resolve("El nombre de usuario no puede ser solo números");
+    }
+    if (
+      reservados.includes(username.toLowerCase()) ||
+      oficiales.includes(username.toLowerCase())
+    ) {
+      return resolve("El nombre de usuario no está disponible");
+    }
+    return resolve(null);
+  });
 }
 
+function existeUsername(username) {
+  return new Promise((resolve) => {
+  db.query(
+      "SELECT COUNT(*) AS count FROM Usuarios WHERE username = ?",
+      [username],
+      (err, results) => {
+        if (err) {
+          return resolve("Error al validar el nombre de usuario");
+        }
+        if (results[0].count > 0) {
+          return resolve("El nombre de usuario ya está en uso");
+        }
+        return resolve(null);
+      }
+    );
+  });
+}
+
+
 function validarEmail(email) {
-  if (!email || email.trim() === "") {
-	return "El email es requerido";
-  }
-  const emailRegex = /^\S+@\S+\.\S+$/;
-  if (!emailRegex.test(email)) {
-	return "El email no es válido";
-  }
-	db.query(
-		"SELECT COUNT(*) AS count FROM Usuarios WHERE email = ?",
-		[email],
-		(err, results) => {
-			if (err) {
-				console.error("Error al validar el email:", err);
-				return "Error al validar el email";
-			}
-			if (results[0].count > 0) {
-				return "El email ya está en uso";
-			}
-			return null;
-		}
-	);
+  return new Promise((resolve) => {
+    if (!email || email.trim() === "") {
+      return resolve("El email es requerido");
+    }
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+      return resolve("El email no es válido");
+    }
+    db.query(
+      "SELECT COUNT(*) AS count FROM Usuarios WHERE email = ?",
+      [email],
+      (err, results) => {
+        if (err) {
+          return resolve("Error al validar el email");
+        }
+        if (results[0].count > 0) {
+          return resolve("El email ya está en uso");
+        }
+        return resolve(null);
+      }
+    );
+  });
 }
 
 module.exports = {
 validarUsername,
+existeUsername,
 validarEmail
 };

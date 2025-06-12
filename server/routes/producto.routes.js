@@ -9,7 +9,8 @@ router.get('/reservados', autenticarToken, productoController.getReservadosByBar
 
 router.post('/', autenticarToken, upload.single('foto'), productoController.addProducto);
 router.post('/reservar', autenticarToken, productoController.reservarProducto);
+router.post('/marcar-entregado', autenticarToken, productoController.marcarProductoEntregado);
 
 router.put('/:id', autenticarToken, upload.single('foto'), productoController.updateProducto);
 
-module.exports = router;	
+module.exports = router;

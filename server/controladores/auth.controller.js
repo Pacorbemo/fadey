@@ -6,43 +6,40 @@ const { validarUsername, validarEmail } = require('../funciones/validaciones');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 exports.registro = async (req, res) => {
-  let { nombre, username, telefono, barbero, email, password } = req.body;
-  if (!nombre || !username || !telefono || !email || !password) {
-    return res.status(400).json({ error: "Información insuficiente" });
+  let { nombre, username, barbero, email, password } = req.body;
+  if (!nombre || !username || !email || !password) {
+    return res.status(400).json({ mensaje: "Información insuficiente" });
   }
 
   if(nombre.length > 50) {
-    return res.status(400).json({ error: "El nombre no puede tener más de 50 caracteres" });
-  }
-  
-  if (!/^\d{7,15}$/.test(telefono)) {
-    return res.status(400).json({ error: "El teléfono no es válido" });
+    return res.status(400).json({ mensaje: "El nombre no puede tener más de 50 caracteres" });
   }
   
   if (typeof barbero != 'boolean') {
-    return res.status(400).json({ error: "El campo 'barbero' debe ser un booleano" });
+    return res.status(400).json({ mensaje: "El campo 'barbero' debe ser un booleano" });
   }
   
   if(password.length < 6 || password.length > 32) {
-    return res.status(400).json({ error: "La contraseña debe tener entre 6 y 32 caracteres" });
+    return res.status(400).json({ mensaje: "La contraseña debe tener entre 6 y 32 caracteres" });
   }
   
-  if (usernameError = validarUsername(username)) {
-    return res.status(400).json({ error: usernameError });
+  const usernameError = await validarUsername(username);
+  if (usernameError) {
+    return res.status(400).json({ mensaje: usernameError });
   }
 
-  if (emailError = validarEmail(email)) {
-    return res.status(400).json({ error: emailError });
+  const emailError = await validarEmail(email);
+  if (emailError) {
+    return res.status(400).json({ mensaje: emailError });
   }
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const query =
-      "INSERT INTO Usuarios (nombre, username, telefono, barbero, email, password) VALUES (?, ?, ?, ?, ?, ?)";
-    db.query(query, [nombre, username, telefono, barbero, email, hashedPassword], (err, result) => {
+      "INSERT INTO Usuarios (nombre, username, barbero, email, password) VALUES (?, ?, ?, ?, ?)";
+    db.query(query, [nombre, username, barbero, email, hashedPassword], (err, result) => {
       if (err) {
-        console.error("Error al registrar usuario:", err);
-        return res.status(500).json({ error: "Error al registrar usuario" });
+        return res.status(500).json({ mensaje: "Error al registrar usuario" });
       }
 
       const userId = result.insertId;
@@ -57,32 +54,35 @@ exports.registro = async (req, res) => {
       });
     });
   } catch (error) {
-    console.error("Error al hashear la contraseña:", error);
-    res.status(500).json({ error: "Error al procesar la contraseña" });
+    res.status(500).json({ mensaje: "Error al procesar la contraseña" });
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = (req, res) => {
   const { username, password } = req.body;
-
   if (!username || !password) {
-    return res.status(400).json({ error: "Información insuficiente" });
+    return res.status(400).json({
+      mensaje: 'Debes rellenar todos los campos.',
+      sugerencia: 'Por favor, introduce tu usuario y contraseña.'
+    });
   }
 
   const query = "SELECT * FROM Usuarios WHERE username = ?";
   db.query(query, [username], async (err, results) => {
     if (err) {
-      console.error("Error al buscar usuario:", err);
-      return res.status(500).json({ error: "Error al buscar usuario" });
+      return res.status(500).json({ mensaje: "Error al buscar usuario" });
     }
     if (results.length === 0) {
-      return res.status(400).json({ error: "Usuario no encontrado" });
+      return res.status(400).json({ mensaje: "El usuario no existe" });
     }
 
     const usuario = results[0];
-    const passwordMatch = await bcrypt.compare(password, usuario.password);
-    if (!passwordMatch) {
-      return res.status(400).json({ error: "Contraseña incorrecta" });
+    const coincidePassword = await bcrypt.compare(password, usuario.password);
+    if (!coincidePassword) {
+      return res.status(401).json({
+        mensaje: 'Usuario o contraseña incorrectos',
+        sugerencia: '¿Olvidaste tu contraseña? Usa el enlace para recuperarla.'
+      });
     }
 
     const token = jwt.sign(
@@ -101,7 +101,6 @@ exports.login = async (req, res) => {
         email: usuario.email,
         bio: usuario.bio || '',
         localizacion: usuario.localizacion || '',
-        telefono: usuario.telefono || '',
         enviar_emails: usuario.enviar_emails || false,
         email_verificado: usuario.email_verificado || false
       }

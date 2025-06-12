@@ -82,6 +82,9 @@
           }
         </div>
       }
+      @if(datosService.user.rol === 'barbero') {
+        <app-preferencias-horario-barbero />
+      }
       <h3>Opciones de cuenta</h3>
       <a routerLink="/cambiar-password" class="btn-opciones">
         <img src="/svgs/icono-candado.svg" alt="Cambiar contraseña">
@@ -111,13 +114,15 @@
       <button type="button" class="btn-opciones"
         (click)="cambiarTipoCuenta()">
         <img src="/svgs/icono-cambiar-cuenta.svg" alt="Cambiar tipo de cuenta">
-        Cambiar cuenta a {{ datosService.user.rol === 'barbero' ? 'Barbero' : 'Cliente' }}
+        Cambiar cuenta a {{ datosService.user.rol === 'barbero' ? 'Cliente' : 'Barbero' }}
       </button>
+      
       <button type="button" class="btn-opciones" (click)="mostrarDialogoEliminar = true">
         <img src="/svgs/icono-papelera.svg" alt="Eliminar cuenta">
         Eliminar cuenta
       </button>
     </div>
+
   </aside>
 </section>
 

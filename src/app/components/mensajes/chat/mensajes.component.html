@@ -1,6 +1,10 @@
 <div class="chat-container">
-  @if (!cargandoService.cargando) {
-    <div class="mensajes" #mensajesContainer>
+    <div class="mensajes" #mensajesContainer (scroll)="onScrollMensajes($event)">
+      @if (!mensajesCargadosCompletos) {
+        <button class="btn-cargar-mas" (click)="cargarMasMensajes()" [disabled]="cargandoMasMensajes">
+          {{ cargandoMasMensajes ? 'Cargando...' : 'Cargar más mensajes' }}
+        </button>
+      }
       @for (grupo of mensajesAgrupadosPorDia(); track grupo.fecha) {
         <div class="separador-dia">
           <span>{{ grupo.fecha }}</span>
@@ -26,5 +30,5 @@
       />
       <button (click)="enviarMensaje()">Enviar</button>
     </div>
-  }
+  
 </div>

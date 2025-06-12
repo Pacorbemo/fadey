@@ -349,3 +349,28 @@ form {
 }
 
 
+@media (max-width: 600px) {
+  section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .foto-perfil-container {
+    width: 20vw;
+    height: 20vw;
+  }
+
+  aside {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    font-size: 14px;
+  }
+}

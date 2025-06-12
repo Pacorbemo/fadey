@@ -1,0 +1,11 @@
+@if (visible && mensaje) {
+  <div class="toast show">
+    <span class="toast-icon">&#9888;</span>
+    <div class="toast-text">
+    {{ mensaje }}
+    @if (sugerencia) {
+        <div class="toast-hint">{{ sugerencia }}</div>
+    }
+    </div>
+  </div>
+}

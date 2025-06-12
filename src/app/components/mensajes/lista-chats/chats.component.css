@@ -2,8 +2,7 @@ ul {
 	list-style: none;
 	padding: 0;
 	margin: 0 auto;
-	max-width: 600px;
-	width: 100%;
+	width: 40vw;
 	background: #181a20;
 	border-radius: 18px;
 	box-shadow: 0 4px 24px rgba(0,0,0,0.18);
@@ -15,7 +14,7 @@ li, .chat-item {
 	width: 100%;
 	display: flex;
 	align-items: center;
-	padding: 18px 18px;
+	padding: 1.4vw;
 	box-sizing: border-box;
 	background: transparent;
 	border-bottom: 1px solid #23263a;
@@ -48,23 +47,26 @@ li:hover, .chat-item:hover {
 }
 
 .username-barber {
-	font-size: 1.08rem;
+	font-size: 1.1vw;
 	font-weight: 700;
 	color: #3a5be0;
 	letter-spacing: 0.5px;
 	font-family: 'Inter', sans-serif;
 	margin-bottom: 2px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .ultimo-mensaje {
-	font-size: 0.98rem;
+	font-size: .9vw;
 	color: #e0e6f0;
 	opacity: 0.85;
 	margin-bottom: 4px;
 }
 
 .fecha {
-	font-size: 0.85rem;
+	font-size: 0.9vw;
 	color: #7a7e8a;
 	align-self: flex-end;
 }
@@ -77,6 +79,48 @@ li:hover, .chat-item:hover {
 	justify-content: flex-start;
 	padding: 32px 0;
 	background: #181a20;
+}
+
+.badge-noleidos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #ff5252 0%, #d32f2f 100%);
+  color: #fff;
+  font-size: 0.92em;
+  font-weight: 700;
+  border-radius: 50px;
+  min-width: 26px;
+  height: 22px;
+  padding: 0 9px;
+  margin-left: auto;
+  box-shadow: 0 2px 8px #ff525233, 0 1px 0 #fff2 inset;
+  border: 1.5px solid #fff3;
+  letter-spacing: 0.02em;
+  transition: background 0.18s, box-shadow 0.18s;
+  position: relative;
+  top: -2px;
+  z-index: 2;
+  animation: badgePop 0.3s cubic-bezier(.4,0,.2,1);
+}
+.badge-noleidos::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 2px; right: 2px; bottom: 2px; left: 2px;
+  border-radius: 50px;
+  background: linear-gradient(120deg, #fff2 10%, transparent 80%);
+  opacity: 0.13;
+  pointer-events: none;
+}
+.badge-noleidos:hover {
+  background: linear-gradient(90deg, #ff7979 0%, #e53935 100%);
+  box-shadow: 0 4px 16px #ff525244, 0 2px 0 #fff2 inset;
+}
+@keyframes badgePop {
+  0% { transform: scale(0.7); opacity: 0; }
+  70% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 @media (max-width: 600px) {

@@ -114,3 +114,25 @@ button:hover {
   color: #111;
   border-color: #fff;
 }
+
+@media (max-width: 600px) {
+  table {
+    width: 90vw;
+  }
+
+  td{
+    padding: 2px;
+  }
+
+  .botones-cambio-semana {
+    gap: 10px;
+  }
+  
+  .botones-cambio-semana button {
+    font-size: 1.2em;
+  }
+
+  h2{
+    margin: 0.3vw 0 1vw 0;
+  }
+}

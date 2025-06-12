@@ -4,6 +4,8 @@ const { actualizarEstadoSolicitud, eliminarRelacion } = require('../funciones/re
 
 exports.getRelaciones = (req, res) => {
   const idUsuario = req.user.id;
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT 
       Relaciones.id,
@@ -13,11 +15,11 @@ exports.getRelaciones = (req, res) => {
       Relaciones.fecha_creacion
     FROM Relaciones
     JOIN Usuarios ON Relaciones.cliente_id = Usuarios.id
-    WHERE Relaciones.barbero_id = ? OR Relaciones.cliente_id = ?;
+    WHERE Relaciones.barbero_id = ? OR Relaciones.cliente_id = ?
+    LIMIT ? OFFSET ?;
   `;
-  db.query(query, [idUsuario, idUsuario], (err, results) => {
+  db.query(query, [idUsuario, idUsuario, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener relaciones:", err);
       return res.status(500).json({ error: "Error al obtener relaciones" });
     }
     res.status(200).json(results);
@@ -26,6 +28,8 @@ exports.getRelaciones = (req, res) => {
 
 exports.getRelacionesCliente = (req, res) => {
   const idUsuario = req.user.id;
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT 
       Relaciones.id,
@@ -35,11 +39,11 @@ exports.getRelacionesCliente = (req, res) => {
       Relaciones.fecha_creacion
     FROM Relaciones
     JOIN Usuarios ON Relaciones.barbero_id = Usuarios.id
-    WHERE Relaciones.cliente_id = ?;
+    WHERE Relaciones.cliente_id = ?
+    LIMIT ? OFFSET ?;
   `;
-  db.query(query, [idUsuario], (err, results) => {
+  db.query(query, [idUsuario, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener relaciones:", err);
       return res.status(500).json({ error: "Error al obtener relaciones" });
     }
     res.status(200).json(results);
@@ -48,6 +52,8 @@ exports.getRelacionesCliente = (req, res) => {
 
 exports.getRelacionesBarbero = (req, res) => {
   const idUsuario = req.user.id;
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT 
       Relaciones.id,
@@ -57,11 +63,11 @@ exports.getRelacionesBarbero = (req, res) => {
       Relaciones.fecha_creacion
     FROM Relaciones
     JOIN Usuarios ON Relaciones.cliente_id = Usuarios.id
-    WHERE Relaciones.barbero_id = ?;
+    WHERE Relaciones.barbero_id = ?
+    LIMIT ? OFFSET ?;
   `;
-  db.query(query, [idUsuario], (err, results) => {
+  db.query(query, [idUsuario, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener relaciones:", err);
       return res.status(500).json({ error: "Error al obtener relaciones" });
     }
     res.status(200).json(results);
@@ -70,6 +76,8 @@ exports.getRelacionesBarbero = (req, res) => {
 
 exports.getSolicitudes = (req, res) => {
   const idUsuario = req.user.id;
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT 
       Relaciones.id,
@@ -79,11 +87,11 @@ exports.getSolicitudes = (req, res) => {
       Relaciones.fecha_creacion
     FROM Relaciones
     JOIN Usuarios ON Relaciones.cliente_id = Usuarios.id
-    WHERE Relaciones.barbero_id = ? AND Relaciones.estado = 'pendiente';
+    WHERE Relaciones.barbero_id = ? AND Relaciones.estado = 'pendiente'
+    LIMIT ? OFFSET ?;
   `;
-  db.query(query, [idUsuario], (err, results) => {
+  db.query(query, [idUsuario, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener solicitudes:", err);
       return res.status(500).json({ error: "Error al obtener solicitudes" });
     }
     res.status(200).json(results);
@@ -111,7 +119,6 @@ exports.solicitarRelacion = (req, res) => {
   
   db.query(idQuery, [userBarbero], (err, results) => {
     if (err) {
-      console.error("Error al buscar el barbero:", err);
       return res.status(500).json({ error: "Error al buscar el barbero" });
     }
     if (results.length === 0) {
@@ -121,7 +128,6 @@ exports.solicitarRelacion = (req, res) => {
     
     db.query(checkQuery, [idCliente, idBarbero], (err, results) => {
       if (err) {
-        console.error("Error al comprobar relación:", err);
         return res.status(500).json({ error: "Error al comprobar la relación" });
       }
       if (results.length > 0) {
@@ -129,10 +135,9 @@ exports.solicitarRelacion = (req, res) => {
       }
       db.query(insertQuery, [idCliente, idBarbero], (err, result) => {
         if (err) {
-          console.error("Error al solicitar relación:", err);
           return res.status(500).json({ error: "Error al solicitar relación" });
         }
-        res.status(200).json({ message: "Solicitud enviada" });
+        res.status(200).json({ mensaje: "Solicitud enviada" });
         crearNotificacion({
           usuario_id: idBarbero,
           emisor_id: idCliente,
@@ -158,7 +163,6 @@ exports.comprobarRelacion = (req, res) => {
   `;
   db.query(query, [idCliente, idBarbero], (err, results) => {
     if (err) {
-      console.error("Error al comprobar la relación:", err);
       return res.status(500).json({ error: "Error al comprobar la relación" });
     }
 

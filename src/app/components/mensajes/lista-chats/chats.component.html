@@ -8,7 +8,11 @@
 			     alt="Avatar"
 			/>
 			<div class="info-chat">
-				<span class="username-barber">{{ chat.username }}</span>
+				<span class="username-barber">{{ chat.username }}
+          @if(chat.no_leidos && chat.no_leidos > 0) {
+            <span class="badge-noleidos">{{ chat.no_leidos }}</span>
+          }
+        </span>
 				<span class="ultimo-mensaje">{{ chat.ultimo_mensaje }}</span>
 				<span class="fecha">
 					{{ hoy(chat.ultima_fecha) 

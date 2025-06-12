@@ -1,11 +1,12 @@
 <div class="productos-container">
+	<app-toast></app-toast>
 	@for(producto of productos; track producto.id) {
     <div class="producto-card">
       <img [src]="producto.foto | uploads" alt="{{ producto.nombre }}">
       <div class="producto-info">
         <h2>{{ producto.nombre }}</h2>
         <p>{{ producto.descripcion }}</p>
-        <p>Precio: {{ producto.precio }}</p>
+        <p>Precio: {{ producto.precio }}€</p>
         <p>Stock: {{ producto.stock }}</p>
       </div>
       <div class="reserva">

@@ -1,0 +1,63 @@
+.preferencias-horario {
+  background: #23272f;
+  border-radius: 10px;
+  padding: 1.5em;
+  color: #eaf0fa;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.preferencias-horario h3 {
+  margin-bottom: 1em;
+}
+.preferencias-horario table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+.preferencias-horario th, .preferencias-horario td {
+  padding: 0.5em 0.7em;
+  text-align: center;
+}
+.preferencias-horario th {
+  background: #2c3440;
+}
+.preferencias-horario tr:nth-child(even) {
+  background: #262b33;
+}
+.acciones-horario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 0.5em;
+}
+.acciones-horario button {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5em 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.acciones-horario button:hover {
+  background: #388e3c;
+}
+.mensaje-horario {
+  color: #4caf50;
+  margin-top: 0.5em;
+}
+
+@media (max-width: 600px) {
+  .preferencias-horario table {
+    font-size: 0.9em;
+  }
+  .acciones-horario{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .acciones-horario button {
+    padding: 0.4em 1em;
+    font-size: 0.9em;
+  }
+}

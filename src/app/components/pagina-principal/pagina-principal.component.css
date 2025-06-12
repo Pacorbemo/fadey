@@ -19,7 +19,7 @@
 
 h1{
 	font-family: Montserrat, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
-	font-size: 4.2rem;
+	font-size: 4vw;
 }
 
 .form-control{
@@ -28,10 +28,12 @@ h1{
 
 .input {
 	width: 100%;
+	height: 3rem;
 	font-family: inherit;
+	font-size: 1vw;
 	background-color: white;
 	color: black;
-	height: 3rem;
+	height: 2.5vw;
 	padding: 12px;
 	border-radius: 12px;
 	border: 1.5px solid lightgrey;
@@ -70,6 +72,49 @@ h1{
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
-	gap: 50px;
+	gap: 2.4vw;
 	padding: 20px 0;
 }
+
+@media (max-width: 600px) {
+  .container {
+    width: 100%;
+    min-width: 0;
+  }
+  .main {
+	width: auto;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 0.5em;
+    gap: 2em;
+  }
+  .cards {
+    margin-top: 2vh;
+    width: 100%;
+    padding: 0;
+  }
+  .card-row {
+	width: 100%;
+    flex-direction: row;
+    gap: 18px;
+    padding: 0 0 18px 0;
+    align-items: stretch;
+  }
+  h1 {
+    font-size: 2.1rem;
+    text-align: center;
+    margin: 0.2em 0 0.7em 0;
+  }
+  .form-control {
+    width: 70%;
+    min-width: 0;
+    margin-bottom: 1em;
+  }
+  .input {
+    height: 2.0rem;
+    font-size: 0.8em;
+    padding: 10px;
+    border-radius: 8px;
+  }
+}
+

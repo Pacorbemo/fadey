@@ -11,7 +11,6 @@ exports.crearNotificacion = (req, res) => {
   `;
   db.query(query, [usuario_id, emisor_id || null, mensaje || null, tipo], (err, result) => {
     if (err) {
-      console.error("Error al crear notificación:", err);
       return res.status(500).json({ error: "Error al crear notificación" });
     }
     res.status(201).json({ id: result.insertId });
@@ -20,17 +19,18 @@ exports.crearNotificacion = (req, res) => {
 
 exports.obtenerNotificaciones = (req, res) => {
   const usuario_id = req.user.id;
+  const limit = parseInt(req.query.limit) || 20;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT n.*, u.username AS username
     FROM notificaciones n
     LEFT JOIN usuarios u ON n.emisor_id = u.id
     WHERE n.usuario_id = ?
     ORDER BY n.fecha DESC
-    LIMIT 10
+    LIMIT ? OFFSET ?
   `;
-  db.query(query, [usuario_id], (err, results) => {
+  db.query(query, [usuario_id, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener notificaciones:", err);
       return res.status(500).json({ error: "Error al obtener notificaciones" });
     }
     res.json(
@@ -52,7 +52,6 @@ exports.marcarLeida = (req, res) => {
     [id],
     (err) => {
       if (err) {
-        console.error("Error al marcar notificación como leída:", err);
         return res.status(500).json({ error: "Error al actualizar notificación" });
       }
       res.json({ success: true });
@@ -67,7 +66,6 @@ exports.marcarTodasLeidas = (req, res) => {
     [usuario_id],
     (err, result) => {
       if (err) {
-        console.error("Error al marcar todas las notificaciones como leídas:", err);
         return res.status(500).json({ error: "Error al actualizar notificaciones" });
       }
       res.json({ success: true, updated: result.affectedRows });

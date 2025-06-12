@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UsuariosService } from '../../../services/usuarios.service';
-import { CargandoService } from '../../../services/cargando.service';
-import { Usuario, usuarioVacio } from '../../../interfaces/usuario.interface';
+ import { Usuario, usuarioVacio } from '../../../interfaces/usuario.interface';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -38,11 +37,15 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
   receptor: Usuario = usuarioVacio;
   @ViewChild('mensajesContainer') contenedorMensajes!: ElementRef;
   private debeHacerScroll = false;
+  mensajesPaginadosOffset: number = 0;
+  mensajesPaginadosLimit: number = 30;
+  mensajesCargadosCompletos: boolean = false;
+  cargandoMasMensajes: boolean = false;
+
   constructor(
     private mensajesService: MensajesService,
     private ruta: ActivatedRoute,
     private usuariosService: UsuariosService,
-    public cargandoService: CargandoService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -61,17 +64,57 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
     this.ruta.params.subscribe((params) => {
       this.receptor.username = params['username'];
     });
-    this.usuariosService.datosUsername(this.receptor.username).subscribe((usuario) => {
-      this.receptor = usuario;
+    this.usuariosService.datosUsername(this.receptor.username).subscribe((response) => {
+      this.receptor = response.user;
       this.mensajesService.conectar(this.usuarioActual);
-      this.mensajesService.cargarMensajes(this.usuarioActual, this.receptor.id).subscribe((mensajesCargados: MensajeCargado[]) => {
-        this.mensajes = mensajesCargados;
-        this.cargandoService.cargando = false;
-      });
+      // Marcar mensajes como leídos al abrir el chat
+      this.mensajesService.marcarMensajesLeidos(this.receptor.id).subscribe();
+      this.cargarMensajesInicial();
     });
     this.mensajesService.recibirMensajes().subscribe((mensaje: any) => {
       this.mensajes = [...this.mensajes, mensaje]; 
     })
+  }
+
+  cargarMensajesInicial() {
+    this.mensajesCargadosCompletos = false;
+    this.cargandoMasMensajes = false;
+    this.mensajesService.cargarMensajes(this.receptor.id, this.mensajesPaginadosLimit, this.mensajesPaginadosOffset)
+      .subscribe((mensajesCargados: MensajeCargado[]) => {
+        this.mensajes = mensajesCargados;
+        if (mensajesCargados.length < this.mensajesPaginadosLimit) {
+          this.mensajesCargadosCompletos = true;
+        }
+      });
+  }
+
+  cargarMasMensajes() {
+    if (this.mensajesCargadosCompletos || this.cargandoMasMensajes) return;
+    this.cargandoMasMensajes = true;
+    // Guardar posición actual del scroll antes de cargar más
+    const contenedor = this.contenedorMensajes?.nativeElement;
+    const scrollAntes = contenedor ? contenedor.scrollHeight - contenedor.scrollTop : 0;
+    this.mensajesService.cargarMensajes(this.receptor.id, this.mensajesPaginadosLimit, this.mensajesPaginadosOffset + this.mensajesPaginadosLimit)
+      .subscribe((mensajesCargados: MensajeCargado[]) => {
+        if (mensajesCargados.length < this.mensajesPaginadosLimit) {
+          this.mensajesCargadosCompletos = true;
+        }
+        this._mensajes = [...mensajesCargados, ...this._mensajes];
+        this.mensajesPaginadosOffset += this.mensajesPaginadosLimit;
+        this.cargandoMasMensajes = false;
+        setTimeout(() => {
+          if (contenedor) {
+            contenedor.scrollTop = contenedor.scrollHeight - scrollAntes;
+          }
+        });
+      });
+  }
+
+  onScrollMensajes(event: any) {
+    const el = event.target;
+    if (el.scrollTop < 80 && !this.cargandoMasMensajes && !this.mensajesCargadosCompletos) {
+      this.cargarMasMensajes();
+    }
   }
 
   enviarMensaje(): void {

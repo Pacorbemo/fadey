@@ -4,15 +4,15 @@
   
   .input {
 	color: #fff;
-	font-size: 0.9rem;
+	font-size: 0.8vw;
 	background-color: transparent;
-	width: 100%;
 	box-sizing: border-box;
 	border-radius: 0.6em;
 	padding-inline: 0.5em;
 	padding-block: 0.7em;
 	border: none;
 	margin-left: 0.15vw;
+	width: 14vw;
   }
   
   .input:hover {
@@ -63,27 +63,70 @@
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	border: 1px solid #ccc;
-	background: rgb(255, 84, 84);
+	border: none;
+	background: #23243a;
+	box-shadow: 0 4px 24px 0 rgba(76, 63, 255, 0.13);
+	border-radius: 0 0 0.7em 0.7em;
 	position: absolute;
 	z-index: 1000;
 	width: 100%;
+	overflow: hidden;
   }
   
   .autocomplete-list li {
-	padding: 10px;
+	padding: 1vw;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
+	gap: 0.7em;
+	background: none;
+	color: #fff;
+	font-size: 1vw;
+	transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+	border-bottom: 1px solid rgba(255,255,255,0.07);
+	position: relative;
   }
   
-  .autocomplete-list li:hover {
-	background-color: #f0f0f0;
+  .autocomplete-list li:last-child {
+	border-bottom: none;
   }
   
-  .avatar {
-	width: 30px;
-	height: 30px;
+  .autocomplete-list li:hover, .autocomplete-list li:focus {
+	background: linear-gradient(90deg, #35355a 0%, #23243a 100%);
+	color: #6c63ff;
+	box-shadow: 0 2px 12px 0 rgba(76, 63, 255, 0.10);
+	outline: none;
+  }
+  
+  .autocomplete-list .avatar {
+	width: 2.1em;
+	height: 2.1em;
 	border-radius: 50%;
-	margin-right: 10px;
+	margin-right: 0.7em;
+	border: 2px solid #35355a;
+	object-fit: cover;
+	background: #18192b;
   }
+
+@media (max-width: 600px) {
+
+	.form-control {
+		width: 100%;
+	}
+
+	.input {
+		font-size: 0.8rem;
+		padding-inline: 0.4em;
+		padding-block: 0.6em;
+		width: 30vw;
+	}
+	
+	.autocomplete-list li {
+		font-size: 0.8rem;
+	}
+	
+	.avatar {
+		width: 25px;
+		height: 25px;
+	}
+}

@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
   @ViewChild('menu') menuRef!: ElementRef;
 
   menuAbierto: boolean = false;
+  burguerAbierto = false;
 
   constructor(
     public datosService: DatosService,

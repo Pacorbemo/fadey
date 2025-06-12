@@ -130,13 +130,33 @@
   box-shadow: 0 2px 8px #0002;
 }
 
-@media (max-width: 700px) {
+.btn-cargar-mas {
+  margin: 0 auto 10px auto;
+  display: block;
+  background: #23263a;
+  color: #e0e6f0;
+  border: 1px solid #3a5be0;
+  border-radius: 16px;
+  padding: 8px 18px;
+  font-size: 0.98em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-cargar-mas:hover:not(:disabled) {
+  background: #3a5be0;
+  color: #fff;
+}
+.btn-cargar-mas[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
   .chat-container {
-    width: 100vw;
     min-width: 0;
     border-radius: 0;
     margin: 0;
-    height: 100vh;
     background: #181a20;
     border: none;
   }

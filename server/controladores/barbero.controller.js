@@ -6,7 +6,6 @@ exports.esBarbero = (req, res) => {
 
   db.query(query, [id], (err, results) => {
     if (err) {
-      console.error("Error al buscar usuario:", err);
       return res.status(500).json({ error: "Error al buscar el usuario" });
     }
     if (results.length === 0) {
@@ -29,7 +28,6 @@ exports.buscarBarberos = (req, res) => {
   `;
   db.query(sql, [`%${query}%`, `%${query}%`], (err, results) => {
     if (err) {
-      console.error("Error al buscar barberos:", err);
       return res.status(500).json({ error: "Error al buscar barberos" });
     }
     res.status(200).json(results);
@@ -46,7 +44,6 @@ exports.randomBarberos = (req, res) => {
   `;
   db.query(sql, (err, results) => {
     if (err) {
-      console.error("Error al obtener barberos aleatorios:", err);
       return res
         .status(500)
         .json({ error: "Error al obtener barberos aleatorios" });
@@ -57,17 +54,52 @@ exports.randomBarberos = (req, res) => {
 
 exports.getProductosBarbero = (req, res) => {
   const { username } = req.params;
+  const limit = parseInt(req.query.limit) || 50;
+  const offset = parseInt(req.query.offset) || 0;
   const query = `
     SELECT Productos.id, Productos.nombre, Productos.precio, Productos.descripcion, Productos.foto, Productos.stock 
     FROM Productos 
     JOIN Usuarios ON Productos.barbero_id = Usuarios.id 
     WHERE Usuarios.username = ?
+    LIMIT ? OFFSET ?
   `;
-  db.query(query, [username], (err, results) => {
+  db.query(query, [username, limit, offset], (err, results) => {
     if (err) {
-      console.error("Error al obtener productos:", err);
       return res.status(500).json({ error: "Error al obtener productos" });
     }
     res.status(200).json(results);
   });
+};
+
+exports.getHorarioBarbero = (req, res) => {
+  const userId = req.user.id;
+  db.query(
+    "SELECT horario FROM Usuarios WHERE id = ? AND barbero = 1",
+    [userId],
+    (err, results) => {
+      if (err)
+        return res.status(500).json({ error: "Error al obtener el horario" });
+      if (results.length === 0)
+        return res.status(200).json({ horario: null });
+      let horario = results[0].horario;
+      try {
+        horario = JSON.parse(horario);
+      } catch (e) {}
+      res.status(200).json({ horario });
+    }
+  );
+};
+
+exports.setHorarioBarbero = (req, res) => {
+  const userId = req.user.id;
+  const { horario } = req.body;
+  db.query(
+    "UPDATE Usuarios SET horario = ? WHERE id = ? AND barbero = 1",
+    [JSON.stringify(horario), userId],
+    (err, results) => {
+      if (err)
+        return res.status(500).json({ error: "Error al guardar el horario" });
+      res.status(200).json({ ok: true });
+    }
+  );
 };

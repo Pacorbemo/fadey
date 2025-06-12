@@ -7,11 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { PreferenciasHorarioBarberoComponent } from '../preferencias-horario-barbero/preferencias-horario-barbero.component';
 
 @Component({
   selector: 'app-editar-perfil',
   standalone: true,
-  imports: [CommonModule, UploadsPipe, FormsModule, RouterLink],
+  imports: [CommonModule, UploadsPipe, FormsModule, RouterLink, PreferenciasHorarioBarberoComponent],
   templateUrl: './editar-perfil.component.html',
   styleUrl: './editar-perfil.component.css'
 })
@@ -55,19 +56,19 @@ export class EditarPerfilComponent {
     const formData = new FormData();
     formData.append('imagen', this.imagenSeleccionada);
 
-    this.httpService.putToken('/usuarios/imagen-perfil', formData).subscribe(
-      (response) => {
+    this.httpService.putToken('/usuarios/imagen-perfil', formData).subscribe({
+      next: (response) => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         user.foto_perfil = response.imageUrl;
         localStorage.setItem('user', JSON.stringify(user));
         this.datosService.user.foto_perfil = response.imageUrl;
         alert('Imagen subida correctamente');
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al subir la imagen:', error);
         alert('Error al subir la imagen');
       }
-    );
+    });
   }
 
   async editar(campo: string, valor: string) {
@@ -94,8 +95,8 @@ export class EditarPerfilComponent {
         alert('El nombre de usuario solo puede contener letras, números y guiones bajos');
         return;
       }
-      const response = await firstValueFrom(this.usuariosService.verificarUsername(valor));
-      if (response?.exists) {
+      const response = await firstValueFrom(this.usuariosService.validarUsername(valor));
+      if (response.valido) {
         alert('El nombre de usuario ya está en uso');
         return;
       }

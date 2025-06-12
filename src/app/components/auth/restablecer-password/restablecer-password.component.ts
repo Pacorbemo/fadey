@@ -33,7 +33,7 @@ export class RestablecerPasswordComponent {
     this.http.post(`/usuarios/restablecer-password/${this.token}`, { password: this.password })
       .subscribe({
         next: (res: any) => {
-          this.mensaje = res.message || 'Contraseña restablecida correctamente.';
+          this.mensaje = res.mensaje || 'Contraseña restablecida correctamente.';
           this.cambiando = false;
           setTimeout(() => this.router.navigate(['/inicio-sesion']), 2000);
         },

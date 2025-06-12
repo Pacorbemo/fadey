@@ -43,7 +43,7 @@ export class ReservarCitasComponent implements OnInit {
     this.route.params.subscribe({
       next: params => {
         this.usernameBarbero = params['username'];
-        this.usuariosService.verificarUsername(this.usernameBarbero).subscribe({
+        this.usuariosService.datosUsername(this.usernameBarbero).subscribe({
           next: (response) => {
             this.usernameValido = response.exists;
             if (response.exists && response.user?.id) {

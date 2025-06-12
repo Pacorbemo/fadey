@@ -70,25 +70,31 @@ export class MisProductosComponent {
   ngOnInit(): void {
     this.httpService
       .getToken(`/productos/barbero/${this.datosService.user.username}`)
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           this.productos = response;
+          this.httpService.getToken(`/productos/reservados`).subscribe({
+            next: (response) => {
+              this.reservados = response || {};
+              for (const producto of this.productos) {
+                if (!Array.isArray(this.reservados[producto.id])) {
+                  this.reservados[producto.id] = [];
+                }
+              }
+            },
+            error: (error) => {
+              console.error('Error al obtener los productos reservados:', error);
+              this.reservados = {};
+            }
+          });
         },
-        (error) => {
+        error: (error) => {
           console.error('Error al obtener los productos:', error);
         }
-      )
+      })
       .add(() => {
         this.cargandoService.cargando = false;
       });
-    this.httpService.getToken(`/productos/reservados`).subscribe(
-      (response) => {
-        this.reservados = response;
-      },
-      (error) => {
-        console.error('Error al obtener los productos reservados:', error);
-      }
-    );
   }
 
   urlImagen(): string {
@@ -174,16 +180,16 @@ export class MisProductosComponent {
 
     this.httpService
       .postToken('/productos', formData)
-      .subscribe(
-        (response) => {
+      .subscribe({
+        next: (response) => {
           console.log('Producto subido correctamente:', response);
           alert('Producto subido correctamente');
         },
-        (error) => {
+        error: (error) => {
           console.error('Error al subir el producto:', error);
           alert('Error al subir el producto');
         }
-      )
+      })
       .add(() => {
         this.cargandoService.cargando = false;
       });
@@ -235,6 +241,21 @@ export class MisProductosComponent {
     } else {
       this.expandidos.splice(index, 1);
     }
+  }
+
+  marcarEntregado(productoId: number, username: string) {
+    if (!confirm('¿Marcar este producto como entregado para ' + username + '?')) return;
+    this.httpService.postToken('/productos/marcar-entregado', { producto_id: productoId, username }, true).subscribe({
+      next: () => {
+        if (this.reservados[productoId]) {
+          this.reservados[productoId] = this.reservados[productoId].filter(u => u.username !== username);
+        }
+        this.cargandoService.cargando = false;
+      },
+      error: () => {
+        alert('Error al marcar como entregado');
+      }
+    });
   }
 }
 

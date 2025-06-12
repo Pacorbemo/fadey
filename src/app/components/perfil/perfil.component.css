@@ -60,6 +60,7 @@ h2 {
     gap: 16px;
 }
 
+
 .perfil-botones button {
     background: none;
     border: none;
@@ -70,6 +71,11 @@ h2 {
     cursor: pointer;
     transition: color 0.2s;
     border-radius: 6px;
+}
+
+.perfil-botones button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(33,150,243,0.3);
 }
 
 .perfil-botones button:hover {
@@ -116,4 +122,15 @@ h2 {
 .reserva-dialogo button:last-child {
   background-color: #f44336;
   color: white;
+}
+
+@media (max-width: 600px){
+  section{
+    margin-bottom: 6vw;
+    width: auto;
+  }
+  .perfil-botones{
+    bottom: -7vw
+  }
+
 }
