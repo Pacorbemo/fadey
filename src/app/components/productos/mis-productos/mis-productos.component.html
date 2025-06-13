@@ -110,7 +110,7 @@
           <div class="col col-1">{{usuario.username}}</div>
           <div class="col col-2">{{usuario.cantidad}}</div>
           <div class="col col-3">
-            <button class="btn-entregar" (click)="marcarEntregado(producto.id, usuario.username)">Marcar como entregado</button>
+            <button class="btn-entregar" (click)="marcarEntregado(producto.id, producto.nombre, usuario.username)">Marcar como entregado</button>
           </div>
         </li>
       }

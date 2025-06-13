@@ -81,10 +81,6 @@ export class EditarPerfilComponent {
       alert('Por favor, introduce un email válido');
       return;
     }
-    if (campo === 'localizacion' && valor.length > 30) {
-      alert('La localización no puede exceder los 30 caracteres');
-      return;
-    }
 
     if(campo === 'username'){
       if (valor.length < 3 || valor.length > 20) {

@@ -20,7 +20,6 @@ exports.getUsuario = (req, res) => {
         username: results[0].username,
         rol: results[0].barbero ? "barbero" : "cliente",
         foto_perfil: results[0].foto_perfil || null,
-        localizacion: results[0].localizacion || null,
         bio: results[0].bio || null,
         email: results[0].email,
         email_verificado: results[0].email_verificado || false,
@@ -36,7 +35,7 @@ exports.usuarioExiste = async (req, res) => {
   let { username } = req.params;
 
   const query =
-    "SELECT id, nombre, username, foto_perfil, bio, localizacion FROM Usuarios WHERE username = ?";
+    "SELECT id, nombre, username, foto_perfil, bio FROM Usuarios WHERE username = ?";
   db.query(query, [username], (err, results) => {
     if (err) {
       return res.status(500).json({ error: "Error al buscar el usuario" });
@@ -129,7 +128,6 @@ exports.editarCampo = (req, res) => {
     "nombre",
     "username",
     "email",
-    "localizacion",
     "bio",
     "enviar_emails",
     "barbero"

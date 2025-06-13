@@ -25,9 +25,6 @@ export class NotificacionesComponent implements OnInit {
     this.notificacionesService.conectar(usuarioActual);
     this.notificacionesService.recibirNotificacion().subscribe((notificacion: Notificacion) => {
       this.notificacionesService.notificaciones.unshift(notificacion);
-      // if (this.notificacionesAbierto) {
-      //   this.notificacionesService.marcarTodasLeidas();
-      // }
     });
   }
 

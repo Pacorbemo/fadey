@@ -2,7 +2,7 @@
   <div class="tabla-container">
     <h2 class="titulo">Citas</h2>
     @if(datosService.esCliente()){
-      <app-citas-cliente style="width: 100%;"/>
+      <app-citas-cliente/>
     }
     @else if(datosService.esBarbero()){
       <app-citas-barbero/>

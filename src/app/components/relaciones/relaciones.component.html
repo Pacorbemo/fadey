@@ -43,7 +43,12 @@
                     </table>
                 </div>
             } @else {
-                <p class="vacio">Aún no tienes relaciones.</p>
+                @if(barberos.length > 0){
+                    <p class="vacio">Ningún barbero coincide con la búsqueda.</p>
+                }
+                @else {
+                    <p class="vacio">Aún no tienes relaciones.</p>
+                }
             }
         }
 

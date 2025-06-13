@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { NotificacionesComponent } from './components/shared/notificaciones/notificaciones.component';
 import { UploadsPipe } from './pipes/uploads.pipe';
 import { HttpService } from './services/http.service';
+import { ToastComponent } from './components/shared/toast/toast.component';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +30,7 @@ import { HttpService } from './services/http.service';
     NotificacionesComponent,
     CommonModule,
     UploadsPipe,
+    ToastComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

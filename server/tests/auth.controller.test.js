@@ -177,7 +177,6 @@ describe('POST /auth/login', () => {
         email: 'test@example.com',
         foto_perfil: '',
         bio: '',
-        localizacion: '',
         enviar_emails: false,
         email_verificado: true
       }]);
@@ -227,7 +226,6 @@ describe('POST /auth/login', () => {
         email: 'test@example.com',
         foto_perfil: '',
         bio: '',
-        localizacion: '',
         enviar_emails: false,
         email_verificado: true
       }]);

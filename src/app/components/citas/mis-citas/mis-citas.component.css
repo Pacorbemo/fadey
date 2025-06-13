@@ -6,12 +6,12 @@
   flex-direction: column;
 }
 
-app-citas-barbero{
+app-citas-barbero, app-citas-cliente {
   width: 70%;
 }
 
 @media (max-width: 600px) {
-  app-citas-barbero {
+  app-citas-barbero, app-citas-cliente {
     width: 100%;
   }
 }

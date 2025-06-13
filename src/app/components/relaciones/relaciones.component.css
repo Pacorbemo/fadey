@@ -38,10 +38,14 @@ input[type="text"]:focus {
 
 .solicitudes-container th,
 .solicitudes-container td {
-    padding: 14px 12px;
+    padding: 1vw 2vw;
     border-bottom: 1px solid var(--border);
-    text-align: left;
+    text-align: center;
     vertical-align: middle;
+}
+
+.solicitudes-container td:last-child {
+    padding-right: 1vw;
 }
 
 .solicitudes-container th {

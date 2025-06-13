@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'mis-citas-tabla',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   template: `
   <div class="tabla-wrapper">
     <ul class="tabla-ul">
@@ -17,7 +18,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         <li class="row">
           <div class="col col-1">{{ cita.fecha_hora | date:'dd/MM HH:mm' }}</div>
           <div class="col col-2">{{ cita.usuario_nombre }}</div>
-          <div class="col col-3">{{ '@' + cita.usuario_username }}</div>
+          <div class="col col-3">
+            <a [routerLink]="['/',cita.usuario_username]">
+              {{ '@' + cita.usuario_username }}
+            </a>
+          </div>
         </li>
       }
     </ul>

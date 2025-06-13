@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { debounceTime, Subject, switchMap } from 'rxjs';
 import { CargandoService } from '../../../services/cargando.service';
 import { UploadsPipe } from '../../../pipes/uploads.pipe';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-mis-productos',
@@ -59,7 +60,8 @@ export class MisProductosComponent {
   constructor(
     private httpService: HttpService,
     private datosService: DatosService,
-    public cargandoService: CargandoService
+    public cargandoService: CargandoService,
+    private toastService: ToastService
   ) {
     this.pantallaSubject.pipe(debounceTime(30)).subscribe((oscurecer) => {
       this.oscurecerPantalla = oscurecer;
@@ -102,7 +104,21 @@ export class MisProductosComponent {
   }
 
   seleccionarImagen(event: any): void {
-    this.producto.foto = event.target.files[0];
+    const file = event.target.files[0];
+    if (file) {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      const validExts = ['jpg', 'jpeg', 'png'];
+      if (!validExts.includes(ext || '')) {
+        this.toastService.error({
+          mensaje: 'Solo se permiten imágenes JPG o PNG',
+          sugerencia: 'Selecciona una imagen en formato .jpg, .jpeg o .png.'
+        }, 5000);
+        this.producto.foto = null;
+        event.target.value = '';
+        return;
+      }
+      this.producto.foto = file;
+    }
   }
 
   seleccionarCambioImagen(event: any): void {
@@ -156,6 +172,15 @@ export class MisProductosComponent {
     this.pantallaSubject.next(false);
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       const file = event.dataTransfer.files[0];
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      const validExts = ['jpg', 'jpeg', 'png'];
+      if (!validExts.includes(ext || '')) {
+        this.toastService.error({
+          mensaje: 'Solo se permiten imágenes JPG o PNG',
+          sugerencia: 'Selecciona una imagen en formato .jpg, .jpeg o .png.'
+        });
+        return;
+      }
       this.producto.foto = file;
       event.dataTransfer.clearData();
     }
@@ -175,6 +200,7 @@ export class MisProductosComponent {
     formData.append('precio', this.producto.precio.toString());
     formData.append('stock', this.producto.stock.toString());
     if (this.producto.foto) {
+      
       formData.append('foto', this.producto.foto);
     }
 
@@ -182,12 +208,10 @@ export class MisProductosComponent {
       .postToken('/productos', formData)
       .subscribe({
         next: (response) => {
-          console.log('Producto subido correctamente:', response);
-          alert('Producto subido correctamente');
+          this.toastService.mostrar(response);
         },
         error: (error) => {
-          console.error('Error al subir el producto:', error);
-          alert('Error al subir el producto');
+          this.toastService.error('Error al subir el producto: ' + error.message);
         }
       })
       .add(() => {
@@ -243,19 +267,24 @@ export class MisProductosComponent {
     }
   }
 
-  marcarEntregado(productoId: number, username: string) {
-    if (!confirm('¿Marcar este producto como entregado para ' + username + '?')) return;
-    this.httpService.postToken('/productos/marcar-entregado', { producto_id: productoId, username }, true).subscribe({
-      next: () => {
-        if (this.reservados[productoId]) {
-          this.reservados[productoId] = this.reservados[productoId].filter(u => u.username !== username);
-        }
-        this.cargandoService.cargando = false;
-      },
-      error: () => {
-        alert('Error al marcar como entregado');
+  marcarEntregado(productoId: number, productoNombre:string, username: string) {
+    this.toastService.preguntar(
+      `¿Marcar ${productoNombre} como entregado para ${username}?`,
+      () => {
+        this.httpService.postToken('/productos/marcar-entregado', { producto_id: productoId, username }, true).subscribe({
+          next: (response) => {
+            if (this.reservados[productoId]) {
+              this.reservados[productoId] = this.reservados[productoId].filter(u => u.username !== username);
+            }
+            this.cargandoService.cargando = false;
+            this.toastService.mostrar(response);
+          },
+          error: (error) => {
+            this.toastService.error(error);
+          }
+        });
       }
-    });
+    );
   }
 }
 

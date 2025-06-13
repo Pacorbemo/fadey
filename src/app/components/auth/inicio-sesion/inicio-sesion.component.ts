@@ -32,7 +32,7 @@ export class InicioSesionComponent {
     };
 
     if (!credenciales.username || !credenciales.password) {
-      this.toastService.mostrar('Debes rellenar todos los campos. Por favor, introduce tu usuario y contraseña.');
+      this.toastService.error('Debes rellenar todos los campos. Por favor, introduce tu usuario y contraseña.');
       return;
     }
 
@@ -45,7 +45,7 @@ export class InicioSesionComponent {
         this.router.navigate(["/mis-citas"]);
       },
       error: (error) => {
-        this.toastService.mostrar(error);
+        this.toastService.error(error);
       }
     });
   }

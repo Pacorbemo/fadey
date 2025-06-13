@@ -55,8 +55,12 @@ exports.getReservadosByBarbero = (req, res) => {
 
 exports.addProducto = (req, res) => {
   const { nombre, precio, descripcion, stock } = req.body;
-  const foto = req.file;
   const barbero_id = req.user.id;
+  let foto = null;
+  
+  if(req.file){
+    foto = req.file.filename;
+  }
   
   if (!nombre || !precio || !descripcion || !stock) {
     return res.status(400).json({ mensaje: "Información insuficiente" });
@@ -67,7 +71,7 @@ exports.addProducto = (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?)
   `;
   
-  db.query(query, [nombre, precio, descripcion, foto.filename | null, stock, barbero_id], (err, result) => {
+  db.query(query, [nombre, precio, descripcion, foto, stock, barbero_id], (err, result) => {
     if (err) {
       return res.status(500).json({ mensaje: "Error al agregar producto" });
     }
@@ -210,13 +214,6 @@ exports.marcarProductoEntregado = (req, res) => {
         if (result.affectedRows === 0) {
           return res.status(404).json({ mensaje: "No se pudo marcar como entregado" });
         }
-        // Notificar al cliente
-        crearNotificacion({
-          usuario_id: cliente_id,
-          emisor_id: barbero_id,
-          tipo: 'producto_entregado',
-          mensaje: JSON.stringify({ producto: reservas[0].producto_nombre, cantidad: reservas[0].cantidad })
-        });
         res.status(200).json({ mensaje: "Producto marcado como entregado" });
       });
     });

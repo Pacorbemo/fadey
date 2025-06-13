@@ -4,7 +4,6 @@ export interface Usuario {
 	username: string;
 	rol: string; 
 	foto_perfil: string;
-	localizacion: string;
 	bio: string;
 	email: string;
 	email_verificado: boolean;
@@ -17,7 +16,6 @@ export const usuarioVacio: Usuario = {
 	username: '',
 	rol: '',
 	foto_perfil: '',
-	localizacion: '',
 	bio: '',
 	email: '',
 	email_verificado: false,

@@ -38,7 +38,7 @@ export class RegisterComponent {
 
   registrarUsuario(): void {
     if (this.password !== this.confirmPassword) {
-      this.toastService.mostrar('Las contraseñas no coinciden.');
+      this.toastService.error('Las contraseñas no coinciden.');
       return;
     }
 
@@ -62,7 +62,7 @@ export class RegisterComponent {
         const err = error.error?.error;
         let mensaje = typeof err === 'string' ? err : err?.mensaje || 'Ha ocurrido un error inesperado. Inténtalo de nuevo.';
         let sugerencia = err?.sugerencia || '';
-        this.toastService.mostrar(mensaje + (sugerencia ? ' ' + sugerencia : ''));
+        this.toastService.error(mensaje + (sugerencia ? ' ' + sugerencia : ''));
       }
     });
   }

@@ -1,14 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type ToastMensaje = string | { mensaje: string, sugerencia?: string };
+export type ToastMensaje = string | { 
+      mensaje: string; 
+      sugerencia?: string; 
+      tipo?: 'error' | 'exito' | 'pregunta'; 
+      onConfirmar?: () => void; 
+      onCancelar?: () => void; 
+    };
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
   private mensajeSubject = new BehaviorSubject<ToastMensaje>('');
   mensaje$ = this.mensajeSubject.asObservable();
 
-  mostrar(error: any, respaldo: string = 'Ha ocurrido un error inesperado.') {
+  error(error: any, duracion: number = 3500) {
+    const respaldo = 'Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde.';
     let mensaje = '';
     let sugerencia = '';
     if (typeof error === 'string') {
@@ -36,6 +43,27 @@ export class ToastService {
     }
     setTimeout(() => {
       this.mensajeSubject.next('');
-    }, 3500);
+    }, duracion);
+  }
+
+  mostrar(response: any, duracion: number = 3500) {
+    this.mensajeSubject.next({ mensaje: response.mensaje, tipo: 'exito' });
+    setTimeout(() => {
+      this.mensajeSubject.next('');
+    }, duracion);
+  }
+
+  preguntar(mensaje: string, callback: () => void) {
+    this.mensajeSubject.next({
+      mensaje,
+      tipo: 'pregunta',
+      onConfirmar: () => {
+        callback();
+        this.mensajeSubject.next('');
+      },
+      onCancelar: () => {
+        this.mensajeSubject.next('');
+      }
+    });
   }
 }

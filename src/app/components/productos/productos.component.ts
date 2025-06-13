@@ -39,16 +39,16 @@ export class ProductosComponent implements OnInit {
     if (producto.reservaCantidad > 0) {
       this.httpService.postToken('/productos/reservar', { idProducto: producto.id, cantidad: producto.reservaCantidad }).subscribe({
         next: (response) => {
-          console.log('Reserva realizada:', response);
+          this.toastService.mostrar(response);
           producto.stock -= producto.reservaCantidad;
-          producto.reservaCantidad = 0;
+          producto.reservaCantidad = 1;
         },
         error: (error) => {
-          this.toastService.mostrar(error);
+          this.toastService.error(error);
         }
       });
     } else {
-      this.toastService.mostrar('No se ha seleccionado ninguna cantidad para reservar.');
+      this.toastService.error('No se ha seleccionado ninguna cantidad para reservar.');
     }
   }
 }

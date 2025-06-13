@@ -29,4 +29,14 @@ app.use('/barberos', barberoRoutes);
 app.use('/usuarios', usuarioRoutes);
 app.use('/notificaciones', notificacionRoutes);
 
+app.use((err, req, res, next) => {
+  if (err instanceof Error && err.message && err.message.includes('Solo se permiten imágenes')) {
+    return res.status(400).json({ mensaje:'Sube una imagen en formato JPEG, PNG o WEBP.' });
+  }
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ mensaje: 'La imagen es demasiado grande', sugerencia: 'El tamaño máximo es 5MB.' });
+  }
+  return res.status(500).json({ mensaje: 'Error interno del servidor', sugerencia: err.message });
+});
+
 module.exports = app;

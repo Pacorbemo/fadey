@@ -12,7 +12,7 @@ import { CargandoService } from '../../../../services/cargando.service';
       @if(citas.length){
         <mis-citas-tabla [citas]="citas" [pagina]="pagina" [limite]="limite" (paginaCambiada)="cambiarPagina($event)" />
       }@else {
-        <h3>No tienes citas pendientes</h3>
+       <p class="vacio">No tienes citas pendientes</p>
       }
     }
   `,

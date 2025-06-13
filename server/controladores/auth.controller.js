@@ -100,7 +100,6 @@ exports.login = (req, res) => {
         foto_perfil: usuario.foto_perfil,
         email: usuario.email,
         bio: usuario.bio || '',
-        localizacion: usuario.localizacion || '',
         enviar_emails: usuario.enviar_emails || false,
         email_verificado: usuario.email_verificado || false
       }

@@ -39,11 +39,13 @@ function socketHandler(server, db) {
     if (users[usuario_id]) {
       usuarioController.usuarioExisteById(usuario_id, (err, user) => {
         if (err) {
-          console.error("Error al verificar el usuario:", err);
           return;
         }
         if(user){
-          io.to(users[usuario_id]).emit('nuevaNotificacion', { tipo, username : user.username, mensaje, leida : 0 });
+          usuarioController.usuarioExisteById(emisor_id, (err, emisor) => {
+          if (emisor) 
+            io.to(users[usuario_id]).emit('nuevaNotificacion', { tipo, username : emisor.username, mensaje, leida : 0 });
+          })
         }
       })
     }

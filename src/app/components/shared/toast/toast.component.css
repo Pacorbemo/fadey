@@ -12,8 +12,8 @@
   font-weight: 500;
   z-index: 9999;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.7em;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s, top 0.4s;
@@ -23,6 +23,13 @@
   pointer-events: auto;
   top: 2.5rem;
 }
+
+.row{
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
 .toast-icon {
   color: #ff4d6d;
   font-size: 1.5em;
@@ -41,4 +48,54 @@
   font-weight: 400;
   text-shadow: none;
   letter-spacing: 0.01em;
+}
+
+.toast-exito {
+  background: #eaffea;
+  color: #222;
+  border-left: 6px solid #4caf50;
+}
+.toast-exito .toast-icon svg {
+  vertical-align: middle;
+}
+.toast-error {
+  background: #23243a;
+  color: #fff;
+  border-left: 6px solid #ff4d6d;
+}
+.toast-pregunta {
+  background: #fffbe6;
+  color: #222;
+  border-left: 6px solid #ffb300;
+}
+.toast-pregunta .toast-icon svg {
+  vertical-align: middle;
+}
+.toast-actions {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 0.7em;
+}
+.btn-toast {
+  padding: 0.3em 1.1em;
+  border: none;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.btn-confirmar {
+  background: #4caf50;
+  color: #fff;
+}
+.btn-confirmar:hover {
+  background: #388e3c;
+}
+.btn-cancelar {
+  background: #ff5757;
+  color: #ffffff;
+}
+.btn-cancelar:hover {
+  background: #fd2d2d;
 }

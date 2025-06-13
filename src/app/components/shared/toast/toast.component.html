@@ -1,11 +1,29 @@
 @if (visible && mensaje) {
-  <div class="toast show">
-    <span class="toast-icon">&#9888;</span>
-    <div class="toast-text">
-    {{ mensaje }}
-    @if (sugerencia) {
-        <div class="toast-hint">{{ sugerencia }}</div>
-    }
+  <div class="toast show toast-{{tipo}}">
+    <div class="row">
+      <span class="toast-icon">
+        @if(tipo === 'exito') {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        }
+        @else if(tipo === 'pregunta') {
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffb300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-1m0-4a2 2 0 1 1 4 0c0 1.5-2 2-2 4"/></svg>
+        }
+        @else {
+          &#9888;
+        }
+      </span>
+      <span class="toast-text">
+        {{ mensaje }}
+        @if (sugerencia) {
+          <div class="toast-hint">{{ sugerencia }}</div>
+        }
+      </span>
     </div>
+    @if(tipo === 'pregunta') {
+      <div class="toast-actions">
+        <button class="btn-toast btn-confirmar" (click)="confirmar()">Confirmar</button>
+        <button class="btn-toast btn-cancelar" (click)="cancelar()">Cancelar</button>
+      </div>
+    }
   </div>
 }
