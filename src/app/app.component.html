@@ -6,10 +6,10 @@
     <div class="nav-burguer-container" #burguer>
       <button class="burguer" (click)="burguerAbierto = !burguerAbierto" aria-label="Abrir menú de navegación">
         @if(!burguerAbierto){
-          <img src="/svgs/icono-menu.svg" width="24" height="24" alt="Abrir menú" />
+          <img src="svgs/icono-menu.svg" width="24" height="24" alt="Abrir menú" />
         }
         @else{
-          <img src="/svgs/icono-cerrar-menu.svg" width="24" height="24" alt="Cerrar menú" />
+          <img src="svgs/icono-cerrar-menu.svg" width="24" height="24" alt="Cerrar menú" />
         }
       </button>
       <nav [class.abierto]="burguerAbierto">

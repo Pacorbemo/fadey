@@ -77,7 +77,7 @@
       }
       <h3>Opciones de cuenta</h3>
       <a routerLink="/cambiar-password" class="btn-opciones">
-        <img src="/svgs/icono-candado.svg" alt="Cambiar contraseña">
+        <img src="svgs/icono-candado.svg" alt="Cambiar contraseña">
         Cambiar contraseña
       </a>
       <div id="notificaciones-container">
@@ -88,7 +88,7 @@
         [class.btn-inactivo]="!notificacionesEmail"
         [attr.aria-disabled]="!datosService.user.email_verificado"
         [attr.tabindex]="datosService.user.email_verificado ? 0 : -1">
-        <img [src]="notificacionesEmail ? '/svgs/icono-ojo.svg' : '/svgs/icono-ojo-off.svg'" alt="Notificaciones por email">
+        <img [src]="notificacionesEmail ? 'svgs/icono-ojo.svg' : 'svgs/icono-ojo-off.svg'" alt="Notificaciones por email">
         Notificaciones por email
         <span class="estado-notificacion" @if(datosService.user.email_verificado)>
           {{ notificacionesEmail ? '(activadas)' : '(desactivadas)' }}
@@ -103,12 +103,12 @@
 
       <button type="button" class="btn-opciones"
         (click)="cambiarTipoCuenta()">
-        <img src="/svgs/icono-cambiar-cuenta.svg" alt="Cambiar tipo de cuenta">
+        <img src="svgs/icono-cambiar-cuenta.svg" alt="Cambiar tipo de cuenta">
         Cambiar cuenta a {{ datosService.user.rol === 'barbero' ? 'Cliente' : 'Barbero' }}
       </button>
       
       <button type="button" class="btn-opciones" (click)="mostrarDialogoEliminar = true">
-        <img src="/svgs/icono-papelera.svg" alt="Eliminar cuenta">
+        <img src="svgs/icono-papelera.svg" alt="Eliminar cuenta">
         Eliminar cuenta
       </button>
     </div>
