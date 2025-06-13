@@ -1,15 +1,6 @@
+@if(verificando) {
+    <app-cargando [mensaje]="'Verificando tu email...'" />
+}
 <div class="verificacion-container">
-    @switch (estado) {
-        @case ('verificando') {
-            <p>Verificando tu email...</p>
-        }
-        @case ('exito') {
-            <p class="exito">{{ mensaje }}</p>
-            <a routerLink="/">Ir al inicio</a>
-        }
-        @case ('error') {
-            <p class="error">{{ mensaje }}</p>
-            <a routerLink="/">Ir al inicio</a>
-        }
-    }
+    <a [routerLink]="['/editar-perfil']">Ir al perfil</a>
 </div>

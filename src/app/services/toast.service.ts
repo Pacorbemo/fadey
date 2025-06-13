@@ -41,9 +41,12 @@ export class ToastService {
     } else {
       this.mensajeSubject.next(mensaje);
     }
-    setTimeout(() => {
-      this.mensajeSubject.next('');
-    }, duracion);
+
+    if(duracion >= 0) {
+      setTimeout(() => {
+        this.mensajeSubject.next('');
+      }, duracion);
+    }
   }
 
   mostrar(response: any, duracion: number = 3500) {
@@ -54,9 +57,11 @@ export class ToastService {
 		mensaje = response.mensaje;
 	}
     this.mensajeSubject.next({ mensaje, tipo: 'exito' });
-    setTimeout(() => {
-      this.mensajeSubject.next('');
-    }, duracion);
+    if(duracion >= 0) {
+      setTimeout(() => {
+        this.mensajeSubject.next('');
+      }, duracion);
+    }
   }
 
   preguntar(mensaje: string, callback: () => void) {
