@@ -1,10 +1,10 @@
-const http = require("http");
+const https = require("http");
 const app = require("./app");
 const socketHandler = require('./socket');
 const { db } = require('./db/db.config');
 const PORT = 5000;
 
-const server = http.createServer(app);
+const server = https.createServer(app);
 socketHandler(server, db);
 
 if (require.main === module) {
