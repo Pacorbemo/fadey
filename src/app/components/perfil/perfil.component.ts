@@ -43,6 +43,7 @@ export class PerfilComponent implements OnInit {
             if (this.user.username == this.datosService.user.username) {
               this.usuarioAutorizado = true;
               this.loadComponent('citas');
+              this.cargandoService.ocultarCargando();
             } else {
               this.relacionesService.comprobarRelacion(this.user.id).subscribe({
                 next: relacionResponse => {
