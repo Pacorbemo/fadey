@@ -1,4 +1,5 @@
 <div class="component-container">
+@if(!cargandoService.cargando){
 @if(!usernameValido){
 	<div class="overlay">
 		<div class="reserva-dialogo">
@@ -91,5 +92,6 @@
 			</div>
 		</div>
 	}
+}
 }
 </div>

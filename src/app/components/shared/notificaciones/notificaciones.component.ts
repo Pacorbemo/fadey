@@ -13,6 +13,8 @@ export class NotificacionesComponent implements OnInit {
 
   notificacionesAbierto: boolean = false;
   fadeOut: boolean = false;
+  notificaciones: Notificacion[] = [];
+  notificacionesCargadas: boolean = false;
 
   constructor(
     public notificacionesService: NotificacionesService,
@@ -20,7 +22,6 @@ export class NotificacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.notificacionesService.obtenerNotificaciones();
     const usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
     this.notificacionesService.conectar(usuarioActual);
     this.notificacionesService.recibirNotificacion().subscribe((notificacion: Notificacion) => {
@@ -35,7 +36,11 @@ export class NotificacionesComponent implements OnInit {
     }
   }
 
-  alternarNotificaciones(): void {
+  async alternarNotificaciones() {
+    if (!this.notificacionesAbierto && !this.notificacionesCargadas) {
+      await this.notificacionesService.obtenerNotificaciones()
+      this.notificacionesCargadas = true;
+    }
     if (this.notificacionesAbierto) {
       this.fadeOut = true;
       setTimeout(() => {

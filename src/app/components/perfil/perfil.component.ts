@@ -8,6 +8,7 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
 import { RelacionesService } from '../../services/relaciones.service';
 import { UploadsPipe } from '../../pipes/uploads.pipe';
 import { Usuario, usuarioVacio } from '../../interfaces/usuario.interface';
+import { CargandoService } from '../../services/cargando.service';
 
 @Component({
   selector: 'app-perfil',
@@ -27,7 +28,8 @@ export class PerfilComponent implements OnInit {
     private route: ActivatedRoute,
     private usuariosServices: UsuariosService,
     public datosService: DatosService,
-    private relacionesService: RelacionesService
+    private relacionesService: RelacionesService,
+    public cargandoService: CargandoService
   ) {}
 
   ngOnInit(): void {

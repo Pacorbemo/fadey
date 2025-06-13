@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { Socket } from 'ngx-socket-io';
+import { ToastService } from './toast.service';
 
 export interface Notificacion {
   mensaje: string;
@@ -20,6 +21,7 @@ export class NotificacionesService {
   constructor(
     private httpService: HttpService,
     private socket: Socket,
+    private toastService: ToastService
   ) { }
 
   obtenerNotificaciones(): void {
@@ -29,7 +31,7 @@ export class NotificacionesService {
           this.notificaciones = response;
         },
         error: (error: any) => {
-          console.error('Error al obtener notificaciones:', error);
+          this.toastService.error(error);
         }
       }
     )
@@ -41,8 +43,8 @@ export class NotificacionesService {
         next: () => {
           this.notificaciones.forEach(notificacion => notificacion.leida = true);
         },
-        error: () => {
-          console.error('Error al marcar todas las notificaciones como leídas');
+        error: (err) => {
+            this.toastService.error(err);
         }
       }
     )

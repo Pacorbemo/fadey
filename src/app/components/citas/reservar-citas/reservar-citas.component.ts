@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RelacionesService } from '../../../services/relaciones.service';
 import { CargandoService } from '../../../services/cargando.service';
+import { ToastService } from '../../../services/toast.service';
 @Component({
   selector: 'app-reservar-citas',
   templateUrl: './reservar-citas.component.html',
@@ -36,7 +37,8 @@ export class ReservarCitasComponent implements OnInit {
     private usuariosService: UsuariosService,
     public relacionesService: RelacionesService,
     private route: ActivatedRoute,
-    public cargandoService: CargandoService
+    public cargandoService: CargandoService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -163,7 +165,7 @@ export class ReservarCitasComponent implements OnInit {
         this.recargarCitas(); 
       },
       error: (error) => {
-        console.error('Error al confirmar la reserva:', error);
+        this.toastService.error(error);
       }
     });
   }

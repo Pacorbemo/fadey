@@ -18,6 +18,7 @@ import { NotificacionesComponent } from './components/shared/notificaciones/noti
 import { UploadsPipe } from './pipes/uploads.pipe';
 import { HttpService } from './services/http.service';
 import { ToastComponent } from './components/shared/toast/toast.component';
+import { ToastService } from './services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +47,8 @@ export class AppComponent implements OnInit {
   constructor(
     public datosService: DatosService,
     private router: Router,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +61,7 @@ export class AppComponent implements OnInit {
           localStorage.setItem('user', JSON.stringify(response));
         },
         error: (error: any) => {
-          console.error('Error al cargar el usuario:', error);
+          this.toastService.error(error);
           this.router.navigate(['/inicio-sesion'])
         },
       });

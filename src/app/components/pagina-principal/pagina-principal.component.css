@@ -1,4 +1,4 @@
-.container{
+.container {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -6,7 +6,7 @@
 	height: 100%;
 }
 
-.fondo{
+.fondo {
 	top: 0;
 	position: absolute;
 	width: 100%;
@@ -17,12 +17,12 @@
 	filter: blur(200px)
 }
 
-h1{
+h1 {
 	font-family: Montserrat, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
 	font-size: 4vw;
 }
 
-.form-control{
+.form-control {
 	width: 20vw;
 }
 
@@ -42,21 +42,21 @@ h1{
 	transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 	box-shadow: 0px 0px 20px -18px;
 }
-  
+
 .input:hover {
 	border: 2px solid lightgrey;
 	box-shadow: 0px 0px 20px -17px;
 }
-  
+
 .input:active {
 	transform: scale(0.95);
 }
-  
+
 .input:focus {
 	border: 2px solid grey;
 }
 
-.main{
+.main {
 	width: 100%;
 	display: flex;
 	position: relative;
@@ -65,10 +65,8 @@ h1{
 }
 
 .cards {
+	width: 90%;
 	margin-top: 5vh;
-}
-
-.card-row{
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
@@ -77,44 +75,49 @@ h1{
 }
 
 @media (max-width: 600px) {
-  .container {
-    width: 100%;
-    min-width: 0;
-  }
-  .main {
-	width: auto;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0 0.5em;
-    gap: 2em;
-  }
-  .cards {
-    margin-top: 2vh;
-    width: 100%;
-    padding: 0;
-  }
-  .card-row {
-	width: 100%;
-    flex-direction: row;
-    gap: 2vw;
-    padding: 0 0 18px 0;
-    align-items: stretch;
-  }
-  h1 {
-    font-size: 2.1rem;
-    text-align: center;
-    margin: 0.2em 0 0.7em 0;
-  }
-  .form-control {
-    width: 70%;
-    min-width: 0;
-    margin-bottom: 1em;
-  }
-  .input {
-    height: 2.0rem;
-    font-size: 0.8em;
-    padding: 10px;
-    border-radius: 8px;
-  }
-}
+	.container {
+		width: 100%;
+		min-width: 0;
+	}
 
+	.main {
+		width: auto;
+		flex-direction: column;
+		align-items: stretch;
+		padding: 0 0.5em;
+		gap: 2em;
+	}
+
+	.cards {
+		margin-top: 2vh;
+		width: 100%;
+		padding: 0;
+	}
+
+	.card-row {
+		width: 100%;
+		flex-direction: row;
+		gap: 2vw;
+		padding: 0 0 18px 0;
+		align-items: stretch;
+	}
+
+	h1 {
+		font-size: 2.1rem;
+		text-align: center;
+		margin: 0.2em 0 0.7em 0;
+	}
+
+	.form-control {
+		width: 70%;
+		min-width: 0;
+		margin-bottom: 1em;
+	}
+
+	.input {
+		height: 2.0rem;
+		font-size: 0.8em;
+		padding: 10px;
+		border-radius: 8px;
+	}
+}

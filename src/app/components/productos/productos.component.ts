@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { UploadsPipe } from '../../pipes/uploads.pipe';
 import { ToastComponent } from '../shared/toast/toast.component';
 import { ToastService } from '../../services/toast.service';
+import { CargandoService } from '../../services/cargando.service';
 
 @Component({
   selector: 'app-productos',
@@ -17,7 +18,7 @@ export class ProductosComponent implements OnInit {
   usernameBarbero : string = '';
   productos: { id: number; nombre: string; descripcion: string; precio: string; stock: number; foto: string, reservaCantidad: number }[] = [];
 
-  constructor(private route: ActivatedRoute, private httpService: HttpService, private toastService: ToastService) { }
+  constructor(private route: ActivatedRoute, private httpService: HttpService, private toastService: ToastService, public cargandoService: CargandoService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe({
@@ -29,6 +30,7 @@ export class ProductosComponent implements OnInit {
               ...producto,
               reservaCantidad: 1
             }));
+            this.cargandoService.cargando = false;
           }
         });
       }

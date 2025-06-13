@@ -20,7 +20,7 @@
 	}
 </section>
 
-@if(!usuarioAutorizado){
+@if(!usuarioAutorizado && !cargandoService.cargando ){
 	<div class="overlay">
 		<div class="reserva-dialogo">
 			<p>No tienes acceso al perfil de {{user.username}}</p>

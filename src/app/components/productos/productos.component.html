@@ -1,27 +1,29 @@
-<div class="productos-container">
-	<app-toast></app-toast>
-	@for(producto of productos; track producto.id) {
-    <div class="producto-card">
-      <img [src]="producto.foto | uploads" alt="{{ producto.nombre }}">
-      <div class="producto-info">
-        <h2>{{ producto.nombre }}</h2>
-        <p>{{ producto.descripcion }}</p>
-        <p>Precio: {{ producto.precio }}€</p>
-        <p>Stock: {{ producto.stock }}</p>
-      </div>
-      <div class="reserva">
-        <input
+@if(!cargandoService.cargando){
+  <div class="productos-container">
+    <app-toast></app-toast>
+    @for(producto of productos; track producto.id) {
+      <div class="producto-card">
+        <img [src]="producto.foto | uploads" alt="{{ producto.nombre }}">
+        <div class="producto-info">
+          <h2>{{ producto.nombre }}</h2>
+          <p>{{ producto.descripcion }}</p>
+          <p>Precio: {{ producto.precio }}€</p>
+          <p>Stock: {{ producto.stock }}</p>
+        </div>
+        <div class="reserva">
+          <input
           type="number"
           min="1"
           placeholder="Cantidad"
           [(ngModel)]="producto.reservaCantidad" 
-      (blur)="producto.reservaCantidad = producto.reservaCantidad < 1 ? 1 : producto.reservaCantidad"
-      />
-        <button (click)="reservarProducto(producto)" [disabled]="producto.stock<1">Reservar</button>
+          (blur)="producto.reservaCantidad = producto.reservaCantidad < 1 ? 1 : producto.reservaCantidad"
+          />
+          <button (click)="reservarProducto(producto)" [disabled]="producto.stock<1">Reservar</button>
+        </div>
       </div>
-    </div>
-	}
-  @if(productos.length == 0) {
-    <h2>{{usernameBarbero}} no tiene productos disponibles</h2>
-  }
-</div>
+    }
+    @if(productos.length == 0) {
+      <h2>{{usernameBarbero}} no tiene productos disponibles</h2>
+    }
+  </div>
+}

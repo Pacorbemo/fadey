@@ -17,9 +17,14 @@
             {{crearMensaje(notificacion)}}
           </li>
         }
-        @if (notificacionesService.notificaciones.length === 0) {
+        @if (notificacionesService.notificaciones.length === 0 && notificacionesCargadas) {
           <li>
             No tienes notificaciones.
+          </li>
+        }
+        @if (!notificacionesCargadas) {
+          <li>
+            Cargando notificaciones...
           </li>
         }
       </ul>

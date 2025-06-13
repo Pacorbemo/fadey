@@ -14,12 +14,10 @@
 			<h2>Ningun usuario coincide con "{{buscadorService.buscadorCopia}}"</h2>
 			}
 			@else {
-			<div class="card-row">
-				<div *ngFor="let barbero of buscadorService.resultados">
+				@for(barbero of buscadorService.resultados; track barbero.username) {
 					<pagina-principal-card [barbero]="barbero"
 						(click)="buscadorService.seleccionarUsuario(barbero.username)"></pagina-principal-card>
-				</div>
-			</div>
+				}
 			}
 		</div>
 	</div>
