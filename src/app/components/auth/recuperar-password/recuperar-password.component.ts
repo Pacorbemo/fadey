@@ -1,33 +1,35 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpService } from '../../../services/http.service';
+import { ToastService } from '../../../services/toast.service';
+import { ValidacionesService } from '../../../services/validaciones.service';
 
 @Component({
   selector: 'app-recuperar-password',
   standalone: true,
   templateUrl: './recuperar-password.component.html',
   styleUrls: ['./recuperar-password.component.css'],
-  imports: [FormsModule]
+  imports: [FormsModule],
 })
 export class RecuperarPasswordComponent {
   email: string = '';
-  enviado: boolean = false;
-  error: string = '';
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService, private toastService: ToastService, private validacionesService: ValidacionesService ) {}
 
-  enviarInstrucciones() {
-    this.error = '';
-    this.enviado = false;
-    this.http.post(`/usuarios/recuperar-password`, { email: this.email }, true)
+  desactivarBoton (): boolean {
+    return !!this.validacionesService.validarEmail(this.email);
+  }
+
+  enviarInstrucciones(): void {
+    this.http
+      .post(`/usuarios/recuperar-password`, { email: this.email }, true)
       .subscribe({
         next: (res) => {
-          this.enviado = true;
-          this.error = '';
+          this.toastService.mostrar(res);
         },
         error: (err) => {
-          this.error = err.error?.error || 'Error enviando el email. Inténtalo de nuevo más tarde.';
-        }
+          this.toastService.error(err);
+        },
       });
   }
 }

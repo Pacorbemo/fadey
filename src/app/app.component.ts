@@ -38,6 +38,7 @@ import { ToastComponent } from './components/shared/toast/toast.component';
 export class AppComponent implements OnInit {
   @ViewChild(BuscadorComponent) buscadorComponent!: BuscadorComponent;
   @ViewChild('menu') menuRef!: ElementRef;
+  @ViewChild('burguer') burguerRef!: ElementRef;
 
   menuAbierto: boolean = false;
   burguerAbierto = false;
@@ -88,6 +89,9 @@ export class AppComponent implements OnInit {
       !this.menuRef.nativeElement.contains(event.target)
     ) {
       this.menuAbierto = false;
+    }
+    if( this.burguerAbierto && this.burguerRef && !this.burguerRef.nativeElement.contains(event.target)) {
+      this.burguerAbierto = false;
     }
   }
 }

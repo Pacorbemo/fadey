@@ -1,8 +1,6 @@
 <div class="component-container">
 <div class="form-container">
   <p class="title">Registro</p>
-
-  <app-toast></app-toast>
   <form (ngSubmit)="registrarUsuario()" class="form">
     
     <div class="input-group">
@@ -15,7 +13,7 @@
         required 
         (blur)="verificarUsername()" 
       />
-      @if(!usernameValido) {
+      @if(!usernameValido && mensajeErrorUsername) {
         <p class="error">{{ mensajeErrorUsername }}</p>
       }
     </div>
@@ -42,31 +40,31 @@
         required 
         (blur)="verificarEmail()" 
       />
-      @if(!emailValido) {
+      @if(!emailValido && mensajeErrorEmail) {
         <p class="error">{{ mensajeErrorEmail }}</p>
       }
     </div>
 
     <div class="input-group">
-      <label for="password">Contraseña</label>
-      <input 
-        type="password" 
-        id="password" 
-        name="password" 
-        [(ngModel)]="password" 
-        required 
-      />
+      <app-password-field
+        label="Contraseña"
+        [(value)]="password"
+        [showStrength]="true"
+        [showGenerator]="true"
+        [mostrarRequisitos]="true"
+        [required]="true"
+        (passwordGenerada)="onPasswordGenerada($event)" 
+      ></app-password-field>
     </div>
 
     <div class="input-group">
-      <label for="confirmPassword">Confirmar Contraseña</label>
-      <input 
-        type="password" 
-        id="confirmPassword" 
-        name="confirmPassword" 
-        [(ngModel)]="confirmPassword" 
-        required 
-      />
+      <app-password-field
+        label="Confirmar Contraseña"
+        [(value)]="confirmPassword"
+        [showStrength]="false"
+        [showGenerator]="false"
+        [required]="true"
+      ></app-password-field>
     </div>
 
     <div class="input-group">

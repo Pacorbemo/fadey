@@ -99,3 +99,14 @@
 .btn-cancelar:hover {
   background: #fd2d2d;
 }
+
+@media (max-width: 600px) {
+  .toast {
+    width: 90%;
+    padding: 1rem;
+    font-size: 0.95em;
+  }
+  .toast-icon {
+    font-size: 1.3em;
+  }
+}

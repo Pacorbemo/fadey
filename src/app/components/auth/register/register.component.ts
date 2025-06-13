@@ -4,14 +4,15 @@ import { UsuariosService } from '../../../services/usuarios.service';
 import { DatosService } from '../../../services/datos.service';
 import { Router, RouterLink } from '@angular/router';
 import { ToastService } from '../../../services/toast.service';
-import { ToastComponent } from '../../shared/toast/toast.component';
+import { ValidacionesService } from '../../../services/validaciones.service';
+import { PasswordFieldComponent } from '../../shared/password-field/password-field.component';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
   standalone: true,
-  imports: [ FormsModule, RouterLink, ToastComponent ],
+  imports: [ FormsModule, RouterLink, PasswordFieldComponent ],
 })
 export class RegisterComponent {
   username: string = '';
@@ -21,8 +22,8 @@ export class RegisterComponent {
   password: string = '';
   confirmPassword: string = '';
 
-  usernameValido: boolean = true; 
-  emailValido: boolean = true;
+  usernameValido: boolean = false; 
+  emailValido: boolean = false;
 
   mensajeErrorUsername: string = '';
   mensajeErrorEmail: string = '';
@@ -33,10 +34,13 @@ export class RegisterComponent {
     private usuariosService: UsuariosService,
     private datosService: DatosService,
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private validacionesService: ValidacionesService
   ) {}
 
   registrarUsuario(): void {
+
+    // El resto de validaciones para enviar el formulario se realizan al desactivar el botón
     if (this.password !== this.confirmPassword) {
       this.toastService.error('Las contraseñas no coinciden.');
       return;
@@ -59,21 +63,28 @@ export class RegisterComponent {
         this.router.navigate(['/mis-citas']);
       },
       error: (error) => {
-        const err = error.error?.error;
-        let mensaje = typeof err === 'string' ? err : err?.mensaje || 'Ha ocurrido un error inesperado. Inténtalo de nuevo.';
-        let sugerencia = err?.sugerencia || '';
-        this.toastService.error(mensaje + (sugerencia ? ' ' + sugerencia : ''));
+        this.toastService.error(error)
       }
     });
   }
 
   verificarUsername(): void {
-    if (this.username.trim() === '') {
+    // Evitamos mostrar error si el usuario no ha introducido nada
+    if (!this.username) {
       this.usernameValido = false;
-      this.mensajeErrorUsername = 'El username no puede estar vacío.';
+      this.mensajeErrorUsername = '';
       return;
     }
 
+    // Primero hace comprobaciones de formato y longitud
+    const userInvalido = this.validacionesService.validarUsername(this.username);
+    if (userInvalido) {
+      this.usernameValido = false;
+      this.mensajeErrorUsername = userInvalido;
+      return;
+    }
+
+    // Finalmente verifica si el username ya está en uso
     this.usuariosService.validarUsername(this.username).subscribe({
       next: (response) => {
         this.usernameValido = response.valido;
@@ -87,31 +98,32 @@ export class RegisterComponent {
   }
 
   verificarEmail(): void {
-    this.email = this.email.trim();
-
-    if (this.email === '') {
+    if (!this.email) {
       this.emailValido = false;
-      this.mensajeErrorEmail = 'El correo electrónico no puede estar vacío.';
+      this.mensajeErrorEmail = '';
       return;
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(this.email)) {
+    const emailInvalido = this.validacionesService.validarEmail(this.email);
+    if (emailInvalido) {
       this.emailValido = false;
-      this.mensajeErrorEmail = 'El formato de correo electrónico no es válido.';
+      this.mensajeErrorEmail = emailInvalido;
       return;
     }
 
-    this.usuariosService.verificarEmail(this.email).subscribe(
-      (response) => {
+    this.usuariosService.verificarEmail(this.email).subscribe({
+      next: (response) => {
         this.emailValido = !response.exists;
         this.mensajeErrorEmail = response.exists ? 'El correo electrónico ya está en uso.' : '';
       },
-      (error) => {
-        console.error('Error al verificar el correo electrónico:', error);
+      error: (error) => {
         this.emailValido = false;
-        this.mensajeErrorEmail = 'Error al verificar el correo electrónico.';
+        this.mensajeErrorEmail = error.error;
       }
-    );
+    });
+  }
+
+  onPasswordGenerada(password: string): void {
+    this.confirmPassword = password;
   }
 }

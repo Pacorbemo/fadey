@@ -47,7 +47,13 @@ export class ToastService {
   }
 
   mostrar(response: any, duracion: number = 3500) {
-    this.mensajeSubject.next({ mensaje: response.mensaje, tipo: 'exito' });
+	let mensaje;
+	if(typeof response === 'string') {
+		mensaje = response;
+	} else if (typeof response === 'object' && response !== null) {
+		mensaje = response.mensaje;
+	}
+    this.mensajeSubject.next({ mensaje, tipo: 'exito' });
     setTimeout(() => {
       this.mensajeSubject.next('');
     }, duracion);

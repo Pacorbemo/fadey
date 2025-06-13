@@ -33,5 +33,14 @@ export class DatosService {
   set tokenUsuario(token: string) {
     this._tokenUsuario = token;
   }
+  
+  actualizar(campo: string, valor: any): void {
+    if (this.user && campo in this.user) {
+      (this.user as any)[campo] = valor;
+      localStorage.setItem('user', JSON.stringify(this.user));
+    } else {
+      console.error(`Campo ${campo} no existe en el usuario.`);
+    }
+  }
 
 }
