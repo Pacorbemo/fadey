@@ -30,15 +30,20 @@ export class BuscadorService {
         } // Si buscador cambia en lo que se recibe la respuesta, no se muestran los resultados
         this.resultados = usuarios;
         this.buscadorCopia = this.buscador;
-        this.cargandoService.cargando = false;
+        this.cargandoService.ocultarCargando()
       });
     this.randomSubject
       .pipe(switchMap(() => this.usuariosService.getRandomUsuarios()))
-      .subscribe((usuarios) => {
+      .subscribe({
+      next: (usuarios) => {
         this.resultadosAleatorios = usuarios;
         this.resultados = usuarios;
-        this.cargandoService.cargando = false;
-      });
+        this.cargandoService.ocultarCargando();
+      },
+      error: () => {
+        this.cargandoService.ocultarCargando();
+      }
+    });
   }
 
   resultados: Usuario[] = [];

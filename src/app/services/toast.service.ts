@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type ToastMensaje = string | { 
+export type ToastMensaje = 
+  | string
+  | { 
       mensaje: string; 
       sugerencia?: string; 
       tipo?: 'error' | 'exito' | 'pregunta'; 
@@ -14,54 +16,43 @@ export class ToastService {
   private mensajeSubject = new BehaviorSubject<ToastMensaje>('');
   mensaje$ = this.mensajeSubject.asObservable();
 
+  private limpiarToast(duracion: number) {
+    if (duracion >= 0) {
+      setTimeout(() => this.mensajeSubject.next(''), duracion);
+    }
+  }
+
   error(error: any, duracion: number = 3500) {
     const respaldo = 'Ha ocurrido un error inesperado. Inténtalo de nuevo más tarde.';
     let mensaje = '';
     let sugerencia = '';
-    if (typeof error === 'string') {
+
+    if(error.status === 0){
+      mensaje = 'No se pudo conectar al servidor.';
+      sugerencia = 'Por favor, verifica tu conexión a Internet.';
+      duracion = 10000;
+    }
+    else if (typeof error === 'string') {
       mensaje = error;
-    } 
-    else if (error?.error) {
+    } else if (error?.error) {
       const err = error.error;
       mensaje = typeof err === 'string' ? err : err?.mensaje || respaldo;
-      if (err?.sugerencia) {
-        sugerencia = err.sugerencia;
-      }
-    } 
-    else if (error?.mensaje) {
+      sugerencia = err?.sugerencia || '';
+    } else if (error?.mensaje) {
       mensaje = error.mensaje;
-      if (error.sugerencia) {
-        sugerencia = error.sugerencia;
-      }
+      sugerencia = error.sugerencia || '';
     } else {
       mensaje = respaldo;
     }
-    if (sugerencia) {
-      this.mensajeSubject.next({ mensaje, sugerencia });
-    } else {
-      this.mensajeSubject.next(mensaje);
-    }
 
-    if(duracion >= 0) {
-      setTimeout(() => {
-        this.mensajeSubject.next('');
-      }, duracion);
-    }
+    this.mensajeSubject.next(sugerencia ? { mensaje, sugerencia, tipo: 'error' } : { mensaje, tipo: 'error' });
+    this.limpiarToast(duracion);
   }
 
   mostrar(response: any, duracion: number = 3500) {
-	let mensaje;
-	if(typeof response === 'string') {
-		mensaje = response;
-	} else if (typeof response === 'object' && response !== null) {
-		mensaje = response.mensaje;
-	}
+    const mensaje = typeof response === 'string' ? response : response?.mensaje || '';
     this.mensajeSubject.next({ mensaje, tipo: 'exito' });
-    if(duracion >= 0) {
-      setTimeout(() => {
-        this.mensajeSubject.next('');
-      }, duracion);
-    }
+    this.limpiarToast(duracion);
   }
 
   preguntar(mensaje: string, callback: () => void) {
@@ -72,9 +63,7 @@ export class ToastService {
         callback();
         this.mensajeSubject.next('');
       },
-      onCancelar: () => {
-        this.mensajeSubject.next('');
-      }
+      onCancelar: () => this.mensajeSubject.next('')
     });
   }
 }

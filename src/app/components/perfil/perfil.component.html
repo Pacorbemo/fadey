@@ -37,8 +37,8 @@
 			</div>
 		</div>
 	}
-	<ng-container *ngComponentOutlet="component$.value" />
 }
+<ng-container *ngComponentOutlet="component$.value" />
 
 @if(cargandoService.cargandoProlongado | async){
 	<app-cargando [mensaje]="`Cargando perfil de ${user.username}`" ></app-cargando>

@@ -3,7 +3,7 @@
     <p>Fadey</p>
   </div>
   @if(datosService.tokenUsuario){
-    <div class="nav-burguer-container" #burguer>
+    <div class="nav-burguer-container" #burgerButton >
       <button class="burguer" (click)="burguerAbierto = !burguerAbierto" aria-label="Abrir menú de navegación">
         @if(!burguerAbierto){
           <img src="svgs/icono-menu.svg" width="24" height="24" alt="Abrir menú" />
@@ -12,7 +12,7 @@
           <img src="svgs/icono-cerrar-menu.svg" width="24" height="24" alt="Cerrar menú" />
         }
       </button>
-      <nav [class.abierto]="burguerAbierto">
+      <nav [class.abierto]="burguerAbierto" #burguerNav>
         <a id="crear-citas" routerLink="crear-citas" routerLinkActive="active-link">Crear</a>
         <a routerLink="mis-citas" routerLinkActive="active-link">Citas</a>
         @if(datosService.esBarbero()){

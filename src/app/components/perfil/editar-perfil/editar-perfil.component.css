@@ -86,7 +86,6 @@ h2 {
 	color: gray;
 }
 
-
 .change-button-container {
 	position: absolute;
 	top: 50%;
@@ -96,15 +95,7 @@ h2 {
 	transition: opacity 0.3s ease;
 }
 
-span .change-button-container:hover {
-	opacity: 1;
-}
-
 .file-input {
-	display: none;
-}
-
-form {
 	display: none;
 }
 
@@ -122,6 +113,7 @@ form {
   gap: 0.5em;
   margin: 1em auto;
 }
+
 .email-warning button {
   background: #d32f2f;
   color: #fff;
@@ -190,7 +182,6 @@ form {
   font-weight: 500;
 }
 
-/* Estilos para opciones de cuenta */
 .opciones-cuenta {
   grid-column: 1 / span 2;
   margin-top: 20px;
@@ -255,7 +246,6 @@ form {
   align-items: center;
 }
 
-
 .mensaje-notificacion-disabled {
   color: #d32f2f;
   font-size: 0.95em;
@@ -263,7 +253,6 @@ form {
 	width: max-content !important;
 }
 
-/* Estilos para el modal de confirmación de eliminación de cuenta */
 .dialogo-eliminar-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -372,5 +361,9 @@ form {
   input[type="email"],
   textarea {
     font-size: 14px;
+  }
+
+  #email-container{
+    grid-column: span 2;
   }
 }

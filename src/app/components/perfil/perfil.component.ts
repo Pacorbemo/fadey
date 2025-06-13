@@ -10,6 +10,7 @@ import { UploadsPipe } from '../../pipes/uploads.pipe';
 import { Usuario, usuarioVacio } from '../../interfaces/usuario.interface';
 import { CargandoService } from '../../services/cargando.service';
 import { CargandoComponent } from '../shared/cargando/cargando.component';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-perfil',
@@ -30,7 +31,8 @@ export class PerfilComponent implements OnInit {
     private usuariosServices: UsuariosService,
     public datosService: DatosService,
     private relacionesService: RelacionesService,
-    public cargandoService: CargandoService
+    public cargandoService: CargandoService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +45,6 @@ export class PerfilComponent implements OnInit {
             if (this.user.username == this.datosService.user.username) {
               this.usuarioAutorizado = true;
               this.loadComponent('citas');
-              this.cargandoService.ocultarCargando();
             } else {
               this.relacionesService.comprobarRelacion(this.user.id).subscribe({
                 next: relacionResponse => {
@@ -85,9 +86,10 @@ export class PerfilComponent implements OnInit {
     this.relacionesService.solicitar(usernameBarbero).subscribe({
       next: () => {
         this.relacionActual = 'pendiente';
+        this.toastService.mostrar('Solicitud enviada correctamente.');
       },
       error: (error) => {
-        console.error('Error al solicitar relación:', error);
+        this.toastService.error(error);
       }
     });
   }

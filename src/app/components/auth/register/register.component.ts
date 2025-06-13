@@ -91,6 +91,10 @@ export class RegisterComponent {
         this.mensajeErrorUsername = '';
       },
       error: (error) => {
+        if( error.status === 0) {
+          this.toastService.error(error);
+          return;
+        }
         this.usernameValido = false;
         this.mensajeErrorUsername = error.error;
       }
@@ -117,6 +121,10 @@ export class RegisterComponent {
         this.mensajeErrorEmail = response.exists ? 'El correo electrónico ya está en uso.' : '';
       },
       error: (error) => {
+        if( error.status === 0) {
+          this.toastService.error(error);
+          return;
+        }
         this.emailValido = false;
         this.mensajeErrorEmail = error.error;
       }
