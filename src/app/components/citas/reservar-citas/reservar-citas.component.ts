@@ -24,8 +24,6 @@ export class ReservarCitasComponent implements OnInit {
   idBarbero: number = 0;
   usernameBarbero: string = '';
   esBarbero: boolean = true;
-  // horariosDisponibles: { [dia: number]: string[] } = {
-  //   1: ['08:00', '08:30', '09:00', '10:00'],
   horariosDisponibles: {[dia: number]: string[]} = []
   horariosReservados: {[dia: number]: string[]} = []
   horariosReservadosPorUsuario: {[dia: number]: string[]} = []
@@ -137,7 +135,7 @@ export class ReservarCitasComponent implements OnInit {
           .toString()
           .padStart(2, '0')}`;
         this.franjasHorarias.push(horaFormateada);
-        if (hora === horaFin && minutos === minutosFin) break; // Nos ahorramos pintar el :30 si la última hora termina en :00
+        if (hora === horaFin && minutos === minutosFin) break; // Ahorramos pintar el :30 si la última hora termina en :00
       }
     }
   }

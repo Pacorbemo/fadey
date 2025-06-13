@@ -5,12 +5,12 @@ import { DatosService } from '../../services/datos.service';
 import { FormsModule } from '@angular/forms';
 import { CargandoService } from '../../services/cargando.service';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
+import { CargandoComponent } from '../shared/cargando/cargando.component';
 
 @Component({
   selector: 'app-relaciones',
   standalone: true,
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule, CargandoComponent],
   templateUrl: './relaciones.component.html',
   styleUrl: './relaciones.component.css'
 })

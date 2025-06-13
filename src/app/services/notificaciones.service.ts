@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { Socket } from 'ngx-socket-io';
 import { ToastService } from './toast.service';
+import { Observable } from 'rxjs';
 
 export interface Notificacion {
   mensaje: string;
@@ -24,17 +25,8 @@ export class NotificacionesService {
     private toastService: ToastService
   ) { }
 
-  obtenerNotificaciones(): void {
-    this.httpService.getToken('/notificaciones', undefined, true).subscribe(
-      {
-        next: (response: any) => {
-          this.notificaciones = response;
-        },
-        error: (error: any) => {
-          this.toastService.error(error);
-        }
-      }
-    )
+  obtenerNotificaciones(): Observable<Notificacion[]> {
+    return this.httpService.getToken('/notificaciones', undefined, true)
   }
 
   marcarTodasLeidas(): void {

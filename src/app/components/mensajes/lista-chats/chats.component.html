@@ -1,27 +1,32 @@
 <div class="chats-container">
 	<h2 class="titulo">Chats</h2>
-	<ul>
-		@for (chat of chats; track chat.username) {
-		<li [routerLink]="['/', chat.username, 'mensajes']">
-			<img class="avatar-barber"
-			     [src]="chat.foto_perfil | uploads : 'uploads'"
-			     alt="Avatar"
-			/>
-			<div class="info-chat">
-				<span class="username-barber">{{ chat.username }}
-          @if(chat.no_leidos && chat.no_leidos > 0) {
-            <span class="badge-noleidos">{{ chat.no_leidos }}</span>
-          }
-        </span>
-				<span class="ultimo-mensaje">{{ chat.ultimo_mensaje }}</span>
-				<span class="fecha">
-					{{ hoy(chat.ultima_fecha) 
+	@if(cargandoService.cargandoProlongado | async){
+		<app-cargando [mensaje]="`Cargando productos`" ></app-cargando>
+	}
+	@else {
+		<ul>
+			@for (chat of chats; track chat.username) {
+				<li [routerLink]="['/', chat.username, 'mensajes']">
+					<img class="avatar-barber"
+					[src]="chat.foto_perfil | uploads : 'uploads'"
+					alt="Avatar"
+					/>
+					<div class="info-chat">
+						<span class="username-barber">{{ chat.username }}
+							@if(chat.no_leidos && chat.no_leidos > 0) {
+								<span class="badge-noleidos">{{ chat.no_leidos }}</span>
+							}
+						</span>
+						<span class="ultimo-mensaje">{{ chat.ultimo_mensaje }}</span>
+						<span class="fecha">
+							{{ hoy(chat.ultima_fecha) 
 						? (chat.ultima_fecha | date:'HH:mm') 
 						: (chat.ultima_fecha | date:'dd/MM') 
 					}}
 				</span>
 			</div>
 		</li>
-		}
+	}
 	</ul>
+	}
 </div>

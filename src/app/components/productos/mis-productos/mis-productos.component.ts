@@ -3,15 +3,16 @@ import { FormsModule } from '@angular/forms';
 import { HttpService } from '../../../services/http.service';
 import { DatosService } from '../../../services/datos.service';
 import { CommonModule } from '@angular/common';
-import { debounceTime, Subject, switchMap } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
 import { CargandoService } from '../../../services/cargando.service';
 import { UploadsPipe } from '../../../pipes/uploads.pipe';
 import { ToastService } from '../../../services/toast.service';
+import { CargandoComponent } from '../../shared/cargando/cargando.component';
 
 @Component({
   selector: 'app-mis-productos',
   standalone: true,
-  imports: [FormsModule, CommonModule, UploadsPipe],
+  imports: [FormsModule, CommonModule, UploadsPipe, CargandoComponent],
   templateUrl: './mis-productos.component.html',
   styleUrl: './mis-productos.component.css',
   host: {

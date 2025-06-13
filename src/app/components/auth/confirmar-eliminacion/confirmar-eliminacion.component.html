@@ -1,17 +1,17 @@
 <section class="confirmar-eliminacion-container">
   <div class="confirmar-eliminacion-card">
     <h1>Eliminar cuenta</h1>
-    <div *ngIf="estado === 'ok'">
+    @if (estado === 'ok') {
       <p>
         Tu cuenta ha sido eliminada correctamente.<br>
         Sentimos verte partir. ¡Gracias por haber confiado en Fadey!
       </p>
-    </div>
-    <div *ngIf="estado === 'error'">
+    }
+    @else if(estado === 'error'){
       <p style="color:#ff5252;">
         El enlace de confirmación no es válido o ha expirado.<br>
         Si necesitas ayuda, contacta con soporte.
       </p>
-    </div>
+    }
   </div>
 </section>

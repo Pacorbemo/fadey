@@ -5,11 +5,12 @@ import { BuscadorService } from '../../services/buscador.service';
 import { CommonModule } from '@angular/common';
 import { CargandoService } from '../../services/cargando.service';
 import { UsuariosService } from '../../services/usuarios.service';
+import { CargandoComponent } from '../shared/cargando/cargando.component';
 
 @Component({
   selector: 'app-pagina-principal',
   standalone: true,
-  imports: [FormsModule, CardComponent, CommonModule],
+  imports: [FormsModule, CardComponent, CommonModule, CargandoComponent],
   templateUrl: './pagina-principal.component.html',
   styleUrl: './pagina-principal.component.css',
 })

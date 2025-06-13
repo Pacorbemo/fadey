@@ -15,9 +15,13 @@
       <nav [class.abierto]="burguerAbierto">
         <a id="crear-citas" routerLink="crear-citas" routerLinkActive="active-link">Crear</a>
         <a routerLink="mis-citas" routerLinkActive="active-link">Citas</a>
-        <a routerLink="mis-productos" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Productos</a>
+        @if(datosService.esBarbero()){
+          <a routerLink="mis-productos" routerLinkActive="active-link">Productos</a>
+        }
         <a routerLink="relaciones" routerLinkActive="active-link">Relaciones</a>
-        <a routerLink="solicitudes" *ngIf="datosService.esBarbero()" routerLinkActive="active-link">Solicitudes</a>
+        @if(datosService.esBarbero()){
+          <a routerLink="solicitudes" routerLinkActive="active-link">Solicitudes</a>
+        }
         <a routerLink="chats" routerLinkActive="active-link">Chats</a>
       </nav>
     </div>

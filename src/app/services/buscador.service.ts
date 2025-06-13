@@ -27,7 +27,7 @@ export class BuscadorService {
         if (this.buscador == '') {
           cargandoService.cargando = false;
           return
-        } //Si buscador cambia en lo que se recibe la respuesta, no se muestran los resultados
+        } // Si buscador cambia en lo que se recibe la respuesta, no se muestran los resultados
         this.resultados = usuarios;
         this.buscadorCopia = this.buscador;
         this.cargandoService.cargando = false;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet, CommonModule } from '@angular/common';
 import { UsuariosService } from '../../services/usuarios.service';
 import { DatosService } from '../../services/datos.service';
 import { BehaviorSubject } from 'rxjs';
@@ -9,11 +9,12 @@ import { RelacionesService } from '../../services/relaciones.service';
 import { UploadsPipe } from '../../pipes/uploads.pipe';
 import { Usuario, usuarioVacio } from '../../interfaces/usuario.interface';
 import { CargandoService } from '../../services/cargando.service';
+import { CargandoComponent } from '../shared/cargando/cargando.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [RouterModule, NgComponentOutlet, CapitalizePipe, UploadsPipe],
+  imports: [RouterModule, NgComponentOutlet, CapitalizePipe, UploadsPipe, CommonModule, CargandoComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css',
 })

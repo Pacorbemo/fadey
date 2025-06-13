@@ -1,6 +1,9 @@
 <div class="component-container">
   <div class="tabla-container">
     <h2 class="titulo">Citas</h2>
+    @if(cargandoService.cargandoProlongado | async){
+      <app-cargando mensaje="Cargando citas..."></app-cargando>
+    }
     @if(datosService.esCliente()){
       <app-citas-cliente/>
     }

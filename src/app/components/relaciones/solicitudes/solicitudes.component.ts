@@ -3,11 +3,12 @@ import { RelacionesService } from '../../../services/relaciones.service';
 import { CommonModule } from '@angular/common';
 import { CargandoService } from '../../../services/cargando.service';
 import { Router } from '@angular/router';
+import { CargandoComponent } from '../../shared/cargando/cargando.component';
 
 @Component({
   selector: 'app-solicitudes',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CargandoComponent],
   templateUrl: './solicitudes.component.html',
   styleUrl: './solicitudes.component.css'
 })

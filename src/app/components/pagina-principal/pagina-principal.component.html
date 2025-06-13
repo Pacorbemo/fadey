@@ -8,7 +8,7 @@
 	<div class="main">
 		<div class="cards">
 			@if(cargandoService.cargandoProlongado | async) {
-			<h2>Buscando usuarios...</h2>
+				<app-cargando [mensaje]="'Cargando barberos'"></app-cargando>
 			}
 			@else if (buscadorService.resultados.length == 0 && !cargandoService.cargando ) {
 			<h2>Ningun usuario coincide con "{{buscadorService.buscadorCopia}}"</h2>

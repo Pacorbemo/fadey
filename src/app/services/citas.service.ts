@@ -30,7 +30,7 @@ export class CitasService {
     return copiaDiaInicio;
   }
 
-  // Transformar Date con la hora en 00:00 con la hora correspondiente
+  // Transformar un dia en formato Date más una hora en string en un Date
   diaHora(dia: Date, hora: string): Date {
     const [horas, minutos] = hora.split(':').map(Number);
     const fecha = new Date(dia);
@@ -168,7 +168,7 @@ export class CitasService {
     return horariosPurgados;
   }
 
-  // Transformar un array de Date a un objeto con claves los días y valores los horarios
+  // Transformar un array de Date a un objeto con claves numero de día y valores los horarios
   // { 1: ['08:00', '08:30'], 2: ['09:00', '09:30'], ... }
   private procesarFechas(fechas: Date[]): { [dia: number]: string[] } {
     const resultado: { [dia: number]: string[] } = {};

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Notificacion, NotificacionesService } from '../../../services/notificaciones.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-notificaciones',
@@ -13,12 +14,12 @@ export class NotificacionesComponent implements OnInit {
 
   notificacionesAbierto: boolean = false;
   fadeOut: boolean = false;
-  notificaciones: Notificacion[] = [];
   notificacionesCargadas: boolean = false;
 
   constructor(
     public notificacionesService: NotificacionesService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -36,10 +37,20 @@ export class NotificacionesComponent implements OnInit {
     }
   }
 
-  async alternarNotificaciones() {
+  alternarNotificaciones() {
     if (!this.notificacionesAbierto && !this.notificacionesCargadas) {
-      await this.notificacionesService.obtenerNotificaciones()
-      this.notificacionesCargadas = true;
+      this.notificacionesService.obtenerNotificaciones().subscribe(
+      {
+        next: (response: Notificacion[]) => {
+          this.notificacionesService.notificaciones = response;
+        },
+        error: (error: any) => {
+          this.toastService.error(error);
+        },
+        complete: () => {
+          this.notificacionesCargadas = true;
+        }
+      })
     }
     if (this.notificacionesAbierto) {
       this.fadeOut = true;

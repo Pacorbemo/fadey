@@ -1,10 +1,8 @@
 <div class="component-container">
 	<h2 class="titulo">Solicitudes</h2>
 
-	@if (cargandoService.cargando) {
-		@if((cargandoService.cargandoProlongado | async)){
-			<p>Cargando...</p>
-		}
+	@if(cargandoService.cargandoProlongado | async){
+		<app-cargando [mensaje]="`Cargando solicitudes`" ></app-cargando>
 	}
 	
 	@else if (solicitudes.length > 0) {
