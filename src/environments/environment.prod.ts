@@ -1,4 +1,4 @@
 export const environment = {
 	production: true,
-  	serverUrl: 'http://localhost:5000',
+  	serverUrl: 'http://corb3ra.com:5000',
 };
