@@ -20,13 +20,18 @@
 						<span class="ultimo-mensaje">{{ chat.ultimo_mensaje }}</span>
 						<span class="fecha">
 							{{ hoy(chat.ultima_fecha) 
-						? (chat.ultima_fecha | date:'HH:mm') 
-						: (chat.ultima_fecha | date:'dd/MM') 
-					}}
-				</span>
-			</div>
-		</li>
-	}
-	</ul>
+								? (chat.ultima_fecha | date:'HH:mm') 
+								: (chat.ultima_fecha | date:'dd/MM') 
+							}}
+						</span>
+					</div>
+				</li>
+			}
+			@if(chats.length == 0) {
+				<li class="no-chats">
+					<p>No tienes chats disponibles</p>
+				</li>
+			}
+		</ul>
 	}
 </div>

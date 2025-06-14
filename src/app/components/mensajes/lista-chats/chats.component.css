@@ -125,8 +125,17 @@ li:hover, .chat-item:hover {
 
 @media (max-width: 600px) {
 	ul {
-		max-width: 100vw;
+		width: 80vw;
 		border-radius: 0;
+	}
+	.username-barber {
+		font-size: 1rem;
+	}
+	.ultimo-mensaje {
+		font-size: 0.85rem;
+	}
+	.fecha {
+		font-size: 0.8rem;
 	}
 	.chat-item {
 		padding: 12px 6px;
@@ -135,4 +144,5 @@ li:hover, .chat-item:hover {
 		width: 36px;
 		height: 36px;
 	}
+
 }

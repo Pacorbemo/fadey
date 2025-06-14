@@ -13,7 +13,9 @@
         }
       </button>
       <nav [class.abierto]="burguerAbierto" #burguerNav>
-        <a id="crear-citas" routerLink="crear-citas" routerLinkActive="active-link">Crear</a>
+        @if(datosService.esBarbero()){
+          <a id="crear-citas" routerLink="crear-citas" routerLinkActive="active-link">Crear</a>
+        }
         <a routerLink="mis-citas" routerLinkActive="active-link">Citas</a>
         @if(datosService.esBarbero()){
           <a routerLink="mis-productos" routerLinkActive="active-link">Productos</a>
