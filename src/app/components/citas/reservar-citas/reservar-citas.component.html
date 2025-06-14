@@ -40,8 +40,8 @@
 	<h2>{{ semanaActual.fin | dateMesString}} {{semanaActual.fin.getFullYear()}}</h2>
 	<div class="botones-cambio-semana">
 		<button (click)="cambiarSemana(-1)"
-			[disabled]="desactivarAtras()" >-</button>
-		<button (click)="cambiarSemana(1)">+</button>
+			[disabled]="desactivarAtras()" >Semana anterior</button>
+		<button (click)="cambiarSemana(1)">Semana siguiente</button>
 	</div>
 	@if(!cargando.local){
 		<table>

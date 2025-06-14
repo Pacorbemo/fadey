@@ -122,16 +122,23 @@ h2 {
 
 @media (max-width: 600px){
   section{
-    margin-bottom: 6vw;
+    margin: 0;
+    margin-bottom: 8vw;
     width: auto;
   }
+
+  span {
+    width: 30vw;
+    height: 30vw;
+  }
+
   .perfil-botones{
-    bottom: -7vw
+    bottom: -8vw
   }
 
   .perfil-botones button {
     font-size: 3.4vw;
-    padding: 10px 16px;
+    padding: 6px 12px;
   }
 
 }

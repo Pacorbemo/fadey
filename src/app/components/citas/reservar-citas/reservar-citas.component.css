@@ -89,13 +89,12 @@ button:hover {
 }
 
 .botones-cambio-semana button {
+  width: auto;
   background: #222;
   color: #fff;
-  border: 2px solid #444;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.5em;
+  border: 2px solid #8a6767;
+  font-size: 1vw;
+  padding: 0.5em 1em;
   font-weight: bold;
   transition: background 0.2s, color 0.2s, border 0.2s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -114,9 +113,13 @@ button:hover {
 }
 
 .botones-cambio-semana button:hover:not(:disabled) {
-  background: #fff;
+  background: #929292;
   color: #111;
   border-color: #fff;
+}
+
+.botones-cambio-semana button:focus {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
 }
 
 @media (max-width: 600px) {
@@ -128,12 +131,17 @@ button:hover {
     padding: 2px;
   }
 
+  table button{
+    padding: 0.4em 0;
+    font-size: 1em;
+  }
+
   .botones-cambio-semana {
     gap: 10px;
   }
   
   .botones-cambio-semana button {
-    font-size: 1.2em;
+    font-size: 0.8em;
   }
 
   h2{
