@@ -7,10 +7,15 @@
 			<label for="username">Username</label>
 			<input type="text" name="username" id="username" [(ngModel)]="username" placeholder="" required>
 		</div>
-		<app-password-field
+		<div>
+			<app-password-field
 			label="Contraseña"
 			[(value)]="password"
-		/>
+			/>
+			<div class="forgot">
+				<a routerLink="/recuperar-password" rel="noopener noreferrer">¿Has olvidado tu contraseña?</a>
+			</div>
+		</div>
 		<button class="sign" [disabled]="!username || !password">Iniciar Sesión</button>
 	</form>
 	<p class="signup">No tienes cuenta?
