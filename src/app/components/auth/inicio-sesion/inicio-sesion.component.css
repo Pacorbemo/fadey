@@ -144,7 +144,6 @@
 
 @media (max-width: 600px) {
   .form-container {
-    padding: 1.2rem 0.7rem 1.2rem 0.7rem;
     max-width: 98vw;
     border-radius: 0.7rem;
   }
