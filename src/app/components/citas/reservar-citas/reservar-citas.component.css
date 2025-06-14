@@ -21,6 +21,10 @@ button {
   cursor: pointer;
 }
 
+button:enabled{
+  color: white;
+}
+
 button.selected {
   background-color: #ffffff;
   color: black;
