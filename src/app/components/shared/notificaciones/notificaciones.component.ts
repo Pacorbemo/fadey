@@ -3,11 +3,12 @@ import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Notificacion, NotificacionesService } from '../../../services/notificaciones.service';
 import { ToastService } from '../../../services/toast.service';
 import { DatosService } from '../../../services/datos.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-notificaciones',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.css'
 })

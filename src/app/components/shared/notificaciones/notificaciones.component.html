@@ -10,7 +10,7 @@
       <h3>Notificaciones</h3>
       <ul>
         @for(notificacion of notificacionesService.notificaciones; track notificacion){
-          <li>
+          <li [routerLink]="['/' + notificacion.username]">
             @if (!notificacion.leida) {
               <span class="punto-verde"></span>
             }
