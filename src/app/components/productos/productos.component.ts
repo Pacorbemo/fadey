@@ -3,14 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { FormsModule } from '@angular/forms';
 import { UploadsPipe } from '../../pipes/uploads.pipe';
-import { ToastComponent } from '../shared/toast/toast.component';
 import { ToastService } from '../../services/toast.service';
 import { CargandoService } from '../../services/cargando.service';
 
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [FormsModule, UploadsPipe, ToastComponent],
+  imports: [FormsModule, UploadsPipe],
   templateUrl: './productos.component.html',
   styleUrl: './productos.component.css'
 })

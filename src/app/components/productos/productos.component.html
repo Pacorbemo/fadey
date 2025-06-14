@@ -1,6 +1,5 @@
 @if(!cargandoService.cargando){
   <div class="productos-container">
-    <app-toast></app-toast>
     @for(producto of productos; track producto.id) {
       <div class="producto-card">
         <img [src]="producto.foto | uploads" alt="{{ producto.nombre }}">

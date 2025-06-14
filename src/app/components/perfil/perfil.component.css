@@ -129,4 +129,9 @@ h2 {
     bottom: -7vw
   }
 
+  .perfil-botones button {
+    font-size: 3.4vw;
+    padding: 10px 16px;
+  }
+
 }

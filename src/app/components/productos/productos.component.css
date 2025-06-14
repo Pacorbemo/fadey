@@ -80,7 +80,8 @@
 @media (max-width: 600px) {
   .productos-container {
     align-items: center;
-    gap: 5vw;
+    gap: 3vw;
+    padding: 5px;
   }
 
   .producto-card {  

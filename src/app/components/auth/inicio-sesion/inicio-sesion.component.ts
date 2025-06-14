@@ -5,7 +5,6 @@ import { DatosService } from '../../../services/datos.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../services/toast.service';
-import { ToastComponent } from '../../shared/toast/toast.component';
 import { PasswordFieldComponent } from '../../shared/password-field/password-field.component';
 
 @Component({
@@ -13,7 +12,7 @@ import { PasswordFieldComponent } from '../../shared/password-field/password-fie
   templateUrl: './inicio-sesion.component.html',
   styleUrls: ['./inicio-sesion.component.css'],
   standalone: true,
-  imports: [FormsModule, PasswordFieldComponent, RouterLink, CommonModule, ToastComponent],
+  imports: [FormsModule, PasswordFieldComponent, RouterLink, CommonModule],
 })
 export class InicioSesionComponent {
   username: string = '';
