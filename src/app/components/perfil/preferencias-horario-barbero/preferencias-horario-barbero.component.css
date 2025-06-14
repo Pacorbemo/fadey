@@ -96,9 +96,37 @@
 }
 
 @media (max-width: 600px) {
+  .preferencias-horario {
+    padding: 1em;
+  }
+
+  h3{
+    font-size: 1.2em;
+    margin-top: 0;
+    width: 100%;
+  }
+
   .preferencias-horario table {
     font-size: 0.9em;
   }
+
+  .preferencias-horario th, .preferencias-horario td {
+    padding: 0.4em 0.5em;
+  }
+
+  .preferencias-horario th:nth-child(2), 
+  .preferencias-horario td:nth-child(2),
+  .preferencias-horario th:first-child,
+  .preferencias-horario td:first-child
+  {
+    padding: 0;
+  }
+
+  .preferencias-horario select{
+    width: 15vw;
+    min-width: 0;
+  }
+
   .acciones-horario{
     display: grid;
     grid-template-columns: repeat(2, 1fr);

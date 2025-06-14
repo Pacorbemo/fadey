@@ -12,7 +12,7 @@
           <img src="svgs/icono-cerrar-menu.svg" width="24" height="24" alt="Cerrar menú" />
         }
       </button>
-      <nav [class.abierto]="burguerAbierto" #burguerNav>
+      <nav [class.abierto]="burguerAbierto" #burgerNav>
         @if(datosService.esBarbero()){
           <a id="crear-citas" routerLink="crear-citas" routerLinkActive="active-link">Crear</a>
         }

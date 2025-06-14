@@ -31,7 +31,7 @@ export class EditarPerfilComponent {
   username: string = this.datosService.user.username;
   reenviandoEmail: boolean = false;
   mensajeVerificacion: string = '';
-  notificacionesEmail: boolean = this.datosService.user.enviar_emails ?? true;
+  notificacionesEmail: boolean = this.datosService.user.enviar_emails ?? false;
   mostrarDialogoEliminar: boolean = false;
   mensajeEliminacion: string = '';
 

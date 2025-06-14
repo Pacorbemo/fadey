@@ -112,6 +112,7 @@ h2 {
   flex-direction: column;
   gap: 0.5em;
   margin: 1em auto;
+  box-sizing: border-box;
 }
 
 .email-warning button {
@@ -246,11 +247,11 @@ h2 {
   align-items: center;
 }
 
-.mensaje-notificacion-disabled {
+aside div.mensaje-notificacion-disabled {
   color: #d32f2f;
   font-size: 0.95em;
   margin: 4px 0 10px 10px;
-	width: max-content !important;
+	width: max-content;
 }
 
 .dialogo-eliminar-overlay {
@@ -342,6 +343,7 @@ h2 {
   section {
     flex-direction: column;
     align-items: center;
+    padding: 0;
   }
 
   .foto-perfil-container {
@@ -366,4 +368,16 @@ h2 {
   #email-container{
     grid-column: span 2;
   }
+
+  #notificaciones-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  aside div.mensaje-notificacion-disabled{
+    display: flex;
+    width: 100%;
+    margin-left: 0;
+  }
+
 }

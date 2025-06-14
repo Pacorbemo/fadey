@@ -39,7 +39,8 @@ import { ToastService } from './services/toast.service';
 export class AppComponent implements OnInit {
   @ViewChild(BuscadorComponent) buscadorComponent!: BuscadorComponent;
   @ViewChild('menu') menuRef!: ElementRef;
-  @ViewChild('burguer') burguerRef!: ElementRef;
+  @ViewChild('burgerButton') burguerRef!: ElementRef;
+  @ViewChild('burgerNav') burguerNavRef!: ElementRef;
 
   menuAbierto: boolean = false;
   burguerAbierto = false;
@@ -87,7 +88,7 @@ export class AppComponent implements OnInit {
     ) {
       this.menuAbierto = false;
     }
-    if( this.burguerAbierto && this.burguerRef && !this.burguerRef.nativeElement.contains(event.target)) {
+    if( this.burguerAbierto && this.burguerRef && (!this.burguerRef.nativeElement.contains(event.target) || this.burguerNavRef.nativeElement.contains(event.target))) {
       this.burguerAbierto = false;
     }
   }

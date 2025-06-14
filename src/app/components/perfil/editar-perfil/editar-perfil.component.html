@@ -90,7 +90,7 @@
         [attr.tabindex]="datosService.user.email_verificado ? 0 : -1">
         <img [src]="notificacionesEmail ? 'svgs/icono-ojo.svg' : 'svgs/icono-ojo-off.svg'" alt="Notificaciones por email">
         Notificaciones por email
-        <span class="estado-notificacion" @if(datosService.user.email_verificado)>
+        <span class="estado-notificacion">
           {{ notificacionesEmail ? '(activadas)' : '(desactivadas)' }}
         </span>
       </button>
