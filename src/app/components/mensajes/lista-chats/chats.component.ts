@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MensajesService } from '../../../services/mensajes.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { environment } from '../../../../environments/environments';
 import { UploadsPipe } from '../../../pipes/uploads.pipe';
 import { CargandoComponent } from '../../shared/cargando/cargando.component';
 import { CargandoService } from '../../../services/cargando.service';
@@ -26,7 +25,6 @@ interface Chat {
 export class ChatsComponent implements OnInit{
 
   chats: Chat[] = [];
-  public environment = environment;
 
   constructor(private mensajesService: MensajesService, public cargandoService: CargandoService) {}
     

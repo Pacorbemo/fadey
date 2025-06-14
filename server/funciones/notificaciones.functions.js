@@ -23,18 +23,15 @@ function crearNotificacion(
     [emisor_id, usuario_id, usuario_id, usuario_id],
     (err, results) => {
       if (err) {
-        console.error("Error al obtener datos de usuarios:", err);
         return callback && callback(err);
       }
       if (!results || results.length === 0) {
-        console.error("Usuarios no encontrados");
         return callback && callback(new Error("Usuarios no encontrados"));
       }
 
       const { emisor_username, usuario_email, email_verificado, enviar_emails } = results[0];
 
       if (!emisor_username || !usuario_email) {
-        console.error("Datos de usuario incompletos");
         return callback && callback(new Error("Datos de usuario incompletos"));
       }
 
@@ -87,9 +84,6 @@ function crearNotificacion(
 
   db.query(query, [usuario_id, emisor_id, mensaje, tipo], (err, result) => {
     if (callback) return callback(err, result);
-    if (err) {
-      console.error("Error al crear notificación:", err);
-    }
   });
 }
 

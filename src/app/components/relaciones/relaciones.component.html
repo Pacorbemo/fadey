@@ -1,7 +1,7 @@
 <div class="component-container">
     <h2 class="titulo">Tus relaciones</h2>
 
-    @if(barberos.length > 0 ||clientes.length > 0){
+    @if(barberos.todos.length > 0 ||clientes.todos.length > 0){
     <input
         id="busqueda-relaciones"
         name="busqueda"
@@ -15,7 +15,7 @@
     }
     @if (!cargandoService.cargando) {
         @if (datosService.esCliente()) {
-            @if (barberosFiltrados.length > 0) {
+            @if (barberos.filtrados.length > 0) {
                 <div class="solicitudes-container">
                     <table>
                         <thead>
@@ -26,7 +26,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (relacion of barberosFiltrados; track relacion.id) {
+                            @for (relacion of barberos.filtrados; track relacion.id) {
                                 <tr>
                                     <td>
                                         <a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a>
@@ -43,7 +43,7 @@
                     </table>
                 </div>
             } @else {
-                @if(barberos.length > 0){
+                @if(barberos.todos.length > 0){
                     <p class="vacio">Ningún barbero coincide con la búsqueda.</p>
                 }
                 @else {
@@ -53,11 +53,11 @@
         }
 
         @if (datosService.esBarbero()) {
-            @if (clientes.length === 0 && barberos.length === 0) {
+            @if (clientes.todos.length === 0 && barberos.todos.length === 0) {
                 <p>Aún no tienes relaciones.</p>
             }
 
-            @if (clientesFiltrados.length > 0) {
+            @if (clientes.filtrados.length > 0) {
                 <h3>Clientes</h3>
                 <div class="solicitudes-container">
                     <table>
@@ -69,7 +69,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (relacion of clientesFiltrados; track relacion.id) {
+                            @for (relacion of clientes.filtrados; track relacion.id) {
                                 <tr>
                                     <td>
                                         <a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a>
@@ -87,7 +87,7 @@
                 </div>
             }
 
-            @if (barberosFiltrados.length > 0) {
+            @if (barberos.filtrados.length > 0) {
                 <h3>Barberos</h3>
                 <div class="solicitudes-container">
                     <table>
@@ -99,7 +99,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for (relacion of barberosFiltrados; track relacion.id) {
+                            @for (relacion of barberos.filtrados; track relacion.id) {
                                 <tr>
                                     <td>
                                         <a [routerLink]="['/', relacion.username]">{{ relacion.username }}</a>
@@ -117,7 +117,7 @@
                 </div>
             }
 
-            @if (clientesFiltrados.length === 0 && busqueda !== '') {
+            @if (clientes.filtrados.length === 0 && busqueda !== '') {
                 <p class="vacio">No se encontraron resultados para "{{busqueda}}"</p>
             }
         }

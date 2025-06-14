@@ -3,6 +3,7 @@ import { CitasService } from '../../../services/citas.service';
 import { DateMesStringPipe } from '../../../pipes/date-mes-string.pipe';
 import { ArrayCitasInterface } from '../../../interfaces/citas.interface';
 import { FormsModule } from '@angular/forms';
+import { DatosService } from '../../../services/datos.service';
 
 @Component({
   selector: 'app-crear-citas',
@@ -17,7 +18,7 @@ export class CrearCitasComponent implements OnInit {
   hoyString: string = new Date().toISOString().slice(0, 10);
   inputFecha = this.hoyString;
   mostrarWarningInput: boolean = false;
-  idBarbero: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
+  idBarbero: number = this.datosService.user.id;
 
   tramo = {
     inicio: 8,
@@ -33,7 +34,7 @@ export class CrearCitasComponent implements OnInit {
   franjasSeleccionadas: ArrayCitasInterface = [];
   ultimasFranjasSeleccionadas: ArrayCitasInterface = [];
 
-  constructor(private citasService: CitasService) {}
+  constructor(private citasService: CitasService, private datosService: DatosService) {}
 
   ngOnInit(): void {
     this.calcularSemana(new Date());

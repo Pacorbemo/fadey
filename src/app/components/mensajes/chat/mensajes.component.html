@@ -1,8 +1,8 @@
 <div class="chat-container">
     <div class="mensajes" #mensajesContainer (scroll)="onScrollMensajes($event)">
-      @if (!mensajesCargadosCompletos) {
-        <button class="btn-cargar-mas" (click)="cargarMasMensajes()" [disabled]="cargandoMasMensajes">
-          {{ cargandoMasMensajes ? 'Cargando...' : 'Cargar más mensajes' }}
+      @if (!paginacion.cargadosCompletos) {
+        <button class="btn-cargar-mas" (click)="cargarMasMensajes()" [disabled]="paginacion.cargandoMas">
+          {{ paginacion.cargandoMas ? 'Cargando...' : 'Cargar más mensajes' }}
         </button>
       }
       @for (grupo of mensajesAgrupadosPorDia(); track grupo.fecha) {
@@ -12,7 +12,7 @@
         @for (mensaje of grupo.mensajes; let idx = $index; track idx) {
           <div
             class="burbuja"
-            [ngClass]="mensaje.emisor_id === usuarioActual ? 'emisor' : 'receptor'"
+            [ngClass]="mensaje.emisor_id === usuario.actual ? 'emisor' : 'receptor'"
           >
             <span>{{ mensaje.mensaje }}</span>
             <span class="hora">{{ mensaje.fecha_envio | date: 'HH:mm' }}</span>

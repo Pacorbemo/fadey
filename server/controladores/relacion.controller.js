@@ -60,7 +60,6 @@ exports.getRelacionesBarbero = (req, res) => {
       Usuarios.username AS username,
       Usuarios.nombre AS nombre,
       Relaciones.estado,
-      Relaciones.fecha_creacion
     FROM Relaciones
     JOIN Usuarios ON Relaciones.cliente_id = Usuarios.id
     WHERE Relaciones.barbero_id = ?

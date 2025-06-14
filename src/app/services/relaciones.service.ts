@@ -4,6 +4,14 @@ import { CargandoService } from '../services/cargando.service';
 import { Observable } from 'rxjs';
 import { map, finalize } from 'rxjs/operators';
 
+export interface Relacion {
+  id: number;
+  username: string;
+  nombre: string;
+  estado: string;
+  fecha_creacion: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,12 +21,12 @@ export class RelacionesService {
     public cargandoService: CargandoService 
   ) {}
 
-  getRelaciones(filtro?: string): Observable<any> {
+  getRelaciones(filtro?: string): Observable<Relacion[]> {
     return this.httpService.getToken('/relaciones').pipe(
-      map((response: any) => {
+      map((response: Relacion[]) => {
         if (filtro) {
           response = response.filter(
-            (solicitud: any) => solicitud.estado === filtro
+            (relacion: Relacion) => relacion.estado === filtro
           );
         }
         return response;
@@ -27,22 +35,22 @@ export class RelacionesService {
     );
   }
 
-  getRelacionesCliente(): Observable<any> {
+  getRelacionesCliente(): Observable<Relacion[]> {
     return this.httpService.getToken('/relaciones/cliente').pipe(
-      map((response: any) => {
+      map((response: Relacion[]) => {
         return response.filter(
-          (solicitud: any) => solicitud.estado === 'aceptado'
+          (relacion: Relacion) => relacion.estado === 'aceptado'
         );
       }),
       finalize(() => this.cargandoService.ocultarCargando())
     );
   }
 
-  getRelacionesBarbero(): Observable<any> {
+  getRelacionesBarbero(): Observable<Relacion[]> {
     return this.httpService.getToken('/relaciones/barbero').pipe(
-      map((response: any) => {
+      map((response: Relacion[]) => {
         return response.filter(
-          (solicitud: any) => solicitud.estado === 'aceptado'
+          (relacion: Relacion) => relacion.estado === 'aceptado'
         );
       }),
       finalize(() => this.cargandoService.ocultarCargando())

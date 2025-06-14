@@ -18,7 +18,6 @@ function socketHandler(server, db) {
         const query = "INSERT INTO Mensajes (emisor_id, receptor_id, mensaje) VALUES (?, ?, ?)";
         db.query(query, [emisor_id, receptor_id, mensaje], (err, result) => {
           if (err) {
-            console.error('Error al guardar el mensaje:', err);
             return;
           }
           io.to(users[receptor_id]).emit('nuevoMensaje', { emisor_id, mensaje, fecha_envio: new Date() });

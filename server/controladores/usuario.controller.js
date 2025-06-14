@@ -98,13 +98,7 @@ exports.putImagenPerfil = (req, res) => {
 
     if (currentPhotoUrl) {
       const currentPhotoPath = `uploads/${currentPhotoUrl}`;
-      fs.unlink(currentPhotoPath, (err) => {
-        if (err) {
-          console.error("Error al eliminar la foto anterior:", err);
-        } else {
-          console.log("Foto anterior eliminada:", currentPhotoPath);
-        }
-      });
+      fs.unlink(currentPhotoPath, () => {});
     }
 
     const updatePhotoQuery = "UPDATE Usuarios SET foto_perfil = ? WHERE id = ?";

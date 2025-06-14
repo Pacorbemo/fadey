@@ -227,7 +227,6 @@ exports.generarCitasSemana = async (req, res) => {
         }
       }
     }
-    console.log(fechaInicio, fechaFin)
     const deleteLibresQuery = `DELETE FROM Citas WHERE barbero_id = ? AND fecha_hora >= ? AND fecha_hora <= ? AND cliente_id IS NULL`;
     fechaInicio.setHours(0, 0, 0, 0);
     fechaFin.setHours(23, 59, 59, 999);

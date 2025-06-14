@@ -14,7 +14,6 @@ function actualizarEstadoSolicitud(req, estado, res, db) {
   db.query(checkQuery, [idRelacion, idBarbero], (err, results) => {
     
     if (err) {
-      console.error(`Error al comprobar la solicitud (${estado}):`, err);
       return res.status(500).json({ error: "Error al comprobar la solicitud" });
     }
 
@@ -24,7 +23,6 @@ function actualizarEstadoSolicitud(req, estado, res, db) {
 
     db.query(updateQuery, [estado, idRelacion, idBarbero], (err, result) => {
       if (err) {
-        console.error(`Error al actualizar solicitud (${estado}):`, err);
         return res.status(500).json({ error: `Error al actualizar solicitud (${estado})` });
       }
 
@@ -54,7 +52,6 @@ function eliminarRelacion(req, res, db) {
 
   db.query(deleteQuery, [idRelacion, idBarbero, idBarbero], (err, result) => {
     if (err) {
-      console.error("Error al eliminar la relación:", err);
       return res.status(500).json({ error: "Error al eliminar la relación" });
     }
 

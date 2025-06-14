@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UsuariosService } from '../../../services/usuarios.service';
- import { Usuario, usuarioVacio } from '../../../interfaces/usuario.interface';
+import { Usuario, usuarioVacio } from '../../../interfaces/usuario.interface';
 import { CargandoService } from '../../../services/cargando.service';
+import { DatosService } from '../../../services/datos.service';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -30,47 +31,58 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
   }
   set mensajes(valor: any[]) {
     this._mensajes = valor;
-    this.debeHacerScroll = true;
+    this.scroll.debeHacer = true;
     this.cdr.detectChanges();
   }
   mensaje: string = '';
-  usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
-  receptor: Usuario = usuarioVacio;
+
+  usuario = {
+    actual: this.datosService.user.id,
+    receptor: usuarioVacio
+  };
+
+  paginacion = {
+    offset: 0,
+    limit: 30,
+    cargadosCompletos: false,
+    cargandoMas: false
+  };
+
+  scroll = {
+    debeHacer: false
+  };
+
   @ViewChild('mensajesContainer') contenedorMensajes!: ElementRef;
-  private debeHacerScroll = false;
-  mensajesPaginadosOffset: number = 0;
-  mensajesPaginadosLimit: number = 30;
-  mensajesCargadosCompletos: boolean = false;
-  cargandoMasMensajes: boolean = false;
 
   constructor(
     private mensajesService: MensajesService,
     private ruta: ActivatedRoute,
     private usuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
-    private cargandoService: CargandoService
+    private cargandoService: CargandoService,
+    public datosService: DatosService
   ) {}
 
   ngAfterViewInit(): void {
-    this.debeHacerScroll = true;
+    this.scroll.debeHacer = true;
   }
 
   ngAfterViewChecked(): void {
-    if (this.debeHacerScroll) {
+    if (this.scroll.debeHacer) {
       this.scrollAlFinal();
-      this.debeHacerScroll = false;
+      this.scroll.debeHacer = false;
     }
   }
 
   ngOnInit(): void {
     this.ruta.params.subscribe((params) => {
-      this.receptor.username = params['username'];
+      this.usuario.receptor.username = params['username'];
     });
-    this.usuariosService.datosUsername(this.receptor.username).subscribe((response) => {
-      this.receptor = response.user;
-      this.mensajesService.conectar(this.usuarioActual);
+    this.usuariosService.datosUsername(this.usuario.receptor.username).subscribe((response) => {
+      this.usuario.receptor = response.user;
+      this.mensajesService.conectar(this.usuario.actual);
       // Marcar mensajes como leídos al abrir el chat
-      this.mensajesService.marcarMensajesLeidos(this.receptor.id).subscribe();
+      this.mensajesService.marcarMensajesLeidos(this.usuario.receptor.id).subscribe();
       this.cargarMensajesInicial();
     });
     this.mensajesService.recibirMensajes().subscribe((mensaje: any) => {
@@ -79,32 +91,32 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
   }
 
   cargarMensajesInicial() {
-    this.mensajesCargadosCompletos = false;
-    this.cargandoMasMensajes = false;
-    this.mensajesService.cargarMensajes(this.receptor.id, this.mensajesPaginadosLimit, this.mensajesPaginadosOffset)
+    this.paginacion.cargadosCompletos = false;
+    this.paginacion.cargandoMas = false;
+    this.mensajesService.cargarMensajes(this.usuario.receptor.id, this.paginacion.limit, this.paginacion.offset)
       .subscribe((mensajesCargados: MensajeCargado[]) => {
         this.mensajes = mensajesCargados;
-        if (mensajesCargados.length < this.mensajesPaginadosLimit) {
-          this.mensajesCargadosCompletos = true;
+        if (mensajesCargados.length < this.paginacion.limit) {
+          this.paginacion.cargadosCompletos = true;
         }
         this.cargandoService.ocultarCargando();
       });
   }
 
   cargarMasMensajes() {
-    if (this.mensajesCargadosCompletos || this.cargandoMasMensajes) return;
-    this.cargandoMasMensajes = true;
+    if (this.paginacion.cargadosCompletos || this.paginacion.cargandoMas) return;
+    this.paginacion.cargandoMas = true;
     // Guardar posición actual del scroll antes de cargar más
     const contenedor = this.contenedorMensajes?.nativeElement;
     const scrollAntes = contenedor ? contenedor.scrollHeight - contenedor.scrollTop : 0;
-    this.mensajesService.cargarMensajes(this.receptor.id, this.mensajesPaginadosLimit, this.mensajesPaginadosOffset + this.mensajesPaginadosLimit)
+    this.mensajesService.cargarMensajes(this.usuario.receptor.id, this.paginacion.limit, this.paginacion.offset + this.paginacion.limit)
       .subscribe((mensajesCargados: MensajeCargado[]) => {
-        if (mensajesCargados.length < this.mensajesPaginadosLimit) {
-          this.mensajesCargadosCompletos = true;
+        if (mensajesCargados.length < this.paginacion.limit) {
+          this.paginacion.cargadosCompletos = true;
         }
         this._mensajes = [...mensajesCargados, ...this._mensajes];
-        this.mensajesPaginadosOffset += this.mensajesPaginadosLimit;
-        this.cargandoMasMensajes = false;
+        this.paginacion.offset += this.paginacion.limit;
+        this.paginacion.cargandoMas = false;
         setTimeout(() => {
           if (contenedor) {
             contenedor.scrollTop = contenedor.scrollHeight - scrollAntes;
@@ -116,18 +128,18 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
 
   onScrollMensajes(event: any) {
     const el = event.target;
-    if (el.scrollTop < 80 && !this.cargandoMasMensajes && !this.mensajesCargadosCompletos) {
+    if (el.scrollTop === 0 && !this.paginacion.cargadosCompletos && !this.paginacion.cargandoMas) {
       this.cargarMasMensajes();
     }
   }
 
   enviarMensaje(): void {
     if (this.mensaje.trim()) {
-      this.mensajesService.enviarMensaje(this.usuarioActual, this.receptor.id, this.mensaje);
+      this.mensajesService.enviarMensaje(this.usuario.actual, this.usuario.receptor.id, this.mensaje);
       this.mensajes = [
         ...this.mensajes,
         {
-          emisor_id: this.usuarioActual,
+          emisor_id: this.usuario.actual,
           mensaje: this.mensaje,
           fecha_envio: new Date(),
         }

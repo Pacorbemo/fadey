@@ -4,10 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { CitasService } from '../../../services/citas.service';
 
-const DIAS = [
-  'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'
-];
-
 export interface HorarioDia {
   abierto: boolean;
   inicio: string;
@@ -73,14 +69,10 @@ export interface HorarioDia {
   styleUrls: ['./preferencias-horario-barbero.component.css']
 })
 export class PreferenciasHorarioBarberoComponent {
-  @Input() horario: HorarioDia[] = DIAS.map(() => ({ abierto: true, inicio: '09:00', fin: '17:00' }));
-  dias = DIAS;
+  dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  @Input() horario: HorarioDia[] = this.dias.map(() => ({ abierto: true, inicio: '09:00', fin: '17:00' }));
   mensaje = '';
-  horas = Array.from({length: 24 * 2}, (_, i) => {
-    const h = Math.floor(i / 2).toString().padStart(2, '0');
-    const m = i % 2 === 0 ? '00' : '30';
-    return `${h}:${m}`;
-  });
+  horas = this.citasService.generarFranjasHorarias();
   semanasFuturas = 1;
 
   constructor(private usuariosService: UsuariosService, private citasService: CitasService) {
@@ -99,7 +91,7 @@ export class PreferenciasHorarioBarberoComponent {
 
   guardar() {
     if (!this.validarHorario()) {
-      this.mensaje = 'Revisa que las horas de inicio sean anteriores a las de fin y que no haya solapamientos.';
+      this.mensaje = 'Revisa que las horas de inicio sean anteriores a las de fin.';
       return;
     }
     this.usuariosService.setHorarioBarbero(this.horario).subscribe({
@@ -123,7 +115,7 @@ export class PreferenciasHorarioBarberoComponent {
 
   aplicarFuturo() {
     if (!this.validarHorario()) {
-      this.mensaje = 'Revisa que las horas de inicio sean anteriores a las de fin y que no haya solapamientos.';
+      this.mensaje = 'Revisa que las horas de inicio sean anteriores a las de fin.';
       return;
     }
     this.usuariosService.setHorarioBarbero(this.horario).subscribe({

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RelacionesService } from '../../../services/relaciones.service';
 import { ToastService } from '../../../services/toast.service';
+import { DatosService } from '../../../services/datos.service';
 @Component({
   selector: 'app-reservar-citas',
   templateUrl: './reservar-citas.component.html',
@@ -14,66 +15,72 @@ import { ToastService } from '../../../services/toast.service';
   imports: [DateMesStringPipe, CommonModule, RouterLink],
 })
 export class ReservarCitasComponent implements OnInit {
-  usernameValido: boolean = false;
-  usuarioAutorizado: boolean = false;
+  usuario = {
+    id: this.datosService.user.id,
+    autorizado: false
+  };
+  barbero = {
+    id: 0,
+    username: '',
+    esBarbero: false
+  };
+  horarios = {
+    disponibles: {} as { [dia: number]: string[] },
+    reservados: {} as { [dia: number]: string[] },
+    reservadosPorUsuario: {} as { [dia: number]: string[] }
+  };
+  cargando = {
+    local: true,
+    citas: true
+  };
   relacion: string = '';
   diasDeLaSemana: Date[] = [];
   franjasHorarias: string[] = [];
-  idUsuario: number = parseInt(
-    JSON.parse(localStorage.getItem('user') || '{}').id || '0',
-    10
-  );
-  idBarbero: number = 0;
-  usernameBarbero: string = '';
-  esBarbero: boolean = true;
-  horariosDisponibles: { [dia: number]: string[] } = [];
-  horariosReservados: { [dia: number]: string[] } = [];
-  horariosReservadosPorUsuario: { [dia: number]: string[] } = [];
-  mostrarDialogo: boolean = false;
   diaSeleccionado: Date = new Date();
-
-  cargandoLocal: boolean = true;
-  cargandoCitas: boolean = true;
+  
+  mostrarDialogo: boolean = false;
+  usernameValido: boolean = false;
 
   constructor(
     private citasService: CitasService,
     private usuariosService: UsuariosService,
     public relacionesService: RelacionesService,
     private route: ActivatedRoute,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private datosService: DatosService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe({
       next: (params) => {
-        this.usernameBarbero = params['username'];
-        this.usuariosService.datosUsername(this.usernameBarbero).subscribe({
+        this.barbero.username = params['username'];
+        this.usuariosService.datosUsername(this.barbero.username).subscribe({
           next: (response) => {
             this.usernameValido = response.exists;
             if (response.exists && response.user?.id) {
-              this.idBarbero = response.user?.id;
+              this.barbero.id = response.user?.id;
             }
             if (this.usernameValido) {
-              if (this.idBarbero == this.idUsuario) {
-                this.usuarioAutorizado = true;
-                this.esBarbero = true;
+              if (this.barbero.id == this.usuario.id) {
+                this.usuario.autorizado = true;
+                this.barbero.esBarbero = true;
                 this.calcularSemana();
                 this.relacion = 'aceptado';
-                this.cargandoLocal = false;
+                this.cargando.local = false;
               } else {
                 this.relacionesService
-                  .comprobarRelacion(this.idBarbero)
+                  .comprobarRelacion(this.barbero.id)
                   .subscribe({
                     next: (relacionResponse) => {
-                      this.usuarioAutorizado =
+                      this.usuario.autorizado =
                         relacionResponse.relacion == 'aceptado';
                       this.relacion = relacionResponse.relacion;
-                      this.usuariosService.esBarbero(this.idBarbero).subscribe({
+                      this.usuariosService.esBarbero(this.barbero.id).subscribe({
                         next: (esBarbero) => {
-                          this.esBarbero = esBarbero;
-                          if (this.usuarioAutorizado && this.esBarbero) {
+                          this.barbero.esBarbero = esBarbero;
+                          if (this.usuario.autorizado && this.barbero.esBarbero) {
                             this.calcularSemana();
-                            this.cargandoLocal = false;
+                            this.cargando.local = false;
                           }
                         },
                       });
@@ -100,7 +107,7 @@ export class ReservarCitasComponent implements OnInit {
   }
 
   calcularSemana(n: number = 0): void {
-    this.cargandoCitas = true;
+    this.cargando.citas = true;
     this.diasDeLaSemana = this.citasService.calcularSemana(
       this.semanaActual.inicio,
       n
@@ -108,7 +115,7 @@ export class ReservarCitasComponent implements OnInit {
     this.semanaActual.inicio = this.diasDeLaSemana[0];
     this.semanaActual.fin = this.diasDeLaSemana[6];
     this.recargarCitas();
-    this.cargandoCitas = false;
+    this.cargando.citas = false;
   }
 
   cambiarSemana(n: number): void {
@@ -121,21 +128,21 @@ export class ReservarCitasComponent implements OnInit {
 
   recargarCitas(): void {
     this.citasService
-      .getCitas(this.idBarbero, this.semanaActual.inicio)
+      .getCitas(this.barbero.id, this.semanaActual.inicio)
       .subscribe({
         next: (response) => {
-          this.horariosReservados = response.reservadas;
-          this.horariosDisponibles = this.citasService.purgarDiasPasados(
+          this.horarios.reservados = response.reservadas;
+          this.horarios.disponibles = this.citasService.purgarDiasPasados(
             response.totales,
           );
-          this.horariosReservadosPorUsuario = response.reservadasUsuario;
+          this.horarios.reservadosPorUsuario = response.reservadasUsuario;
           this.generarFranjasHorarias();
         },
       });
   }
 
   generarFranjasHorarias(): void {
-    const horasDisponibles = Object.values(this.horariosDisponibles).flat();
+    const horasDisponibles = Object.values(this.horarios.disponibles).flat();
     const horaInicio = Math.min(
       ...horasDisponibles.map((hora) => parseInt(hora.split(':')[0]))
     );
@@ -164,12 +171,12 @@ export class ReservarCitasComponent implements OnInit {
   esFranjaDisponible(dia: Date, hora: string): boolean {
     if (this.citasService.diaHora(dia, hora).getTime() < new Date().getTime())
       return false;
-    return this.horariosDisponibles[dia.getDate()]?.includes(hora) || false;
+    return this.horarios.disponibles[dia.getDate()]?.includes(hora) || false;
   }
 
   esFranjaReservada(dia: number, hora: string): number {
-    if (this.horariosReservadosPorUsuario[dia]?.includes(hora)) return 2;
-    if (this.horariosReservados[dia]?.includes(hora)) return 1;
+    if (this.horarios.reservadosPorUsuario[dia]?.includes(hora)) return 2;
+    if (this.horarios.reservados[dia]?.includes(hora)) return 1;
     return 0;
   }
 
@@ -180,7 +187,7 @@ export class ReservarCitasComponent implements OnInit {
 
   confirmarReserva(): void {
     this.citasService
-      .confirmarReserva(this.idBarbero, this.diaSeleccionado)
+      .confirmarReserva(this.barbero.id, this.diaSeleccionado)
       .subscribe({
         next: () => {
           this.mostrarDialogo = false;

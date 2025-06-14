@@ -40,9 +40,7 @@ export class InicioSesionComponent {
     this.usuariosService.login(credenciales).subscribe({
       next: (response) => {
         this.datosService.tokenUsuario = response.token;
-        this.datosService.user = response.user;
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
+        this.datosService.user = response.user        
         this.router.navigate(["/mis-citas"]);
       },
       error: (error) => {

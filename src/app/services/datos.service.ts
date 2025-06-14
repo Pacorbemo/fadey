@@ -9,21 +9,21 @@ import { Usuario, usuarioVacio } from '../interfaces/usuario.interface';
 export class DatosService {
 
   private _tokenUsuario: string = '';
-  public user: Usuario = usuarioVacio;
-  public rol: string = '';
+  public _user: Usuario = usuarioVacio;
   public noFoto: string = `${environment.serverUrl}/uploads/default-avatar.jpg`;
 
   limpiarUser(): void {
-    this.user = usuarioVacio
+    this._user = usuarioVacio
     this._tokenUsuario = '';
+    localStorage.clear();
   }
 
   esBarbero(): boolean {
-    return this.user.rol === 'barbero';
+    return this._user.rol === 'barbero';
   }
 
   esCliente(): boolean {
-    return this.user.rol === 'cliente';
+    return this._user.rol === 'cliente';
   }
 
   get tokenUsuario(): string {
@@ -32,12 +32,34 @@ export class DatosService {
 
   set tokenUsuario(token: string) {
     this._tokenUsuario = token;
+    localStorage.setItem('token', token);
+  }
+  
+  set user(user: Usuario) {
+    this._user = user;
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  get user(): Usuario {
+    return this._user;
+  }
+
+  constructor() {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      this._user = JSON.parse(userData);
+    }
+    
+    const token = localStorage.getItem('token');
+    if (token) {
+      this._tokenUsuario = token;
+    }
   }
   
   // Creamos un tipo provisional K que representa las claves de Usuario
   actualizar<clave extends keyof Usuario>(campo: clave, valor: Usuario[clave]): void {
-    if (this.user && campo in this.user) {
-      this.user[campo] = valor;
+    if (this._user && campo in this._user) {
+      this._user[campo] = valor;
       localStorage.setItem('user', JSON.stringify(this.user));
     } else {
       console.error(`Campo ${campo} no existe en el usuario.`);

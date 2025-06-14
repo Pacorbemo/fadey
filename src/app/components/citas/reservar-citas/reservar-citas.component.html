@@ -1,29 +1,29 @@
 <div class="component-container">
-@if(!cargandoLocal){
+@if(!cargando.local){
 @if(!usernameValido){
 	<div class="overlay">
 		<div class="reserva-dialogo">
-			<p>El usuario "{{usernameBarbero}}" no es válido</p>
+			<p>El usuario "{{barbero.username}}" no es válido</p>
 			<a routerLink="/">Volver a Inicio</a>
 		</div>
 	</div>
 }
 
-@else if(!esBarbero){
+@else if(!barbero.esBarbero){
 	<div class="overlay">
 		<div class="reserva-dialogo">
-			<p>El usuario "{{usernameBarbero}}" no es Barbero</p>
+			<p>El usuario "{{barbero.username}}" no es Barbero</p>
 			<a routerLink="/">Volver a Inicio</a>
 		</div>
 	</div>
 }
 
-@else if(!usuarioAutorizado){
+@else if(!usuario.autorizado){
 	<div class="overlay">
 		<div class="reserva-dialogo">
-			<p>No tienes acceso a las citas de {{usernameBarbero}}</p>
+			<p>No tienes acceso a las citas de {{barbero.username}}</p>
 			@if(relacion == 'ninguna'){
-				<button (click)="solicitar(usernameBarbero)">Enviar solicitud</button>
+				<button (click)="solicitar(barbero.username)">Enviar solicitud</button>
 			}
 			@else if (relacion == 'pendiente'){
 				<h3>Ya has enviado una solicitud, espera a que sea aceptada</h3>
@@ -43,7 +43,7 @@
 			[disabled]="desactivarAtras()" >-</button>
 		<button (click)="cambiarSemana(1)">+</button>
 	</div>
-	@if(!cargandoLocal){
+	@if(!cargando.local){
 		<table>
 			<thead>
 				<tr>
@@ -82,7 +82,7 @@
 	@if (mostrarDialogo) {
 		<div class="overlay">
 			<div class="reserva-dialogo">
-				@if (idBarbero != idUsuario)
+				@if (barbero.id != usuario.id)
 				{
 					<p>Reservar el {{ diaSeleccionado.getDate() }} a las {{ diaSeleccionado.getHours() }}:{{ diaSeleccionado.getMinutes() === 0 ? '00' : diaSeleccionado.getMinutes() }}</p>
 					<button (click)="confirmarReserva()">Confirmar</button>

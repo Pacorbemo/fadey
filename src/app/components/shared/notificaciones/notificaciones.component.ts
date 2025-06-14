@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { Notificacion, NotificacionesService } from '../../../services/notificaciones.service';
 import { ToastService } from '../../../services/toast.service';
+import { DatosService } from '../../../services/datos.service';
 
 @Component({
   selector: 'app-notificaciones',
@@ -19,11 +20,12 @@ export class NotificacionesComponent implements OnInit {
   constructor(
     public notificacionesService: NotificacionesService,
     private elementRef: ElementRef,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private datosService: DatosService
   ) {}
 
   ngOnInit(): void {
-    const usuarioActual: number = parseInt(JSON.parse(localStorage.getItem('user') || '{}').id || '0', 10);
+    const usuarioActual: number = this.datosService.user.id;
     this.notificacionesService.conectar(usuarioActual);
     this.notificacionesService.recibirNotificacion().subscribe((notificacion: Notificacion) => {
       this.notificacionesService.notificaciones.unshift(notificacion);

@@ -56,9 +56,7 @@ export class RegisterComponent {
 
     this.usuariosService.registrar(usuario).subscribe({
       next: (response) => {
-        localStorage.setItem('token', response.token);
         this.datosService.tokenUsuario = response.token;
-        localStorage.setItem('user', JSON.stringify(response.user));
         this.datosService.user = response.user;
         this.router.navigate(['/mis-citas']);
       },
@@ -69,13 +67,6 @@ export class RegisterComponent {
   }
 
   verificarUsername(): void {
-    // Evitamos mostrar error si el usuario no ha introducido nada
-    if (!this.username) {
-      this.usernameValido = false;
-      this.mensajeErrorUsername = '';
-      return;
-    }
-
     // Primero hace comprobaciones de formato y longitud
     const userInvalido = this.validacionesService.validarUsername(this.username);
     if (userInvalido) {
@@ -102,12 +93,6 @@ export class RegisterComponent {
   }
 
   verificarEmail(): void {
-    if (!this.email) {
-      this.emailValido = false;
-      this.mensajeErrorEmail = '';
-      return;
-    }
-
     const emailInvalido = this.validacionesService.validarEmail(this.email);
     if (emailInvalido) {
       this.emailValido = false;

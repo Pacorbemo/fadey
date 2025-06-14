@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RelacionesService } from '../../services/relaciones.service';
+import { RelacionesService, Relacion } from '../../services/relaciones.service';
 import { RouterModule } from '@angular/router';
 import { DatosService } from '../../services/datos.service';
 import { FormsModule } from '@angular/forms';
@@ -12,38 +12,38 @@ import { CargandoComponent } from '../shared/cargando/cargando.component';
   standalone: true,
   imports: [RouterModule, FormsModule, CommonModule, CargandoComponent],
   templateUrl: './relaciones.component.html',
-  styleUrl: './relaciones.component.css'
+  styleUrl: './relaciones.component.css',
 })
 export class RelacionesComponent implements OnInit {
-  barberos: any[] = [];
-  barberosFiltrados: any[] = [];
-  clientes: any[] = [];
-  clientesFiltrados: any[] = [];
   busqueda: string = '';
+  barberos = {
+    todos: [] as Relacion[],
+    filtrados: [] as Relacion[]
+  }
+  clientes = {
+    todos : [] as Relacion[],
+    filtrados: [] as Relacion[]
+  }
 
-  constructor(private relacionesService: RelacionesService, public datosService: DatosService, public cargandoService: CargandoService) { }
+  constructor(
+    private relacionesService: RelacionesService,
+    public datosService: DatosService,
+    public cargandoService: CargandoService
+  ) {}
 
   ngOnInit(): void {
-    if (this.datosService.esCliente()) {
-      this.relacionesService.getRelacionesCliente().subscribe({
-        next: barberos => {
-          this.barberos = barberos;
-          this.barberosFiltrados = this.barberos;
-        }
-      });
-    }
-    else if (this.datosService.esBarbero()) {
+    this.relacionesService.getRelacionesCliente().subscribe({
+      next: (barberos) => {
+        this.barberos.todos = barberos;
+        this.barberos.filtrados = barberos;
+      },
+    });
+    if (this.datosService.esBarbero()) {
       this.relacionesService.getRelacionesBarbero().subscribe({
-        next: clientes => {
-          this.clientes = clientes;
-          this.clientesFiltrados = this.clientes;
-        }
-      });
-      this.relacionesService.getRelacionesCliente().subscribe({
-        next: barberos => {
-          this.barberos = barberos;
-          this.barberosFiltrados = this.barberos;
-        }
+        next: (clientes) => {
+          this.clientes.todos = clientes;
+          this.clientes.filtrados = clientes;
+        },
       });
     }
   }
@@ -51,19 +51,24 @@ export class RelacionesComponent implements OnInit {
   eliminarRelacion(idRelacion: number): void {
     this.relacionesService.eliminarRelacion(idRelacion).subscribe({
       next: () => {
-        this.clientes = this.clientes.filter(r => r.id !== idRelacion);
-        this.barberos = this.barberos.filter(r => r.id !== idRelacion);
-      }
+        this.clientes.todos = this.clientes.todos.filter((r) => r.id !== idRelacion);
+        this.barberos.todos = this.barberos.todos.filter((r) => r.id !== idRelacion);
+      },
     });
   }
 
   filtrar(): void {
-    this.barberosFiltrados = this.barberos.filter(barbero => {
-      return barbero.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) ||
-             barbero.username.toLowerCase().includes(this.busqueda.toLowerCase())    });
-    this.clientesFiltrados = this.clientes.filter(cliente => {
-      return cliente.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) ||
-             cliente.username.toLowerCase().includes(this.busqueda.toLowerCase())    });
+    this.barberos.filtrados = this.barberos.todos.filter((barbero) => {
+      return (
+        barbero.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) ||
+        barbero.username.toLowerCase().includes(this.busqueda.toLowerCase())
+      );
+    });
+    this.clientes.filtrados = this.clientes.todos.filter((cliente) => {
+      return (
+        cliente.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) ||
+        cliente.username.toLowerCase().includes(this.busqueda.toLowerCase())
+      );
+    });
   }
-
 }

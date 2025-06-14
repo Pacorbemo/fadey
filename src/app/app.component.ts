@@ -52,13 +52,10 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.datosService.tokenUsuario = localStorage.getItem('token') || '';
-    this.datosService.user = JSON.parse(localStorage.getItem('user') || '{}');
     if(this.datosService.tokenUsuario) {
       this.httpService.getToken('/usuarios').subscribe({
         next: (response: any) => {
           this.datosService.user = response;
-          localStorage.setItem('user', JSON.stringify(response));
         },
         error: (error: any) => {
           this.toastService.error(error);
@@ -73,8 +70,6 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.clear();
-    this.datosService.tokenUsuario = '';
     this.datosService.limpiarUser();
     this.router.navigate(['/inicio-sesion']);
   }

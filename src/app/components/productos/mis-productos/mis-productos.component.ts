@@ -56,7 +56,7 @@ export class MisProductosComponent {
 
   editingCell: { id: number; field: string } | null = null;
   oscurecerPantalla = false;
-  private arrastrando = false;
+  arrastrando = false;
 
   constructor(
     private httpService: HttpService,
@@ -66,7 +66,6 @@ export class MisProductosComponent {
   ) {
     this.pantallaSubject.pipe(debounceTime(30)).subscribe((oscurecer) => {
       this.oscurecerPantalla = oscurecer;
-      console.log(oscurecer);
     });
   }
 
@@ -86,13 +85,13 @@ export class MisProductosComponent {
               }
             },
             error: (error) => {
-              console.error('Error al obtener los productos reservados:', error);
+              this.toastService.error(error);
               this.reservados = {};
             }
           });
         },
         error: (error) => {
-          console.error('Error al obtener los productos:', error);
+          this.toastService.error(error)
         }
       })
       .add(() => {
@@ -142,7 +141,7 @@ export class MisProductosComponent {
           this.editingCell = null;
         },
         error: (error) => {
-          console.error('Error al actualizar el producto:', error);
+          this.toastService.error(error)
         },
       })
       .add(() => {
@@ -213,12 +212,11 @@ export class MisProductosComponent {
         },
         error: (error) => {
           this.toastService.error('Error al subir el producto: ' + error.message);
-        }
+        },
       })
       .add(() => {
         this.cargandoService.cargando = false;
       });
-    console.log('Producto subido:', this.producto);
   }
 
   editCell(producto: Producto, field: string): void {
@@ -247,12 +245,11 @@ export class MisProductosComponent {
               { [field]: producto[field] },
               true
             )
-            .subscribe(
-              () => {},
-              (error) => {
-                console.error('Error al actualizar el producto:', error);
+            .subscribe({
+              error: (error) => {
+                this.toastService.error(error)
               }
-            );
+          });
         }
       }
     }

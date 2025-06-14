@@ -29,11 +29,11 @@ export class EditarPerfilComponent {
   imagenSeleccionada: File | null = null;
   imagenUrl: string | null = null;
   username: string = this.datosService.user.username;
-  reenviandoEmail = false;
+  reenviandoEmail: boolean = false;
   mensajeVerificacion: string = '';
   notificacionesEmail: boolean = this.datosService.user.enviar_emails ?? true;
-  mostrarDialogoEliminar = false;
-  mensajeEliminacion = '';
+  mostrarDialogoEliminar: boolean = false;
+  mensajeEliminacion: string = '';
 
   constructor(
     private httpService: HttpService,
@@ -47,9 +47,7 @@ export class EditarPerfilComponent {
     const inputFile = document.getElementById('fileInput');
     if (inputFile) {
       inputFile.click();
-    } else {
-      console.error('El elemento con id "fileInput" no se encontró.');
-    }
+    } 
   }
 
   seleccionarImagen(event: any): void {
@@ -70,8 +68,7 @@ export class EditarPerfilComponent {
         this.datosService.actualizar('foto_perfil', response.fotoPerfil);
         this.toastService.mostrar(response);
       },
-      error: (error) => {
-        console.error('Error al subir la imagen:', error);
+      error: () => {
         this.toastService.error('Error al subir la imagen');
       },
     });
@@ -97,7 +94,6 @@ export class EditarPerfilComponent {
       }
       try {
         const response = await firstValueFrom(this.usuariosService.validarUsername(valor));
-        console.log(response)
         if (!response.valido) {
           this.toastService.error('El nombre de usuario ya está en uso');
           return;
