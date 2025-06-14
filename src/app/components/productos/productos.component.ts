@@ -39,7 +39,7 @@ export class ProductosComponent implements OnInit {
 
   reservarProducto(producto: { id: number; nombre: string; descripcion: string; precio: string; stock: number; foto: string, reservaCantidad: number }) {
     if (producto.reservaCantidad > 0) {
-      this.httpService.postToken('/productos/reservar', { idProducto: producto.id, cantidad: producto.reservaCantidad }).subscribe({
+      this.httpService.postToken('/productos/reservar', { idProducto: producto.id, cantidad: producto.reservaCantidad }, true).subscribe({
         next: (response) => {
           this.toastService.mostrar(response);
           producto.stock -= producto.reservaCantidad;

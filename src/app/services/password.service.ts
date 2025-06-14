@@ -20,6 +20,10 @@ export class PasswordService {
   }
 
   calcularFortaleza(password: string): { texto: string; clase: string } {
+    if (!password || password.length < 6) {
+      return { texto: '', clase: '' };
+    }
+    
     let score = 0;
     if (password.length >= 6) score++;
     if (/[A-Z]/.test(password)) score++;
@@ -27,9 +31,8 @@ export class PasswordService {
     if (/[0-9]/.test(password)) score++;
     if (/[^A-Za-z0-9]/.test(password)) score++;
     if (password.length > 12) score++;
-    if (!password || password.length < 6) {
-      return { texto: '', clase: '' };
-    } else if (score <= 2) {
+    
+    if (score <= 2) {
       return { texto: 'Débil', clase: 'debil' };
     } else if (score <= 4) {
       return { texto: 'Media', clase: 'media' };

@@ -32,20 +32,31 @@ export interface HorarioDia {
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let dia of horario; let i = index">
-            <td>{{ dias[i] }}</td>
-            <td><input type="checkbox" [(ngModel)]="dia.abierto"></td>
-            <td>
-              <select [(ngModel)]="dia.inicio" [disabled]="!dia.abierto">
-                <option *ngFor="let h of horas" [value]="h">{{h}}</option>
-              </select>
-            </td>
-            <td>
-              <select [(ngModel)]="dia.fin" [disabled]="!dia.abierto">
-                <option *ngFor="let h of horas" [value]="h">{{h}}</option>
-              </select>
-            </td>
-          </tr>
+
+          @for(dia of horario; track dias[i]; let i = $index) {
+            <tr>
+              <td>{{ dias[i] }}</td>
+              <td><input type="checkbox" [(ngModel)]="dia.abierto"></td>
+              <td>
+                <select [(ngModel)]="dia.inicio" [disabled]="!dia.abierto">
+                  @for(h of horas; track h) {
+                    @if(h != '23:30'){
+                      <option [value]="h">{{h}}</option>
+                    }
+                  }
+                </select>
+              </td>
+              <td>
+                <select [(ngModel)]="dia.fin" [disabled]="!dia.abierto">
+                  @for(h of horas; track h) {
+                    @if(h != '00:00'){
+                      <option [value]="h">{{h}}</option>
+                    }
+                  }
+                </select>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
       <div class="acciones-horario">

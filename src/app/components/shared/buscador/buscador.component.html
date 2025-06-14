@@ -13,12 +13,13 @@
     <div class="input-border-alt"></div>
   </div>
   @if (buscadorService.resultados.length > 0 && mostrarResultados) {
-    <ul class="autocomplete-list">
-      <li *ngFor="let usuario of buscadorService.resultados" 
-      (click)="buscadorService.seleccionarUsuario(usuario.username)">
+    @for (usuario of buscadorService.resultados; track usuario.username) {
+      <ul class="autocomplete-list">
+      <li (click)="buscadorService.seleccionarUsuario(usuario.username)">
         <img [src]="(usuario.foto_perfil | uploads) || datosService.noFoto " alt="Avatar" class="avatar" />
         <span>{{ usuario.username }}</span>
       </li>
-    </ul>
+      </ul>
+    }
   }
 </div>

@@ -17,7 +17,7 @@ export class RelacionesService {
     return this.httpService.getToken('/relaciones').pipe(
       map((response: any) => {
         if (filtro) {
-          response = JSON.parse(JSON.stringify(response)).filter(
+          response = response.filter(
             (solicitud: any) => solicitud.estado === filtro
           );
         }
@@ -30,7 +30,7 @@ export class RelacionesService {
   getRelacionesCliente(): Observable<any> {
     return this.httpService.getToken('/relaciones/cliente').pipe(
       map((response: any) => {
-        return JSON.parse(JSON.stringify(response)).filter(
+        return response.filter(
           (solicitud: any) => solicitud.estado === 'aceptado'
         );
       }),
@@ -41,7 +41,7 @@ export class RelacionesService {
   getRelacionesBarbero(): Observable<any> {
     return this.httpService.getToken('/relaciones/barbero').pipe(
       map((response: any) => {
-        return JSON.parse(JSON.stringify(response)).filter(
+        return response.filter(
           (solicitud: any) => solicitud.estado === 'aceptado'
         );
       }),

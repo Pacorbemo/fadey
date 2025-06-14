@@ -47,9 +47,9 @@ export class HttpService {
     return this.requestWithToken('delete', url, {}, saltarCargando);
   }
 
-  get(url: string, params?: {}, saltarCargando: boolean = false): Observable<any> {
+  get<T>(url: string, params?: {}, saltarCargando: boolean = false): Observable<T> {
     const headers = new HttpHeaders().set('SaltarCargando', saltarCargando ? '1' : '0');
-    return this.http.get(url, { params, headers });
+    return this.http.get(url, { params, headers }) as Observable<T>;
   }
   post(url: string, body: any = {}, saltarCargando: boolean = false): Observable<any> {
     const headers = new HttpHeaders().set('SaltarCargando', saltarCargando ? '1' : '0');

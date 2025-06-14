@@ -277,7 +277,6 @@ export class MisProductosComponent {
             if (this.reservados[productoId]) {
               this.reservados[productoId] = this.reservados[productoId].filter(u => u.username !== username);
             }
-            this.cargandoService.cargando = false;
             this.toastService.mostrar(response);
           },
           error: (error) => {
