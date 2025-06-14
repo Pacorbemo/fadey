@@ -34,7 +34,7 @@ li.header {
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  border-bottom: 2px solid var(--primary-dark, #b8860b);
+  border-bottom: 2px solid var(--primary-light, #b8860b);
   margin-bottom: 10px;
 }
 
@@ -47,7 +47,7 @@ li.row {
 
 li.row:hover {
   background: #23231f;
-  border-left: 4px solid var(--primary-dark, #b8860b);
+  border-left: 4px solid var(--primary-light, #b8860b);
   box-shadow: 0 4px 18px #0003;
   transform: scale(1.012);
 }
@@ -130,7 +130,7 @@ li.row:hover {
 .paginacion button:focus {
   border: none !important;
   outline: none !important;
-  background: var(--primary-dark);
+  background: var(--primary-light);
   color: #23231f;
   box-shadow: 0 2px 8px #0003;
 }

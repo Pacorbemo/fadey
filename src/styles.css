@@ -14,11 +14,12 @@
   -moz-osx-font-smoothing: grayscale;
 
   --primary: #2434e0;
-  --primary-dark: #2b3bee;
+  --primary-light: #2b3bee;
   --bg: #181a20;
 
   --surface: #232323;
   --surface-alt: #1f1b1b;
+  --input-bg: #2c3440;
   --border: #444;
   --text: #fffbe7;
   --text-muted: #e0e0c0;

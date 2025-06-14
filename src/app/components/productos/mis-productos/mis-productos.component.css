@@ -75,7 +75,7 @@ form#uploadForm button {
 }
 
 form#uploadForm button:hover {
-    background-color: var(--primary-dark, #b8860b);
+    background-color: var(--primary-light, #b8860b);
     color: #fffbe7;
 }
 
@@ -106,7 +106,7 @@ li.header {
     font-weight: 700;
     background-color: var(--bg, #242424);
     padding: 0.8rem 0.5rem;
-    border-bottom: 2px solid var(--primary-dark, #b8860b);
+    border-bottom: 2px solid var(--primary-light, #b8860b);
     color: var(--primary, #ffd700);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -136,7 +136,7 @@ li.row {
 
 li.row:hover {
     background: #23231f;
-    border-left: 4px solid var(--primary-dark, #b8860b);
+    border-left: 4px solid var(--primary-light, #b8860b);
     box-shadow: 0 4px 18px #0003;
     transform: scale(1.012);
 }
