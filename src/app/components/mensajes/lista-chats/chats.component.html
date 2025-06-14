@@ -1,6 +1,6 @@
 <div class="chats-container">
 	<h2 class="titulo">Chats</h2>
-	@if(cargandoService.cargandoProlongado | async){
+	@if(cargandoService.cargandoProlongado){
 		<app-cargando [mensaje]="`Cargando productos`" ></app-cargando>
 	}
 	@else {

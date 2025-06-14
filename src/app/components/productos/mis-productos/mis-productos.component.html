@@ -50,7 +50,7 @@
   <button type="submit">Subir Producto</button>
 </form>
 
-@if(cargandoService.cargandoProlongado | async){
+@if(cargandoService.cargandoProlongado){
 	<app-cargando [mensaje]="`Cargando productos`" ></app-cargando>
 }
 

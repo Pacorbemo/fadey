@@ -7,7 +7,7 @@
 	</div>
 	<div class="main">
 		<div class="cards">
-			@if(cargandoService.cargandoProlongado | async) {
+			@if(cargandoService.cargandoProlongado) {
 				<app-cargando [mensaje]="'Cargando barberos'"></app-cargando>
 			}
 			@else if (buscadorService.resultados.length == 0 && !cargandoService.cargando ) {

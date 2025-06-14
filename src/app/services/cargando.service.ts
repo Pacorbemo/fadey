@@ -1,38 +1,47 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, interval, Observable } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, interval, Observable, timer } from 'rxjs';
+import { map, distinctUntilChanged, pairwise, filter, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class  CargandoService {
-  private _cargandoSubject = new BehaviorSubject<boolean>(false);
+  private _cargandoSubject = new BehaviorSubject<boolean>(false);  
   public cargando$ = this._cargandoSubject.asObservable();
-  private _inicioTiempo: number = 0;
+  public cargandoProlongado = false;
 
   set cargando(valor: boolean) {
-    if (valor && !this._cargandoSubject.value) {
-      this._inicioTiempo = Date.now();
-    }
     this._cargandoSubject.next(valor);
-  }
-
-  ocultarCargando(): void {
-    this._cargandoSubject.next(false);
   }
 
   get cargando(): boolean {
     return this._cargandoSubject.value;
   }
+  
+  ocultarCargando(): void {
+    this._cargandoSubject.next(false);
+  }
+        
+  constructor(){
+    // Si la peticion tarda menos de 0.5 segundos, se evita mostrar el texto de "Cargando..."
+    this.cargando$.pipe(
+      pairwise(),                               // Emite el valor anterior y el actual como un array
+      filter(([prev, curr]) => !prev && curr),  // Comprueba que el valor anterior es false y el actual es true
+      switchMap(() =>
+        timer(500).pipe(                        // Espera 0.5 segundos antes de emitir
+          switchMap(() => this.cargando$),      // Vuelve a comprobar el estado de cargando
+          filter((cargando) => cargando)        // Comprueba que siga siendo true
+        )
+      )
+    ).subscribe(() => {                         // Si se cumplen todas las condiciones, se activa el cargando prolongado
+      this.cargandoProlongado = true;           
+    });
 
-  // Si la peticion tarda menos de 0.5 segundos, se evita mostrar el texto de "Cargando..."
-  public cargandoProlongado: Observable<boolean> = combineLatest([this.cargando$, interval(100)]).pipe(
-    map(([estado, _]) => {
-      if (!estado) {
-        return false;
-      }
-      return (Date.now() - this._inicioTiempo) > 500;
-    }),
-    distinctUntilChanged()
-  );
+    // Siempre que cargando sea false, cargandoProlongado es false
+    this.cargando$
+      .pipe(filter(cargando => !cargando && this.cargandoProlongado))
+      .subscribe(() => {
+        this.cargandoProlongado = false;
+    })
+  }
 }

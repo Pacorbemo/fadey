@@ -40,6 +40,6 @@
 }
 <ng-container *ngComponentOutlet="component$.value" />
 
-@if(cargandoService.cargandoProlongado | async){
+@if(cargandoService.cargandoProlongado){
 	<app-cargando [mensaje]="`Cargando perfil de ${user.username}`" ></app-cargando>
 }

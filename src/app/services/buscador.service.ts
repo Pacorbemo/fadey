@@ -5,6 +5,7 @@ import { debounceTime, switchMap } from 'rxjs/operators';
 import { UsuariosService } from './usuarios.service';
 import { Usuario } from '../interfaces/usuario.interface';
 import { CargandoService } from './cargando.service';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,21 +17,28 @@ export class BuscadorService {
   constructor(
     private router: Router,
     private usuariosService: UsuariosService,
-    private cargandoService: CargandoService
+    private cargandoService: CargandoService,
+    private toastService: ToastService
   ) {
     this.buscarSubject
       .pipe(
         debounceTime(300),
         switchMap((query) => this.usuariosService.buscarUsuarios(query))
       )
-      .subscribe((usuarios) => {
-        if (this.buscador == '') {
-          cargandoService.cargando = false;
-          return
-        } // Si buscador cambia en lo que se recibe la respuesta, no se muestran los resultados
-        this.resultados = usuarios;
-        this.buscadorCopia = this.buscador;
-        this.cargandoService.ocultarCargando()
+      .subscribe({
+        next: (usuarios) => {
+          if (this.buscador == '') {
+            cargandoService.cargando = false;
+            return
+          } // Si el buscador cambia en lo que se recibe la respuesta, no se muestran los resultados
+          this.resultados = usuarios;
+          this.buscadorCopia = this.buscador;
+          this.cargandoService.ocultarCargando()
+        }, 
+        error: (err) => {
+          this.cargandoService.ocultarCargando();
+          this.toastService.error(err);
+        }
       });
     this.randomSubject
       .pipe(switchMap(() => this.usuariosService.getRandomUsuarios()))
@@ -40,8 +48,9 @@ export class BuscadorService {
         this.resultados = usuarios;
         this.cargandoService.ocultarCargando();
       },
-      error: () => {
+      error: (err) => {
         this.cargandoService.ocultarCargando();
+        this.toastService.error(err)
       }
     });
   }
@@ -65,7 +74,6 @@ export class BuscadorService {
   }
 
   seleccionarUsuario(username: string): void {
-    console.log(username)
     this.router.navigate([username]);
     this.limpiarResultados();
     this.limpiarBuscador();
