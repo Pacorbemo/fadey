@@ -9,7 +9,7 @@ import { Usuario, usuarioVacio } from '../interfaces/usuario.interface';
 export class DatosService {
 
   private _tokenUsuario: string = '';
-  public user!: Usuario;
+  public user: Usuario = usuarioVacio;
   public rol: string = '';
   public noFoto: string = `${environment.serverUrl}/uploads/default-avatar.jpg`;
 
@@ -34,13 +34,13 @@ export class DatosService {
     this._tokenUsuario = token;
   }
   
-  actualizar(campo: string, valor: any): void {
+  // Creamos un tipo provisional K que representa las claves de Usuario
+  actualizar<clave extends keyof Usuario>(campo: clave, valor: Usuario[clave]): void {
     if (this.user && campo in this.user) {
-      (this.user as any)[campo] = valor;
+      this.user[campo] = valor;
       localStorage.setItem('user', JSON.stringify(this.user));
     } else {
       console.error(`Campo ${campo} no existe en el usuario.`);
     }
   }
-
 }

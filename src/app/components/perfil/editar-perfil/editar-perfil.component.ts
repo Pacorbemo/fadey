@@ -10,6 +10,7 @@ import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { PreferenciasHorarioBarberoComponent } from '../preferencias-horario-barbero/preferencias-horario-barbero.component';
 import { ToastService } from '../../../services/toast.service';
 import { ValidacionesService } from '../../../services/validaciones.service';
+import { Usuario } from '../../../interfaces/usuario.interface';
 
 @Component({
   selector: 'app-editar-perfil',
@@ -109,7 +110,7 @@ export class EditarPerfilComponent {
     this.httpService.putToken('/usuarios', { campo, valor }).subscribe({
       next: (response) => {
         this.toastService.mostrar(response)
-        this.datosService.actualizar(campo, valor);
+        this.datosService.actualizar(campo as keyof Usuario, valor);
       },
       error: (error) => {
         this.toastService.error(error);

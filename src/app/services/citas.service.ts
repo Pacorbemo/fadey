@@ -60,9 +60,9 @@ export class CitasService {
   // Array con TODOS los tramos horarios entre la hora más temprana y la más tardía
   // Si no se le pasa un array de horas, devuelve de 00:00 a 23:30
   generarFranjasHorarias(horariosDisponibles?: string[]): string[] {
-    let horaInicio: number;
-    let horaFin: number;
-    let minutosFin: number;
+    let horaInicio: number = 0;
+    let horaFin: number = 23;
+    let minutosFin: number = 30;
     const intervalo: number = 30;
 
     if (horariosDisponibles) {
@@ -78,10 +78,6 @@ export class CitasService {
           .filter((hora) => parseInt(hora.split(':')[0]) === horaFin)
           .map((hora) => parseInt(hora.split(':')[1]))
       );
-    } else {
-      horaInicio = 0;
-      horaFin = 23;
-      minutosFin = 30;
     }
 
     let franjasHorarias: string[] = [];
@@ -98,8 +94,7 @@ export class CitasService {
   }
 
   subirCitas(idBarbero: number, fechas: Date[]): Observable<any> {
-    const body = { idBarbero, fechas };
-    return this.httpService.postToken('/citas/crear', body);
+    return this.httpService.postToken('/citas/crear', { idBarbero, fechas });
   }
 
   // Obtener las citas de un BARBERO
@@ -141,10 +136,7 @@ export class CitasService {
     return this.httpService.getToken('/citas/cliente', params);
   }
 
-  purgarDiasPasados(
-    horarios: { [dia: number]: string[] },
-    primerDiaSemana: Date
-  ): { [dia: number]: string[] } {
+  purgarDiasPasados(horarios: { [dia: number]: string[] }): { [dia: number]: string[] } {
     const hoy = new Date();
     const horariosPurgados: { [dia: number]: string[] } = {};
 

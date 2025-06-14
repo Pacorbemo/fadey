@@ -127,7 +127,6 @@ export class ReservarCitasComponent implements OnInit {
           this.horariosReservados = response.reservadas;
           this.horariosDisponibles = this.citasService.purgarDiasPasados(
             response.totales,
-            this.semanaActual.inicio
           );
           this.horariosReservadosPorUsuario = response.reservadasUsuario;
           this.generarFranjasHorarias();
