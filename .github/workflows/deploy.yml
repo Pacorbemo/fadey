@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS }}
           script: |
-            cd /fadey
+            cd fadey
             git pull
             npm run build
             npm run deploy
