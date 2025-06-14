@@ -1,6 +1,6 @@
 <div class="chat-container">
     <div class="mensajes" #mensajesContainer (scroll)="onScrollMensajes($event)">
-      @if (!paginacion.cargadosCompletos) {
+      @if (!paginacion.cargadosCompletos && !cargandoService.cargando) {
         <button class="btn-cargar-mas" (click)="cargarMasMensajes()" [disabled]="paginacion.cargandoMas">
           {{ paginacion.cargandoMas ? 'Cargando...' : 'Cargar más mensajes' }}
         </button>

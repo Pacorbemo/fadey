@@ -376,7 +376,6 @@ nav a:hover::after {
   .app {
     width: 100vw;
     box-sizing: border-box  ;
-    padding: 0 4vw;
   }
   .dropdown-menu {
     background: #181828;

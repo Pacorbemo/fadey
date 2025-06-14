@@ -7,6 +7,7 @@ import { UsuariosService } from '../../../services/usuarios.service';
 import { Usuario, usuarioVacio } from '../../../interfaces/usuario.interface';
 import { CargandoService } from '../../../services/cargando.service';
 import { DatosService } from '../../../services/datos.service';
+import { Router } from '@angular/router';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -59,8 +60,9 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
     private ruta: ActivatedRoute,
     private usuariosService: UsuariosService,
     private cdr: ChangeDetectorRef,
-    private cargandoService: CargandoService,
-    public datosService: DatosService
+    public cargandoService: CargandoService,
+    public datosService: DatosService,
+    private router : Router
   ) {}
 
   ngAfterViewInit(): void {
@@ -75,6 +77,12 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
   }
 
   ngOnInit(): void {
+    if(this.router.url.endsWith('/mensajes')){
+      document.documentElement.style.setProperty('--restar', '0px')
+    }else{
+      document.documentElement.style.setProperty('--restar', '20vh')
+    }
+
     this.ruta.params.subscribe((params) => {
       this.usuario.receptor.username = params['username'];
     });
@@ -96,10 +104,10 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
     this.mensajesService.cargarMensajes(this.usuario.receptor.id, this.paginacion.limit, this.paginacion.offset)
       .subscribe((mensajesCargados: MensajeCargado[]) => {
         this.mensajes = mensajesCargados;
+        this.cargandoService.ocultarCargando();
         if (mensajesCargados.length < this.paginacion.limit) {
           this.paginacion.cargadosCompletos = true;
         }
-        this.cargandoService.ocultarCargando();
       });
   }
 
@@ -108,6 +116,7 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
     this.paginacion.cargandoMas = true;
     // Guardar posición actual del scroll antes de cargar más
     const contenedor = this.contenedorMensajes?.nativeElement;
+    console.log(contenedor)
     const scrollAntes = contenedor ? contenedor.scrollHeight - contenedor.scrollTop : 0;
     this.mensajesService.cargarMensajes(this.usuario.receptor.id, this.paginacion.limit, this.paginacion.offset + this.paginacion.limit)
       .subscribe((mensajesCargados: MensajeCargado[]) => {
@@ -128,8 +137,9 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
 
   onScrollMensajes(event: any) {
     const el = event.target;
-    if (el.scrollTop === 0 && !this.paginacion.cargadosCompletos && !this.paginacion.cargandoMas) {
+    if (el.scrollTop < 400 && !this.paginacion.cargadosCompletos && !this.paginacion.cargandoMas) {
       this.cargarMasMensajes();
+      console.log("llamar")
     }
   }
 

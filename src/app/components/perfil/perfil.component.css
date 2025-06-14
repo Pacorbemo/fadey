@@ -1,11 +1,12 @@
 section {
 	position: relative;
-	margin: 1vw 4vw ;
+	padding: 1vw 4vw ;
 	width: 100%;
 	display: flex;
 	gap: 8px;
 	justify-content: left;
 	flex: 1;
+  box-sizing: border-box;
 }
 
 span {
