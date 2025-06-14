@@ -28,7 +28,7 @@ export class InicioSesionComponent {
 
   iniciarSesion(): void {
     const credenciales = {
-      username: this.username,
+      username: this.username.trim(),
       password: this.password,
     };
 
