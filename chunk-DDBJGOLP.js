@@ -1,1 +1,0 @@
-import{c as a}from"./chunk-CTIBTN6F.js";import"./chunk-4XRXFSFZ.js";import"./chunk-2XZSRCBB.js";import"./chunk-YROXT644.js";import"./chunk-QSU6O5O7.js";import"./chunk-RQAWQA5G.js";import"./chunk-2QB5VWAC.js";export{a as ProductosComponent};
