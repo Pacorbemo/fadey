@@ -6,13 +6,14 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../../services/toast.service';
 import { ToastComponent } from '../../shared/toast/toast.component';
+import { PasswordFieldComponent } from '../../shared/password-field/password-field.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './inicio-sesion.component.html',
   styleUrls: ['./inicio-sesion.component.css'],
   standalone: true,
-  imports: [FormsModule, RouterLink, CommonModule, ToastComponent],
+  imports: [FormsModule, PasswordFieldComponent, RouterLink, CommonModule, ToastComponent],
 })
 export class InicioSesionComponent {
   username: string = '';

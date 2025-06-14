@@ -1,5 +1,5 @@
 <div class="component-container">
-@if(!cargandoService.cargando){
+@if(!cargandoLocal){
 @if(!usernameValido){
 	<div class="overlay">
 		<div class="reserva-dialogo">
@@ -43,40 +43,42 @@
 			[disabled]="desactivarAtras()" >-</button>
 		<button (click)="cambiarSemana(1)">+</button>
 	</div>
-	<table>
-		<thead>
+	@if(!cargandoLocal){
+		<table>
+			<thead>
+				<tr>
+					@for (dia of diasDeLaSemana; track idx;  let idx = $index){
+						<th>{{ dia.getDate() }}</th>
+					}
+				</tr>
+			</thead>
+		@if(franjasHorarias.length > 0){
+		<tbody>
+			@for (hora of franjasHorarias; let idx = $index; track idx) {
 			<tr>
-				@for (dia of diasDeLaSemana; track idx;  let idx = $index){
-					<th>{{ dia.getDate() }}</th>
+				@for (dia of diasDeLaSemana; let idx = $index; track idx) {
+				<td>
+					<button 
+					(click)="mostrarReserva(dia, hora)" 
+					[disabled]="!esFranjaDisponible(dia, hora) || esFranjaReservada(dia.getDate(),hora)"
+					[class.selected]="esFranjaReservada(dia.getDate(),hora) === 1 && esFranjaDisponible(dia, hora)"
+					[class.reservada]="esFranjaReservada(dia.getDate(),hora) === 2 && esFranjaDisponible(dia, hora)"
+					>
+					{{ hora }}
+					</button>
+				</td>
 				}
 			</tr>
-		</thead>
-	@if(franjasHorarias.length > 0){
-	<tbody>
-		@for (hora of franjasHorarias; let idx = $index; track idx) {
-		<tr>
-			@for (dia of diasDeLaSemana; let idx = $index; track idx) {
-			<td>
-				<button 
-				(click)="mostrarReserva(dia, hora)" 
-				[disabled]="!esFranjaDisponible(dia, hora) || esFranjaReservada(dia.getDate(),hora)"
-				[class.selected]="esFranjaReservada(dia.getDate(),hora) === 1"
-				[class.reservada]="esFranjaReservada(dia.getDate(),hora) === 2"
-				>
-				{{ hora }}
-				</button>
-			</td>
 			}
-		</tr>
+		</tbody>
 		}
-	</tbody>
+		@else {
+			<tr>
+				<td colspan="7">No hay horarios disponibles esta semana</td>
+			</tr>
+		}
+		</table>
 	}
-	@else {
-		<tr>
-			<td colspan="7">No hay horarios disponibles esta semana</td>
-		</tr>
-	}
-	</table>
 	@if (mostrarDialogo) {
 		<div class="overlay">
 			<div class="reserva-dialogo">

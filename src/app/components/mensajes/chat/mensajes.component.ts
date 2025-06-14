@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UsuariosService } from '../../../services/usuarios.service';
  import { Usuario, usuarioVacio } from '../../../interfaces/usuario.interface';
+import { CargandoService } from '../../../services/cargando.service';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -46,7 +47,8 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
     private mensajesService: MensajesService,
     private ruta: ActivatedRoute,
     private usuariosService: UsuariosService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private cargandoService: CargandoService
   ) {}
 
   ngAfterViewInit(): void {
@@ -85,6 +87,7 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
         if (mensajesCargados.length < this.mensajesPaginadosLimit) {
           this.mensajesCargadosCompletos = true;
         }
+        this.cargandoService.ocultarCargando();
       });
   }
 
@@ -107,6 +110,7 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
             contenedor.scrollTop = contenedor.scrollHeight - scrollAntes;
           }
         });
+        this.cargandoService.ocultarCargando();
       });
   }
 

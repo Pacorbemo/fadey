@@ -26,6 +26,8 @@ export class PerfilComponent implements OnInit {
   usuarioAutorizado: boolean = false;
   relacionActual: string = '';
 
+  cargandoLocal: boolean = true;
+
   constructor(
     private route: ActivatedRoute,
     private usuariosServices: UsuariosService,
@@ -45,6 +47,7 @@ export class PerfilComponent implements OnInit {
             if (this.user.username == this.datosService.user.username) {
               this.usuarioAutorizado = true;
               this.loadComponent('citas');
+              this.cargandoLocal = false;
             } else {
               this.relacionesService.comprobarRelacion(this.user.id).subscribe({
                 next: relacionResponse => {
@@ -53,6 +56,7 @@ export class PerfilComponent implements OnInit {
                   if (this.usuarioAutorizado) {
                     this.loadComponent('citas');
                   }
+                  this.cargandoLocal = false;
                 }
               });
             }
