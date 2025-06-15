@@ -5,6 +5,16 @@
           {{ paginacion.cargandoMas ? 'Cargando...' : 'Cargar más mensajes' }}
         </button>
       }
+      @if(mostrarInfo){
+        <div class="info-chat" [routerLink]='[`/${usuario.receptor.username }`]'>
+          <img
+          class="avatar-chat"
+          [src]="usuario.receptor.foto_perfil | uploads : 'uploads'"
+          alt="Avatar del chat"
+          />
+          <span class="titulo-chat">{{ usuario.receptor.username }}</span>
+        </div>
+      }
       @for (grupo of mensajesAgrupadosPorDia(); track grupo.fecha) {
         <div class="separador-dia">
           <span>{{ grupo.fecha }}</span>

@@ -53,7 +53,7 @@
 	<app-cargando [mensaje]="`Cargando productos`" ></app-cargando>
 }
 
-@if (!cargandoService.cargando) {
+@if (!cargandoService.cargando && productos.length > 0) {
 <ul>
   <li class="header">
     @for(campo of campos; track campo.field){

@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetector
 import { MensajesService } from '../../../services/mensajes.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UsuariosService } from '../../../services/usuarios.service';
 import { Usuario, usuarioVacio } from '../../../interfaces/usuario.interface';
 import { CargandoService } from '../../../services/cargando.service';
 import { DatosService } from '../../../services/datos.service';
 import { Router } from '@angular/router';
+import { UploadsPipe } from '../../../pipes/uploads.pipe';
 
 interface MensajeCargado{
   emisor_id:number,
@@ -23,7 +24,7 @@ interface MensajeCargado{
   templateUrl: './mensajes.component.html',
   styleUrls: ['./mensajes.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, UploadsPipe, RouterLink],
 })
 export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecked {
   private _mensajes: any[] = [];
@@ -54,6 +55,8 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
   };
 
   @ViewChild('mensajesContainer') contenedorMensajes!: ElementRef;
+  
+  mostrarInfo: boolean = false;
 
   constructor(
     private mensajesService: MensajesService,
@@ -79,8 +82,10 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
   ngOnInit(): void {
     if(this.router.url.endsWith('/mensajes')){
       document.documentElement.style.setProperty('--restar', '0px')
+      this.mostrarInfo = true;
     }else{
       document.documentElement.style.setProperty('--restar', '20vh')
+      this.mostrarInfo = false;
     }
 
     this.ruta.params.subscribe((params) => {
@@ -88,6 +93,7 @@ export class MensajesComponent implements OnInit, AfterViewInit, AfterViewChecke
     });
     this.usuariosService.datosUsername(this.usuario.receptor.username).subscribe((response) => {
       this.usuario.receptor = response.user;
+      console.log(this.usuario.receptor)
       this.mensajesService.conectar(this.usuario.actual);
       // Marcar mensajes como leídos al abrir el chat
       this.mensajesService.marcarMensajesLeidos(this.usuario.receptor.id).subscribe();
