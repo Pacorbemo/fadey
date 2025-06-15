@@ -4,6 +4,7 @@ const enviarEmail = require('../funciones/email');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const renderEmailTemplate = require('../funciones/renderEmailTemplate');
+const { error } = require("console");
 
 exports.getUsuario = (req, res) => {
   const userId = req.user.id;
@@ -396,6 +397,7 @@ exports.confirmarEliminacion = (req, res) => {
     console.log(decoded)
     db.query('DELETE FROM Usuarios WHERE id = ? AND email = ?', [id, email], (err, result) => {
       if (err) {
+        console.log(error);
         return res.status(500).json({ mensaje: 'Error eliminando la cuenta.' });
       }
       if (result.affectedRows === 0) {
