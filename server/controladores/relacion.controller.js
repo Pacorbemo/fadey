@@ -66,7 +66,6 @@ exports.getRelacionesBarbero = (req, res) => {
   `;
   db.query(query, [idUsuario, limit, offset], (err, results) => {
     if (err) {
-      console.log(err)
       return res.status(500).json({ error: "Error al obtener relaciones" });
     }
     res.status(200).json(results);
