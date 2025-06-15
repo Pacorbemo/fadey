@@ -8,7 +8,7 @@
     "build": "ng build --configuration production --base-href \"/fadey/\"",
     "deploy": "npx angular-cli-ghpages --dir=dist/fadey/browser",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "npx jest --detectOpenHandles"
   },
   "private": true,
   "dependencies": {

@@ -377,7 +377,6 @@ exports.enviarConfirmacionEliminacion = (req, res) => {
     })
       .then(() => res.status(200).json({ mensaje: 'Correo de confirmación enviado' }))
       .catch(() => {
-        // Error al enviar confirmación de eliminación
         res.status(500).json({ mensaje: 'No se pudo enviar el correo de confirmación.' });
       });
   });
@@ -391,10 +390,10 @@ exports.confirmarEliminacion = (req, res) => {
   const jwt = require('jsonwebtoken');
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      // Error al confirmar eliminación
       return res.status(400).json({ mensaje: 'Token inválido o expirado.' });
     }
     const { id, email } = decoded;
+    console.log(decoded)
     db.query('DELETE FROM Usuarios WHERE id = ? AND email = ?', [id, email], (err, result) => {
       if (err) {
         return res.status(500).json({ mensaje: 'Error eliminando la cuenta.' });
