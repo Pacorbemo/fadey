@@ -1,58 +1,45 @@
-# Fadey
+# Manual del Administrador
 
-Este proyecto es una aplicación web desarrollada con Angular (frontend) y Node.js/Express (backend) usando MySQL como base de datos.
+Este documento está dirigido al administrador del sistema/proyecto Fadey. Aquí se describen los procedimientos y tareas habilitadas en esta versión.
 
-## Pasos para la configuración inicial
+## 1. Instalación
 
-1. **Crear la base de datos**
-   - Importa el archivo `estructura.sql` en tu servidor MySQL para crear la estructura de la base de datos y las tablas necesarias.
+1. Clona el repositorio del proyecto.
+2. Instala las dependencias ejecutando:
+   ```bash
+   npm install
+   ```
+3. Crea la base de datos importando el archivo `fadey_backup.sql` en tu servidor MySQL.
 
-2. **Configurar variables de entorno**
-   - Crea un archivo `.env` en la raíz del proyecto siguiendo el formato de `.env.example` y completa los valores con tu configuración local (usuario, contraseña, etc).
+## 2. Configuración
 
-3. **Instalar dependencias**
-   - Ejecuta `npm install` en la raíz del proyecto para instalar las dependencias del frontend y backend.
+1. Crea un archivo `.env` en la raíz del proyecto siguiendo el formato de `.env.example` y completa los valores de conexión a la base de datos y servidor.
+2. Verifica que la carpeta `uploads/` existe en la raíz para el almacenamiento de imágenes y archivos subidos.
 
-## Cómo ejecutar el proyecto
+## 3. Despliegue y Ejecución
 
 ### Backend
 
 Ejecuta el backend con:
-
 ```bash
 node server/index.js
 ```
 
-El servidor se iniciará y mostrará la URL donde está corriendo.
-
 ### Frontend
 
-Ejecuta el frontend con:
-
+Despliega el frontend con:
 ```bash
-npm run start
+npm run build
 ```
 
-Esto levantará el servidor de desarrollo de Angular. Accede a la aplicación desde tu navegador en la URL que se muestre (por defecto suele ser http://localhost:4200/).
+### Ejecución simultánea para desarrollo
 
----
-
-## Ejecución simultánea para desarrollo
-
-Adicionalmente, para facilitar el desarrollo puedes ejecutar:
-
+Puedes ejecutar ambos (frontend y backend) en el mismo terminal con:
 ```bash
 npm run dev
 ```
 
-Este comando levanta tanto el frontend como el backend en el mismo terminal usando concurrently y nodemon. Para que funcione, asegúrate de tener instalados los módulos:
-
-- concurrently
-- nodemon
-
-Puedes instalarlos con:
-
+Asegúrate de tener instalados los módulos `concurrently` y `nodemon`:
 ```bash
 npm install concurrently nodemon --save-dev
 ```
-
