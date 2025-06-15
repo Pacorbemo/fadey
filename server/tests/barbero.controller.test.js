@@ -24,8 +24,8 @@ describe('BarberoController', () => {
       });
       const res = await request(app).get('/barberos/es-barbero/999');
       expect(res.statusCode).toBe(404);
-      expect(res.body).toHaveProperty('error');
-      expect(res.body.error).toMatch(/usuario no encontrado/i);
+      expect(res.body).toHaveProperty('mensaje');
+      expect(res.body.mensaje).toMatch(/usuario no encontrado/i);
     });
     it('debe devolver 500 si hay error de base de datos', async () => {
       db.query.mockImplementationOnce((query, params, callback) => {
@@ -33,8 +33,8 @@ describe('BarberoController', () => {
       });
       const res = await request(app).get('/barberos/es-barbero/1');
       expect(res.statusCode).toBe(500);
-      expect(res.body).toHaveProperty('error');
-      expect(res.body.error).toMatch(/buscar el usuario/i);
+      expect(res.body).toHaveProperty('mensaje');
+      expect(res.body.mensaje).toMatch(/buscar el usuario/i);
     });
   });
 
@@ -61,8 +61,8 @@ describe('BarberoController', () => {
       });
       const res = await request(app).get('/barberos/buscar/test');
       expect(res.statusCode).toBe(500);
-      expect(res.body).toHaveProperty('error');
-      expect(res.body.error).toMatch(/buscar barberos/i);
+      expect(res.body).toHaveProperty('mensaje');
+      expect(res.body.mensaje).toMatch(/buscar barberos/i);
     });
   });
 
@@ -83,8 +83,8 @@ describe('BarberoController', () => {
       });
       const res = await request(app).get('/barberos/random');
       expect(res.statusCode).toBe(500);
-      expect(res.body).toHaveProperty('error');
-      expect(res.body.error).toMatch(/barberos aleatorios/i);
+      expect(res.body).toHaveProperty('mensaje');
+      expect(res.body.mensaje).toMatch(/barberos aleatorios/i);
     });
   });
 });

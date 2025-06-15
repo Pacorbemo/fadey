@@ -24,7 +24,7 @@ describe('CitaController', () => {
         .set('Authorization', token)
         .send({ fechas: [new Date().toISOString()], idBarbero: 1 });
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveProperty('message');
+      expect(res.body).toHaveProperty('mensaje');
     });
     it('debe fallar si no tiene permiso', async () => {
       const token = 'Bearer testtoken';

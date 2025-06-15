@@ -6,10 +6,10 @@ exports.esBarbero = (req, res) => {
 
   db.query(query, [id], (err, results) => {
     if (err) {
-      return res.status(500).json({ error: "Error al buscar el usuario" });
+      return res.status(500).json({ mensaje: "Error al buscar el usuario" });
     }
     if (results.length === 0) {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
     res.status(200).json(results[0]);
   });
@@ -18,7 +18,7 @@ exports.esBarbero = (req, res) => {
 exports.buscarBarberos = (req, res) => {
   const { query } = req.params;
   if (!query) {
-    return res.status(400).json({ error: "Falta el parámetro de búsqueda" });
+    return res.status(400).json({ mensaje: "Falta el parámetro de búsqueda" });
   }
   const sql = `
     SELECT id, username, nombre, foto_perfil 
@@ -28,7 +28,7 @@ exports.buscarBarberos = (req, res) => {
   `;
   db.query(sql, [`%${query}%`, `%${query}%`], (err, results) => {
     if (err) {
-      return res.status(500).json({ error: "Error al buscar barberos" });
+      return res.status(500).json({ mensaje: "Error al buscar barberos" });
     }
     res.status(200).json(results);
   });
@@ -46,7 +46,7 @@ exports.randomBarberos = (req, res) => {
     if (err) {
       return res
         .status(500)
-        .json({ error: "Error al obtener barberos aleatorios" });
+        .json({ mensaje: "Error al obtener barberos aleatorios" });
     }
     res.status(200).json(results);
   });
@@ -65,7 +65,7 @@ exports.getProductosBarbero = (req, res) => {
   `;
   db.query(query, [username, limit, offset], (err, results) => {
     if (err) {
-      return res.status(500).json({ error: "Error al obtener productos" });
+      return res.status(500).json({ mensaje: "Error al obtener productos" });
     }
     res.status(200).json(results);
   });
@@ -78,7 +78,7 @@ exports.getHorarioBarbero = (req, res) => {
     [userId],
     (err, results) => {
       if (err)
-        return res.status(500).json({ error: "Error al obtener el horario" });
+        return res.status(500).json({ mensaje: "Error al obtener el horario" });
       if (results.length === 0)
         return res.status(200).json({ horario: null });
       let horario = results[0].horario;
@@ -98,7 +98,7 @@ exports.setHorarioBarbero = (req, res) => {
     [JSON.stringify(horario), userId],
     (err, results) => {
       if (err)
-        return res.status(500).json({ error: "Error al guardar el horario" });
+        return res.status(500).json({ mensaje: "Error al guardar el horario" });
       res.status(200).json({ ok: true });
     }
   );

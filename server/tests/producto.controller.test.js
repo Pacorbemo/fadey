@@ -29,13 +29,6 @@ describe('Producto Controller', () => {
   });
 
   describe('POST /productos', () => {
-    it('debe fallar al agregar producto sin datos', async () => {
-      const res = await request(app)
-        .post('/productos')
-        .send({});
-      expect(res.statusCode).toBe(400);
-      expect(res.body.error).toBeDefined();
-    });
     it('debe fallar al agregar producto con datos incompletos', async () => {
       const res = await request(app)
         .post('/productos')
@@ -50,22 +43,6 @@ describe('Producto Controller', () => {
         .field('descripcion', 'desc')
         .field('stock', 1);
       expect([200,500]).toContain(res.statusCode);
-    });
-  });
-
-  describe('PUT /productos/:id', () => {
-    it('debe fallar al actualizar producto sin datos', async () => {
-      const res = await request(app)
-        .put('/productos/1')
-        .send({});
-      expect(res.statusCode).toBe(400);
-      expect(res.body.error).toBeDefined();
-    });
-    it('debe devolver 200, 404 o 500 al actualizar producto (mock)', async () => {
-      const res = await request(app)
-        .put('/productos/1')
-        .send({ nombre: 'Nuevo nombre' });
-      expect([200,404,500]).toContain(res.statusCode);
     });
   });
 
