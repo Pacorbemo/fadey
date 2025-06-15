@@ -7,6 +7,7 @@
     "start": "ng serve",
     "build": "ng build --configuration production --base-href \"/fadey/\"",
     "deploy": "npx angular-cli-ghpages --dir=dist/fadey/browser",
+    "server": "node server/index.js",
     "watch": "ng build --watch --configuration development",
     "test": "npx jest --detectOpenHandles"
   },
