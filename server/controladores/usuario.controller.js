@@ -394,10 +394,8 @@ exports.confirmarEliminacion = (req, res) => {
       return res.status(400).json({ mensaje: 'Token inválido o expirado.' });
     }
     const { id, email } = decoded;
-    console.log(decoded)
     db.query('DELETE FROM Usuarios WHERE id = ? AND email = ?', [id, email], (err, result) => {
       if (err) {
-        console.log(err);
         return res.status(500).json({ mensaje: 'Error eliminando la cuenta.' });
       }
       if (result.affectedRows === 0) {
