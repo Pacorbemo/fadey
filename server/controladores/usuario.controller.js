@@ -397,7 +397,7 @@ exports.confirmarEliminacion = (req, res) => {
     console.log(decoded)
     db.query('DELETE FROM Usuarios WHERE id = ? AND email = ?', [id, email], (err, result) => {
       if (err) {
-        console.log(error);
+        console.log(err);
         return res.status(500).json({ mensaje: 'Error eliminando la cuenta.' });
       }
       if (result.affectedRows === 0) {
