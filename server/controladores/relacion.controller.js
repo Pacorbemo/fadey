@@ -35,9 +35,8 @@ exports.getRelacionesCliente = (req, res) => {
       Relaciones.id,
       Usuarios.username AS username,
       Usuarios.nombre AS nombre,
-      Relaciones.estado,
-      Relaciones.fecha_creacion
-    FROM Relaciones
+      Relaciones.estado    
+      FROM Relaciones
     JOIN Usuarios ON Relaciones.barbero_id = Usuarios.id
     WHERE Relaciones.cliente_id = ?
     LIMIT ? OFFSET ?;
@@ -59,7 +58,7 @@ exports.getRelacionesBarbero = (req, res) => {
       Relaciones.id,
       Usuarios.username AS username,
       Usuarios.nombre AS nombre,
-      Relaciones.estado,
+      Relaciones.estado
     FROM Relaciones
     JOIN Usuarios ON Relaciones.cliente_id = Usuarios.id
     WHERE Relaciones.barbero_id = ?
