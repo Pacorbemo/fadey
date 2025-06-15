@@ -179,14 +179,12 @@ exports.reservarProducto = (req, res) => {
   });
 };
 
-// Endpoint para marcar un producto reservado como entregado
 exports.marcarProductoEntregado = (req, res) => {
   const { producto_id, username } = req.body;
   const barbero_id = req.user.id;
   if (!producto_id || !username) {
     return res.status(400).json({ mensaje: "Faltan datos obligatorios" });
   }
-  // Obtener el id del cliente a partir del username
   const getClienteIdQuery = "SELECT id FROM Usuarios WHERE username = ?";
   db.query(getClienteIdQuery, [username], (err, results) => {
     if (err) {
@@ -196,7 +194,6 @@ exports.marcarProductoEntregado = (req, res) => {
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
     const cliente_id = results[0].id;
-    // Verificar que la reserva existe y pertenece a este barbero
     const checkReservaQuery = `SELECT rp.*, p.nombre as producto_nombre FROM reservas_productos rp JOIN Productos p ON rp.producto_id = p.id WHERE rp.producto_id = ? AND rp.cliente_id = ? AND rp.entregado = 0 AND p.barbero_id = ?`;
     db.query(checkReservaQuery, [producto_id, cliente_id, barbero_id], (err, reservas) => {
       if (err) {
@@ -205,7 +202,6 @@ exports.marcarProductoEntregado = (req, res) => {
       if (reservas.length === 0) {
         return res.status(404).json({ mensaje: "Reserva no encontrada o ya entregada" });
       }
-      // Marcar como entregado
       const updateQuery = "UPDATE reservas_productos SET entregado = 1, updated_at = NOW() WHERE producto_id = ? AND cliente_id = ? AND entregado = 0";
       db.query(updateQuery, [producto_id, cliente_id], (err, result) => {
         if (err) {

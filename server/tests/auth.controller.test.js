@@ -42,7 +42,6 @@ describe('POST /auth/registro', () => {
       nombre: usuario.nombre,
       rol: 'cliente'
     });
-    // El id puede no estar presente en la respuesta, así que no lo comprobamos estrictamente
   });
 
   it('debe fallar si falta el nombre', async () => {
@@ -67,7 +66,7 @@ describe('POST /auth/registro', () => {
       username: 'testuser',
       barbero: false,
       email: 'test@example.com',
-      password: '123' // menos de 6 caracteres
+      password: '123'
     };
     const res = await request(app)
       .post('/auth/registro')
@@ -82,7 +81,7 @@ describe('POST /auth/registro', () => {
     const usuario = {
       nombre: 'Test User',
       username: 'testuser',
-      barbero: 'no', // no booleano
+      barbero: 'no',
       email: 'test@example.com',
       password: '123456'
     };

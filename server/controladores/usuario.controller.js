@@ -71,7 +71,6 @@ exports.emailExiste = (req, res) => {
   const query = "SELECT 1 FROM Usuarios WHERE email = ? LIMIT 1";
   db.query(query, [email], (err, results) => {
     if (err) {
-      // Error al buscar email
       return res.status(500).json({ mensaje: "Error al buscar el usuario" });
     }
 
@@ -91,7 +90,6 @@ exports.putImagenPerfil = (req, res) => {
   const getPhotoQuery = "SELECT foto_perfil FROM Usuarios WHERE id = ?";
   db.query(getPhotoQuery, [userId], (err, results) => {
     if (err) {
-      // Error al obtener foto de perfil
       return res.status(500).json({ mensaje: "Error al obtener la foto actual" });
     }
 
@@ -145,7 +143,6 @@ exports.editarCampo = (req, res) => {
       const query = `UPDATE Usuarios SET ${campo} = ? WHERE id = ?`;
       db.query(query, [valor, userId], (err, results) => {
         if (err) {
-          // Error al actualizar campo
           return res.status(500).json({ mensaje: `Error al actualizar ${campo}` });
         }
         if (results.affectedRows > 0) {
@@ -165,7 +162,6 @@ exports.editarCampo = (req, res) => {
   const query = `UPDATE Usuarios SET ${campo} = ? WHERE id = ?`;
   db.query(query, [valor, userId], (err, results) => {
     if (err) {
-      // Error al actualizar campo
       return res.status(500).json({ mensaje: `Error al actualizar ${campo}` });
     }
 
@@ -188,7 +184,6 @@ exports.usuarioExisteById = (id, callback) => {
     "SELECT id, nombre, username, foto_perfil FROM Usuarios WHERE id = ?";
   db.query(query, [id], (err, results) => {
     if (err) {
-      // Error al buscar usuario por id
       return callback(err, null);
     }
     if (results.length > 0) {
@@ -199,7 +194,6 @@ exports.usuarioExisteById = (id, callback) => {
   });
 };
 
-// Enviar email de verificación (con JWT, sin tabla extra)
 exports.enviarVerificacionEmail = (req, res) => {
   const userId = req.user.id;
   const query = 'SELECT email, email_verificado, username FROM Usuarios WHERE id = ?';
@@ -225,18 +219,15 @@ exports.enviarVerificacionEmail = (req, res) => {
     })
       .then(() => res.status(200).json({ mensaje: 'Email de verificación enviado' }))
       .catch((e) => {
-        // Error al enviar email de verificación
         res.status(500).json({ mensaje: 'Error enviando email' });
       });
   });
 };
 
-// Verificar email con JWT
 exports.verificarEmail = (req, res) => {
   const { token } = req.params;
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      // Error al verificar email
       return res.status(400).json({ mensaje: 'Token inválido o expirado' });
     }
     const { id, email } = decoded;
@@ -253,7 +244,6 @@ exports.verificarEmail = (req, res) => {
   });
 };
 
-// Cambiar contraseña del usuario autenticado
 exports.cambiarPassword = (req, res) => {
   const userId = req.user.id;
   const { actual, nueva } = req.body;
@@ -265,7 +255,6 @@ exports.cambiarPassword = (req, res) => {
   }
   db.query('SELECT password FROM Usuarios WHERE id = ?', [userId], async (err, results) => {
     if (err || results.length === 0) {
-      // Error al obtener contraseña
       return res.status(500).json({ mensaje: 'Error validando usuario.' });
     }
     const bcrypt = require('bcrypt');
@@ -284,7 +273,6 @@ exports.cambiarPassword = (req, res) => {
   });
 };
 
-// Recuperar contraseña: enviar email con token
 exports.recuperarPassword = (req, res) => {
   const { email } = req.body;
   if (!email) {
@@ -296,11 +284,9 @@ exports.recuperarPassword = (req, res) => {
   }
   db.query('SELECT id, username FROM Usuarios WHERE email = ?', [email], (err, results) => {
     if (err) {
-      // Error al buscar usuario por email
       return res.status(500).json({ mensaje: 'Error buscando usuario.' });
     }
     if (results.length === 0) {
-      // No revelamos si existe o no
       return res.status(200).json({ mensaje: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' });
     }
     const { id, username } = results[0];
@@ -318,13 +304,11 @@ exports.recuperarPassword = (req, res) => {
     })
       .then(() => res.status(200).json({ mensaje: 'Si el correo existe, recibirás instrucciones para restablecer tu contraseña.' }))
       .catch((e) => {
-        // Error al enviar email de recuperación
         res.status(500).json({ mensaje: 'Error enviando email' });
       });
   });
 };
 
-// Restablecer contraseña usando token
 exports.restablecerPassword = (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
@@ -340,7 +324,6 @@ exports.restablecerPassword = (req, res) => {
     const nuevaHash = await bcrypt.hash(password, 10);
     db.query('UPDATE Usuarios SET password = ? WHERE id = ? AND email = ?', [nuevaHash, id, email], (err, result) => {
       if (err) {
-        // Error al restablecer contraseña
         return res.status(500).json({ mensaje: 'Error actualizando la contraseña.' });
       }
       if (result.affectedRows === 0) {
@@ -351,7 +334,6 @@ exports.restablecerPassword = (req, res) => {
   });
 };
 
-// Enviar confirmación de eliminación de cuenta
 exports.enviarConfirmacionEliminacion = (req, res) => {
   const userId = req.user.id;
   db.query('SELECT email, email_verificado, username FROM Usuarios WHERE id = ?', [userId], (err, results) => {
@@ -362,7 +344,6 @@ exports.enviarConfirmacionEliminacion = (req, res) => {
     if (!email_verificado) {
       return res.status(400).json({ mensaje: 'El email no está verificado.' });
     }
-    // Generar token de confirmación
     const jwt = require('jsonwebtoken');
     const token = jwt.sign({ id: userId, email }, process.env.JWT_SECRET, { expiresIn: '1h' });
     const url = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/confirmar-eliminacion?token=${token}`;

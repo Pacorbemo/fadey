@@ -45,7 +45,6 @@ exports.obtenerChats = (req, res) => {
     
     const userIds = results.map(chat => chat.usuario_id);
     if (userIds.length > 0) {
-      // Modificado para incluir foto_perfil
       const userQuery = "SELECT id, username, foto_perfil FROM Usuarios WHERE id IN (?)";
       db.query(userQuery, [userIds], (err, userResults) => {
         if (err) {

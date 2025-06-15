@@ -53,7 +53,7 @@ describe('BarberoController', () => {
     });
     it('debe devolver 404 si falta el parámetro de búsqueda', async () => {
       const res = await request(app).get('/barberos/buscar/');
-      expect(res.statusCode).toBe(404); // Express no matchea la ruta sin param
+      expect(res.statusCode).toBe(404);
     });
     it('debe devolver 500 si hay error de base de datos', async () => {
       db.query.mockImplementationOnce((query, params, callback) => {

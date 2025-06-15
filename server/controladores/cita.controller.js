@@ -66,7 +66,6 @@ exports.obtenerCitas = async (req, res) => {
     
     res.status(200).json({ totales, reservadas, reservadasUsuario });
   } catch (err) {
-    // Error al obtener citas
     res.status(500).json({ error: "Error al obtener citas" });
   }
 };
@@ -85,7 +84,6 @@ exports.obtenerCitasBarbero = async (req, res) => {
     `;
   db.query(query, [id, limit, offset], (err, results) => {
     if (err) {
-      // Error al obtener citas del barbero
       return res.status(500).json({ error: "Error al obtener citas del barbero" });
     }
     res.status(200).json(results);
@@ -106,7 +104,6 @@ exports.obtenerCitasCliente = async (req, res) => {
     `;
   db.query(query, [id, limit, offset], (err, results) => {
     if (err) {
-      // Error al obtener citas del usuario
       return res.status(500).json({ error: "Error al obtener citas del usuario" });
     }
     res.status(200).json(results);
@@ -127,7 +124,6 @@ exports.obtenerProximasCitas = async (req, res) => {
   `;
   db.query(query, [id, limit, offset], (err, results) => {
     if (err) {
-      // Error al obtener próximas citas del barbero
       return res.status(500).json({ error: "Error al obtener próximas citas del barbero" });
     }
     res.status(200).json(results);
@@ -156,7 +152,6 @@ exports.confirmarCita = async (req, res) => {
 
   db.query(checkQuery, [idBarbero, fechaHora], (err, results) => {
     if (err) {
-      // Error al comprobar la cita
       return res.status(500).json({ error: 'Error al comprobar la cita' });
     }
 
@@ -166,7 +161,6 @@ exports.confirmarCita = async (req, res) => {
 
     db.query(updateQuery, [idCliente, new Date(), idBarbero, fechaHora], (err, result) => {
       if (err) {
-        // Error al confirmar reserva
         return res.status(500).json({ error: 'Error al confirmar reserva' });
       }
 
