@@ -46,5 +46,4 @@ uploads/*
 !uploads/.gitkeep
 Fadey.zip
 MANUAL*
-fadey_backup.sql
 imagenes_documentacion
